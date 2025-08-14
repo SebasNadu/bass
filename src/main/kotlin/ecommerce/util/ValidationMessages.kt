@@ -1,5 +1,6 @@
 package ecommerce.util
 
+//TODO: check and adapt to the new environment
 object ValidationMessages {
     const val NAME_REQUIRED = "Product name cannot be blank"
     const val PRICE_REQUIRED = "Price cannot be null"
@@ -17,10 +18,10 @@ object ValidationMessages {
     const val MEMBER_NAME_REQUIRED = "Name cannot be blank"
     const val QUANTITY_NON_NEGATIVE = "Quantity must be a positive number"
     const val OPTION_REQUIRED = "Option must be at least 1"
-    const val OPTION_NAME_SIZE = "The Option name must contain between 1 and 50 characters"
-    const val OPTION_NAME_REQUIRED = "Product name cannot be blank"
-    const val OPTION_NAME_PATTERN = "Invalid characters in product name."
-    const val OPTION_QUANTITY_SIZE = "The Option quantity must be between 1 and 99,999,999"
+    const val MEAL_NAME_SIZE = "The Option name must contain between 1 and 50 characters"
+    const val MEAL_NAME_REQUIRED = "Product name cannot be blank"
+    const val MEAL_NAME_PATTERN = "Invalid characters in product name."
+    const val MEAL_QUANTITY_SIZE = "The Meal quantity must be between 1 and 99,999,999"
     const val OPTION_PRODUCT_ID_REQUIRED = "Product ID cannot be blank"
     const val ID_REQUIRED = "Id cannot be less or equal to zero"
 }

@@ -1,11 +1,12 @@
 package ecommerce.mappers
 
+import ecommerce.dto.OrderItemDTO
 import ecommerce.entities.OrderItemEntity
 
 fun OrderItemEntity.toDTO() =
-    ecommerce.dto.OrderItemDTO(
-        optionId = option.id,
+    OrderItemDTO(
+        mealId = meal.id,
         quantity = quantity,
-        unitPrice = unitPrice,
+        price = price,
         id = id,
     )

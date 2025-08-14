@@ -7,34 +7,32 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class OptionTest {
-    val product = ProductEntity(name = "Test Product", price = 100.0, imageUrl = "https//::test.jpg")
-
     @Test
     fun `subtract should reduce quantity correctly`() {
-        val option =
-            OptionEntity(
+        val meal =
+            MealEntity(
                 name = "Test",
                 quantity = 10,
-                product = product,
-                unitPrice = 100.0,
+                price = 100.0,
+                imageUrl = "https://niceimage",
             )
-        option.subtract(3)
-        assertEquals(7, option.quantity)
+        meal.subtract(3)
+        assertEquals(7, meal.quantity)
     }
 
     @Test
     fun `subtract should throw if quantity is less than 1`() {
-        val option = OptionEntity(name = "Test", quantity = 10, product, unitPrice = 100.0)
+        val meal = MealEntity(name = "Test", quantity = 10, price = 100.0, imageUrl = "https://niceimage")
         assertThrows<InvalidOptionQuantityException> {
-            option.subtract(0)
+            meal.subtract(0)
         }
     }
 
     @Test
     fun `subtract should throw if subtracting more than stock`() {
-        val option = OptionEntity(name = "Test", quantity = 5, product, unitPrice = 100.0)
+        val meal = MealEntity(name = "Test", quantity = 5, imageUrl = "https://niceimage", price = 100.0)
         assertThrows<InsufficientStockException> {
-            option.subtract(10)
+            meal.subtract(10)
         }
     }
 }

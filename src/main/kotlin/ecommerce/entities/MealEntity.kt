@@ -1,36 +1,36 @@
 package ecommerce.entities
 
+import ecommerce.dto.MealDTO
+import ecommerce.dto.MealPatchDTO
 import ecommerce.exception.InsufficientStockException
 import ecommerce.exception.InvalidOptionNameException
 import ecommerce.exception.InvalidOptionQuantityException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    name = "`option`",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["product_id", "name"])],
+    name = "meal",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["name"])],
 )
-class OptionEntity(
+class MealEntity(
     name: String,
     quantity: Int,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_id", nullable = false)
-    var product: ProductEntity,
     @Column(nullable = false)
-    var unitPrice: Double,
-    @OneToMany(mappedBy = "option", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var price: Double,
+    @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
+    @Column(nullable = false)
+    var imageUrl: String,
+//    @Column(nullable = false)
+//    var description: String,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -52,10 +52,10 @@ class OptionEntity(
     init {
         this.name = name
         this.quantity = quantity
+        // TODO: validate image URL
+        // TODO: validate price
+        // TODO: validate description
     }
-
-    val totalPrice: Double
-        get() = unitPrice * quantity
 
     fun checkStock(quantity: Int) {
         if (this.quantity == 0) throw InsufficientStockException("Option is out of stock")
@@ -72,15 +72,30 @@ class OptionEntity(
         if (this.quantity < quantity) throw InsufficientStockException("Not enough stock for option $id")
     }
 
+    fun copyFrom(meal: MealDTO): MealEntity {
+        this.name = meal.name
+        this.quantity = meal.quantity
+        this.imageUrl = meal.imageUrl
+        this.price = meal.price
+        return this
+    }
+
+    fun copyFrom(meal: MealPatchDTO): MealEntity {
+        meal.name?.let { this.name = it }
+        meal.quantity?.let { this.quantity = it }
+        meal.price?.let { this.price = it }
+        meal.imageUrl?.let { this.imageUrl = it }
+        return this
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this == other) return true
-        if (other !is OptionEntity) return false
-        return product == other.product && name == other.name
+        if (other !is MealEntity) return false
+        return name == other.name
     }
 
     override fun hashCode(): Int {
-        var result = product.hashCode()
-        result = 31 * result + name.hashCode()
+        val result = id.hashCode()
         return result
     }
 
@@ -91,6 +106,6 @@ class OptionEntity(
     }
 
     private fun validateQuantity(quantity: Int) {
-        if (quantity < 1 || quantity >= 100_000_000) throw InvalidOptionQuantityException("Quantity must be between 1 and 99,999,999")
+        if (quantity !in 1..<100_000_000) throw InvalidOptionQuantityException("Quantity must be between 1 and 99,999,999")
     }
 }
