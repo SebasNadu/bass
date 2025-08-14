@@ -1,5 +1,6 @@
 package ecommerce.util
 
+//TODO: check and adapt to the new environment
 object ValidationMessages {
     const val NAME_REQUIRED = "Product name cannot be blank"
     const val PRICE_REQUIRED = "Price cannot be null"

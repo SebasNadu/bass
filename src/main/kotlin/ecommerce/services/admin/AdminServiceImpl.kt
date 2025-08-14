@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AdminServiceImpl(
     private val cartItemRepository: CartItemRepository,
-    private val mealRepository: MealRepository,
 ) : FindTopProductsUseCase, FindMembersWithRecentCartActivityUseCase {
     @Transactional(readOnly = true)
     override fun findProducts(): List<TopProductDTO> {
