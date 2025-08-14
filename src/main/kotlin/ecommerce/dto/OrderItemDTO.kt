@@ -1,8 +1,8 @@
 package ecommerce.dto
 
 class OrderItemDTO(
-    val optionId: Long,
+    val mealId: Long,
     val quantity: Int,
-    val unitPrice: Double,
+    val price: Double,
     var id: Long? = null,
 )

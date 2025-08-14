@@ -3,15 +3,15 @@ package ecommerce.integration
 import ecommerce.dto.MemberLoginDTO
 import ecommerce.dto.OrderDTO
 import ecommerce.entities.CartItemEntity
+import ecommerce.entities.MealEntity
 import ecommerce.entities.MemberEntity
-import ecommerce.entities.OptionEntity
 import ecommerce.entities.OrderEntity
 import ecommerce.exception.NotFoundException
 import ecommerce.exception.OperationFailedException
 import ecommerce.model.PaymentRequest
 import ecommerce.repositories.CartItemRepository
+import ecommerce.repositories.MealRepository
 import ecommerce.repositories.MemberRepository
-import ecommerce.repositories.OptionRepository
 import ecommerce.repositories.OrderRepository
 import ecommerce.services.order.OrderServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -42,10 +42,10 @@ class OrderServiceTest {
     lateinit var orderRepository: OrderRepository
 
     @Autowired
-    lateinit var optionRepository: OptionRepository
+    lateinit var mealRepository: MealRepository
 
     lateinit var member: MemberEntity
-    lateinit var option: OptionEntity
+    lateinit var meal: MealEntity
     lateinit var cartItem: CartItemEntity
 
     @BeforeEach
@@ -54,14 +54,14 @@ class OrderServiceTest {
         val members = memberRepository.findAll()
         member = members[0]
 
-        val options = optionRepository.findAll()
-        option = options[0]
+        val meals = mealRepository.findAll()
+        meal = meals[0]
 
         // Add an item to the member's cart
         val cartItemEntity =
             CartItemEntity(
                 member = member,
-                option = option,
+                meal = meal,
                 quantity = 2,
                 addedAt = LocalDateTime.now(),
             )
@@ -82,7 +82,7 @@ class OrderServiceTest {
         val orderDTO: OrderDTO = orderService.create(memberLoginDTO, paymentRequest)
 
         assertNotNull(orderDTO.id)
-        assertEquals(6000.0, orderDTO.totalAmount)
+        assertEquals(2000.0, orderDTO.totalAmount)
         assertEquals(member.id, orderDTO.memberId)
 
         val order = orderRepository.findByIdOrNull(orderDTO.id!!)
@@ -90,12 +90,12 @@ class OrderServiceTest {
         assertEquals(OrderEntity.OrderStatus.CREATED, order.status)
 
         assertEquals(1, order.items.size)
-        assertEquals(option.id, order.items[0].option.id)
+        assertEquals(meal.id, order.items[0].meal.id)
         assertEquals(2, order.items[0].quantity)
 
-        val updatedOption = optionRepository.findByIdOrNull(option.id)
+        val updatedOption = mealRepository.findByIdOrNull(meal.id)
         assertNotNull(updatedOption)
-        assertEquals(3, updatedOption.quantity) // 10 - 2 = 8
+        assertEquals(98, updatedOption.quantity)
 
         val cartItemsAfter = cartItemRepository.findByMemberId(member.id)
         assertTrue(cartItemsAfter.isEmpty())

@@ -47,7 +47,7 @@ class OrderServiceImpl(
         val stripeResponse =
             stripeService.createPaymentIntent(
                 paymentRequest.copy(
-                    amount = cartItems.sumOf { it.option.totalPrice },
+                    amount = cartItems.sumOf { it.totalPrice },
                 ),
             )
 
@@ -70,7 +70,7 @@ class OrderServiceImpl(
                 totalAmount = stripeResponse.amount!!,
                 member = member,
             )
-        val orderItems = cartItems.map { OrderItemEntity(order, it.option, it.quantity, it.option.unitPrice) }
+        val orderItems = cartItems.map { OrderItemEntity(order, it.meal, it.quantity, it.meal.price) }
         order.addAllItems(orderItems)
         return order
     }
@@ -91,10 +91,10 @@ class OrderServiceImpl(
     }
 
     private fun decreaseOptionStock(cartItems: List<CartItemEntity>) {
-        cartItems.forEach { it.option.subtract(it.quantity) }
+        cartItems.forEach { it.meal.subtract(it.quantity) }
     }
 
     private fun validateStock(cartItems: List<CartItemEntity>) {
-        cartItems.forEach { it.option.validateStock(it.quantity) }
+        cartItems.forEach { it.meal.validateStock(it.quantity) }
     }
 }

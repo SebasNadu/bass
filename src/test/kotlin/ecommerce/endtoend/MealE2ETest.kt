@@ -1,9 +1,7 @@
 package ecommerce.endtoend
 
-import ecommerce.dto.OptionDTO
+import ecommerce.dto.MealDTO
 import ecommerce.dto.PageResponseDTO
-import ecommerce.dto.ProductRequestDTO
-import ecommerce.dto.ProductResponseDTO
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
@@ -16,7 +14,7 @@ import org.springframework.http.HttpStatus
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ProductE2ETest {
+class MealE2ETest {
     lateinit var token: String
 
     @BeforeEach
@@ -39,48 +37,40 @@ class ProductE2ETest {
     }
 
     @Test
-    fun getProducts() {
+    fun getMeals() {
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .accept(ContentType.JSON)
-                .`when`().get("/api/products")
+                .`when`().get("/api/meals")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val page = response.body().`as`(object : TypeRef<PageResponseDTO<ProductResponseDTO>>() {})
+        val page = response.body().`as`(object : TypeRef<PageResponseDTO<MealDTO>>() {})
         assertThat(page.content).isNotEmpty()
         assertThat(page.content.size).isEqualTo(10)
     }
 
     @Test
-    fun getProduct() {
+    fun getMeal() {
         val productDTO =
-            ProductRequestDTO(
+            MealDTO(
                 name = "TV",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
         val id =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(productDTO)
-                .post("/api/products")
+                .post("/api/meals")
                 .then().extract().jsonPath().getLong("id")
 
         val response =
             RestAssured.given()
-                .get("/api/products/$id")
+                .get("/api/meals/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -89,40 +79,32 @@ class ProductE2ETest {
     }
 
     @Test
-    fun getProduct_notFound() {
+    fun getMeal_notFound() {
         val response =
             RestAssured.given()
                 .auth().oauth2(token)
-                .get("/api/products/999999")
+                .get("/api/meals/999999")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())
     }
 
     @Test
-    fun createProduct() {
-        val newProductDTO =
-            ProductRequestDTO(
+    fun createMeal() {
+        val newMealDTO =
+            MealDTO(
                 name = "Monitor",
                 price = 150.0,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(newProductDTO)
-                .`when`().post("/api/products")
+                .body(newMealDTO)
+                .`when`().post("/api/meals")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -132,28 +114,20 @@ class ProductE2ETest {
 
     @Test
     fun `Should return error when product name use invalid characters`() {
-        val newProductDTO =
-            ProductRequestDTO(
+        val newMealDTO =
+            MealDTO(
                 name = "!@#$%^&*()_+}{",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(newProductDTO)
-                .`when`().post("/api/products")
+                .body(newMealDTO)
+                .`when`().post("/api/meals")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -165,28 +139,20 @@ class ProductE2ETest {
 
     @Test
     fun `Should return error when product name is bigger than 15 characters`() {
-        val newProductDTO =
-            ProductRequestDTO(
+        val newMealDTO =
+            MealDTO(
                 name = "SpeakersareLovemyDearDearDear",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(newProductDTO)
-                .`when`().post("/api/products")
+                .body(newMealDTO)
+                .`when`().post("/api/meals")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -199,30 +165,22 @@ class ProductE2ETest {
     @Test
     fun `Should return error when product name already exists`() {
         val dto =
-            ProductRequestDTO(
+            MealDTO(
                 name = "Speaker",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         RestAssured.given().auth().oauth2(token)
-            .contentType(ContentType.JSON).body(dto).post("/api/products")
+            .contentType(ContentType.JSON).body(dto).post("/api/meals")
 
         val duplicate =
             RestAssured.given()
                 .contentType(ContentType.JSON)
                 .auth().oauth2(token)
                 .body(dto)
-                .post("/api/products")
+                .post("/api/meals")
                 .then().extract()
 
         assertThat(duplicate.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -231,28 +189,20 @@ class ProductE2ETest {
 
     @Test
     fun `Should return error when product price is negative value`() {
-        val newProductDTO =
-            ProductRequestDTO(
-                name = "Speaker",
+        val newMealDTO =
+            MealDTO(
+                name = "Speaker2",
                 price = -99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         val response =
             RestAssured.given().log().all()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(newProductDTO)
-                .`when`().post("/api/products")
+                .body(newMealDTO)
+                .`when`().post("/api/meals")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -263,44 +213,28 @@ class ProductE2ETest {
     }
 
     @Test
-    fun updateProduct() {
+    fun updateMeal() {
         val created =
-            ProductRequestDTO(
-                name = "Speaker",
+            MealDTO(
+                name = "Speaker3",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
         val id =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(created)
-                .post("/api/products")
+                .post("/api/meals")
                 .then().extract().jsonPath().getLong("id")
 
         val updated =
-            ProductRequestDTO(
+            MealDTO(
                 name = "Gaming Mouse",
                 price = 45.0,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "ello",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
         val response =
@@ -308,7 +242,7 @@ class ProductE2ETest {
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(updated)
-                .put("/api/products/$id")
+                .put("/api/meals/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -317,28 +251,20 @@ class ProductE2ETest {
     }
 
     @Test
-    fun patchProduct() {
+    fun patchMeal() {
         val created =
-            ProductRequestDTO(
+            MealDTO(
                 name = "Tv",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
         val id =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(created)
-                .post("/api/products")
+                .post("/api/meals")
                 .then().extract().jsonPath().getLong("id")
 
         val patch = mapOf("price" to 249.0)
@@ -348,7 +274,7 @@ class ProductE2ETest {
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(patch)
-                .patch("/api/products/$id")
+                .patch("/api/meals/$id")
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
@@ -356,34 +282,26 @@ class ProductE2ETest {
     }
 
     @Test
-    fun deleteProduct() {
+    fun deleteMeal() {
         val created =
-            ProductRequestDTO(
+            MealDTO(
                 name = "Toilet",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "hi",
-                            quantity = 99,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
         val id =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(created)
-                .post("/api/products")
+                .post("/api/meals")
                 .then().extract().jsonPath().getLong("id")
 
         val deleteResponse =
             RestAssured.given()
                 .auth().oauth2(token)
-                .delete("/api/products/$id")
+                .delete("/api/meals/$id")
                 .then().log().all().extract()
 
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
@@ -391,7 +309,7 @@ class ProductE2ETest {
         val getResponse =
             RestAssured.given()
                 .auth().oauth2(token)
-                .get("/api/products/$id")
+                .get("/api/meals/$id")
                 .then().log().all().extract()
 
         assertThat(getResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value())

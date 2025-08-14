@@ -9,7 +9,7 @@ import ecommerce.exception.OperationFailedException
 import ecommerce.mappers.toDTO
 import ecommerce.mappers.toEntity
 import ecommerce.repositories.CartItemRepository
-import ecommerce.repositories.OptionRepository
+import ecommerce.repositories.MealRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 @Service
 class CartItemServiceImpl(
     private val cartItemRepository: CartItemRepository,
-    private val optionRepository: OptionRepository,
+    private val mealRepository: MealRepository,
     private val memberService: CrudMemberUseCase,
 ) : ManageCartItemUseCase {
     @Transactional
@@ -27,10 +27,10 @@ class CartItemServiceImpl(
         cartItemRequestDTO: CartItemRequestDTO,
         memberId: Long,
     ): CartItemResponseDTO {
-        validateOptionExists(cartItemRequestDTO.optionId)
+        validateMealExists(cartItemRequestDTO.mealId)
 
         val cartItem =
-            if (!cartItemRepository.existsByOptionIdAndMemberId(cartItemRequestDTO.optionId, memberId)) {
+            if (!cartItemRepository.existsByMealIdAndMemberId(cartItemRequestDTO.mealId, memberId)) {
                 handleCreate(cartItemRequestDTO, memberId)
             } else {
                 handleUpdate(cartItemRequestDTO, memberId)
@@ -47,7 +47,7 @@ class CartItemServiceImpl(
             CartItemResponseDTO(
                 id = cartItem.id,
                 memberId = cartItem.member.id,
-                option = cartItem.option.toDTO(),
+                meal = cartItem.meal.toDTO(),
                 quantity = cartItem.quantity,
                 addedAt = cartItem.addedAt,
             )
@@ -59,12 +59,12 @@ class CartItemServiceImpl(
         cartItemRequestDTO: CartItemRequestDTO,
         memberId: Long,
     ) {
-        cartItemRepository.deleteByOptionIdAndMemberId(cartItemRequestDTO.optionId, memberId)
+        cartItemRepository.deleteByMealIdAndMemberId(cartItemRequestDTO.mealId, memberId)
     }
 
-    private fun validateOptionExists(optionId: Long) {
-        if (!optionRepository.existsById(optionId)) {
-            throw EmptyResultDataAccessException("Product with ID $optionId does not exist", 1)
+    private fun validateMealExists(mealId: Long) {
+        if (!mealRepository.existsById(mealId)) {
+            throw EmptyResultDataAccessException("Product with ID $mealId does not exist", 1)
         }
     }
 
@@ -78,14 +78,14 @@ class CartItemServiceImpl(
         memberId: Long,
     ): CartItemEntity {
         val option =
-            optionRepository.findByIdOrNull(cartItemRequestDTO.optionId)
-                ?: throw OperationFailedException("Invalid Product Id ${cartItemRequestDTO.optionId}")
+            mealRepository.findByIdOrNull(cartItemRequestDTO.mealId)
+                ?: throw OperationFailedException("Invalid Product Id ${cartItemRequestDTO.mealId}")
         option.checkStock(cartItemRequestDTO.quantity)
         val member = memberService.findById(memberId)
         return cartItemRepository.save(
             CartItemEntity(
                 member = member.toEntity(),
-                option = option,
+                meal = option,
                 quantity = cartItemRequestDTO.quantity,
                 addedAt = LocalDateTime.now(),
             ),
@@ -98,7 +98,7 @@ class CartItemServiceImpl(
     ): CartItemEntity {
         val existing =
             cartItemRepository
-                .findByOptionIdAndMemberId(cartItemRequestDTO.optionId, memberId)
+                .findByMealIdAndMemberId(cartItemRequestDTO.mealId, memberId)
                 ?: throw OperationFailedException("Cart item not found")
 
         if (cartItemRequestDTO.quantity <= 0) throw OperationFailedException("Quantity must be greater than zero")

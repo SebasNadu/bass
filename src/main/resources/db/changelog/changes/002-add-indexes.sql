@@ -1,2 +1,2 @@
-CREATE INDEX idx_cart_item_cover ON cart_item(added_at, option_id);
-CREATE INDEX idx_product_cover ON product(id, name);
+CREATE INDEX idx_cart_item_cover ON cart_item(added_at, meal_id);
+CREATE INDEX idx_meal_cover ON meal(id, name);

@@ -9,30 +9,30 @@ import org.springframework.data.jpa.repository.Query
 interface CartItemRepository : JpaRepository<CartItemEntity, Long> {
     fun findByMemberId(memberId: Long): List<CartItemEntity>
 
-    fun existsByOptionIdAndMemberId(
-        optionId: Long,
+    fun existsByMealIdAndMemberId(
+        mealId: Long,
         memberId: Long,
     ): Boolean
 
-    fun findByOptionIdAndMemberId(
-        optionId: Long,
+    fun findByMealIdAndMemberId(
+        mealId: Long,
         memberId: Long,
     ): CartItemEntity?
 
-    fun deleteByOptionIdAndMemberId(
-        optionId: Long,
+    fun deleteByMealIdAndMemberId(
+        mealId: Long,
         memberId: Long,
     )
 
     @Query(
         value = """
-    SELECT o.name AS name,
+    SELECT m.name AS name,
            COUNT(*) AS count,
            MAX(c.added_at) AS mostRecentAddedAt
     FROM cart_item c
-    JOIN "option" o ON c.option_id = o.id
+    JOIN meal m ON c.meal_id = m.id
     WHERE c.added_at >= DATEADD('DAY', -30, CURRENT_TIMESTAMP)
-    GROUP BY c.option_id, o.name
+    GROUP BY c.meal_id, m.name
     ORDER BY count DESC, mostRecentAddedAt DESC
     LIMIT 5
   """,
