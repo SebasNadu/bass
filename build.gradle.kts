@@ -43,7 +43,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.rest-assured:rest-assured:$assureVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("io.mockk:mockk:${mockkVersion}")
+    testImplementation("io.mockk:mockk:$mockkVersion")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
