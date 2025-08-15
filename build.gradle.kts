@@ -24,6 +24,7 @@ val assureVersion = "5.5.5"
 val h2Version = "2.2.224"
 val jwtVersion = "0.12.6"
 val dotenvVersion = "6.5.1"
+val mockkVersion = "1.13.8"
 dependencies {
     implementation("org.liquibase:liquibase-core")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -42,6 +43,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.rest-assured:rest-assured:$assureVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
