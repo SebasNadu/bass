@@ -176,12 +176,13 @@ class ApiErrorControllerAdvice {
     fun handleResourceAccessException(e: ResourceAccessException): ResponseEntity<Map<String, Any>> {
         val errorMessage = "Request timed out"
         log.error("ResourceAccessException: $errorMessage", e)
-        val body = mapOf(
-            "status" to HttpStatus.GATEWAY_TIMEOUT.value(),
-            "error" to "Request Timeout",
-            "message" to errorMessage,
-            "timestamp" to Instant.now()
-        )
+        val body =
+            mapOf(
+                "status" to HttpStatus.GATEWAY_TIMEOUT.value(),
+                "error" to "Request Timeout",
+                "message" to errorMessage,
+                "timestamp" to Instant.now(),
+            )
         return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(body)
     }
 

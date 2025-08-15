@@ -25,8 +25,6 @@ class MemberEntity(
     val role: Role = Role.CUSTOMER,
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
-    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val wishItems: MutableSet<WishItemEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,

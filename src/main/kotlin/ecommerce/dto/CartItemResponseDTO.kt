@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 data class CartItemResponseDTO(
     val id: Long,
     val memberId: Long,
-    val option: OptionDTO,
+    val meal: MealDTO,
     val quantity: Int,
     val addedAt: LocalDateTime,
 )

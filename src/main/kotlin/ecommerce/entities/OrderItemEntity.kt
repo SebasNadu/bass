@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
+// TODO: check if price is necessary here
 @Entity
 @Table(name = "order_item")
 class OrderItemEntity(
@@ -17,12 +18,12 @@ class OrderItemEntity(
     @JoinColumn(name = "order_id", nullable = false)
     val order: OrderEntity,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id", nullable = false)
-    val option: OptionEntity,
+    @JoinColumn(name = "meal_id", nullable = false)
+    val meal: MealEntity,
     @Column(nullable = false)
     val quantity: Int,
     @Column(nullable = false)
-    val unitPrice: Double,
+    val price: Double,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

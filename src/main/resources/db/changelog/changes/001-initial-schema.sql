@@ -7,41 +7,24 @@ CREATE TABLE member
     role     VARCHAR(20)  NOT NULL
 );
 
-CREATE TABLE product
-(
-    id        BIGSERIAL PRIMARY KEY,
-    name      VARCHAR(15)      NOT NULL,
-    price     DOUBLE PRECISION NOT NULL,
-    image_url VARCHAR(255)     NOT NULL
-);
-
-CREATE TABLE "option"
+CREATE TABLE meal
 (
     id         BIGSERIAL PRIMARY KEY,
-    product_id BIGINT           NOT NULL REFERENCES product (id) ON DELETE CASCADE,
     name       VARCHAR(50)      NOT NULL,
     quantity   INT              NOT NULL,
-    unit_price DOUBLE PRECISION NOT NULL,
-    CONSTRAINT uq_option_product_name UNIQUE (product_id, name)
+    price      DOUBLE PRECISION NOT NULL,
+    image_url  VARCHAR(255)      NOT NULL,
+    CONSTRAINT uq_meal_name UNIQUE (name)
 );
 
 CREATE TABLE cart_item
 (
     id        BIGSERIAL PRIMARY KEY,
     member_id BIGINT    NOT NULL REFERENCES member (id) ON DELETE CASCADE,
-    option_id BIGINT    NOT NULL REFERENCES "option" (id) ON DELETE CASCADE,
+    meal_id   BIGINT    NOT NULL REFERENCES meal (id) ON DELETE CASCADE,
     quantity  INT       NOT NULL,
     added_at  TIMESTAMP NOT NULL,
-    CONSTRAINT uq_cart_member_option UNIQUE (member_id, option_id)
-);
-
-CREATE TABLE wish_item
-(
-    id         BIGSERIAL PRIMARY KEY,
-    added_at   TIMESTAMP NOT NULL,
-    member_id  BIGINT    NOT NULL REFERENCES member (id) ON DELETE CASCADE,
-    product_id BIGINT    NOT NULL REFERENCES product (id) ON DELETE CASCADE,
-    CONSTRAINT uq_wish_member_product UNIQUE (member_id, product_id)
+    CONSTRAINT uq_cart_member_meal UNIQUE (member_id, meal_id)
 );
 
 CREATE TABLE "order"
@@ -58,9 +41,9 @@ CREATE TABLE order_item
 (
     id         BIGSERIAL PRIMARY KEY,
     order_id   BIGINT           NOT NULL REFERENCES "order" (id) ON DELETE CASCADE,
-    option_id  BIGINT           NOT NULL REFERENCES "option" (id),
+    meal_id  BIGINT           NOT NULL REFERENCES meal (id),
     quantity   INT              NOT NULL,
-    unit_price DOUBLE PRECISION NOT NULL
+    price DOUBLE PRECISION NOT NULL
 );
 
 CREATE TABLE payment

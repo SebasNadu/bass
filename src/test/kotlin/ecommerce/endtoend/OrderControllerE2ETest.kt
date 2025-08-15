@@ -1,9 +1,7 @@
 package ecommerce.endtoend
 
-import ecommerce.dto.OptionDTO
+import ecommerce.dto.MealDTO
 import ecommerce.dto.OrderDTO
-import ecommerce.dto.ProductRequestDTO
-import ecommerce.dto.ProductResponseDTO
 import ecommerce.dto.TokenRequestDTO
 import ecommerce.entities.CartItemEntity
 import ecommerce.entities.MemberEntity
@@ -31,7 +29,6 @@ class OrderControllerE2ETest(
     private lateinit var token: String
     private var memberId: Long = 0L
     private lateinit var member: MemberEntity
-    private var optionId: Long = 0L
 
     @BeforeEach
     fun loginAndPrepareData() {
@@ -75,7 +72,7 @@ class OrderControllerE2ETest(
                 .extract().`as`(OrderDTO::class.java)
 
         Assertions.assertThat(response).isNotNull
-        Assertions.assertThat(response.totalAmount).isEqualTo(1000.0)
+        Assertions.assertThat(response.totalAmount).isEqualTo(200.0)
         Assertions.assertThat(response.status.toString()).isEqualTo("CREATED")
     }
 
@@ -101,38 +98,27 @@ class OrderControllerE2ETest(
     }
 
     private fun createCartItem() {
-        val productDTO =
-            ProductRequestDTO(
+        val mealDTO =
+            MealDTO(
                 name = "Test Product",
                 price = 100.0,
                 imageUrl = "https://example.com/image.jpg",
-                options =
-                    setOf(
-                        OptionDTO(
-                            name = "Default Option",
-                            quantity = 10,
-                            productId = null,
-                            unitPrice = 100.0,
-                        ),
-                    ),
+                quantity = 4,
             )
 
-        val productResponse =
+        val mealResponse =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(productDTO)
-                .post("/api/products")
+                .body(mealDTO)
+                .post("/api/meals")
                 .then().statusCode(HttpStatus.CREATED.value())
-                .extract().`as`(ProductResponseDTO::class.java)
-
-        val options = productResponse.options
-        optionId = options[0].id
+                .extract().`as`(MealDTO::class.java)
 
         val cartItem =
             CartItemEntity(
                 member = member,
-                option = options[0].toEntity(productResponse.toEntity()),
+                meal = mealResponse.toEntity(),
                 quantity = 2,
                 addedAt = LocalDateTime.now(),
             )

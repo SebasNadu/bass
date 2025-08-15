@@ -15,15 +15,15 @@ import java.time.LocalDateTime
 @Entity
 @Table(
     name = "cart_item",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["member_id", "option_id"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["member_id", "meal_id"])],
 )
 class CartItemEntity(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
     val member: MemberEntity,
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "option_id", nullable = false)
-    val option: OptionEntity,
+    @JoinColumn(name = "meal_id", nullable = false)
+    val meal: MealEntity,
     @Column(name = "quantity", nullable = false)
     var quantity: Int,
     @Column(name = "added_at", nullable = false)
@@ -32,15 +32,18 @@ class CartItemEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 ) {
+    val totalPrice: Double
+        get() = meal.price * quantity
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CartItemEntity) return false
-        return member == other.member && option == other.option
+        return member == other.member
     }
 
     override fun hashCode(): Int {
         var result = member.hashCode()
-        result = 31 * result + option.hashCode()
+        result = 31 * result + meal.hashCode()
         return result
     }
 }

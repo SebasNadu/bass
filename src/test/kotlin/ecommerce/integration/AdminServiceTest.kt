@@ -3,13 +3,11 @@ package ecommerce.integration
 import ecommerce.controller.admin.usecase.FindMembersWithRecentCartActivityUseCase
 import ecommerce.controller.admin.usecase.FindTopProductsUseCase
 import ecommerce.dto.CartItemRequestDTO
+import ecommerce.entities.MealEntity
 import ecommerce.entities.MemberEntity
-import ecommerce.entities.OptionEntity
-import ecommerce.entities.ProductEntity
 import ecommerce.repositories.CartItemRepository
+import ecommerce.repositories.MealRepository
 import ecommerce.repositories.MemberRepository
-import ecommerce.repositories.OptionRepository
-import ecommerce.repositories.ProductRepository
 import ecommerce.services.cart.CartItemServiceImpl
 import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
@@ -34,56 +32,50 @@ class AdminServiceTest {
     private lateinit var memberRepository: MemberRepository
 
     @Autowired
-    private lateinit var productRepository: ProductRepository
-
-    @Autowired
-    private lateinit var optionRepository: OptionRepository
+    private lateinit var mealRepository: MealRepository
 
     @Autowired
     private lateinit var cartItemRepository: CartItemRepository
 
     private lateinit var member1: MemberEntity
     private lateinit var member2: MemberEntity
-    private lateinit var product1: ProductEntity
-    private lateinit var product2: ProductEntity
-    private lateinit var option1: OptionEntity
-    private lateinit var option2: OptionEntity
+
+    private lateinit var meal1: MealEntity
+    private lateinit var meal2: MealEntity
 
     @BeforeEach
     fun setup() {
         cartItemRepository.deleteAll()
-        optionRepository.deleteAll()
-        productRepository.deleteAll()
+        mealRepository.deleteAll()
+        mealRepository.deleteAll()
         memberRepository.deleteAll()
 
         member1 = memberRepository.save(MemberEntity(name = "m1", email = "m1@example.com", password = "pw"))!!
         member2 = memberRepository.save(MemberEntity(name = "m2", email = "m2@example.com", password = "pw"))!!
 
-        product1 = productRepository.save(ProductEntity(name = "Mouse", price = 10.0, imageUrl = "http://mouse.jpg"))
-        product2 =
-            productRepository.save(ProductEntity(name = "Keyboard", price = 20.0, imageUrl = "http://keyboard.jpg"))
-
-        option1 =
-            optionRepository.save(
-                OptionEntity(
-                    name = "Mouse", product = product1,
+        meal1 =
+            mealRepository.save(
+                MealEntity(
+                    name = "Mouse",
+                    imageUrl = "https://lalala.com",
                     quantity = 3,
-                    unitPrice = 100.0,
+                    price = 100.0,
                 ),
             )
 
-        option2 =
-            optionRepository.save(
-                OptionEntity(
-                    name = "Keyboard", product = product2,
+        meal2 =
+            mealRepository.save(
+                MealEntity(
+                    name = "Keyboard",
+                    imageUrl = "https://lalala.com",
                     quantity = 3,
-                    unitPrice = 100.0,
+                    price = 100.0,
                 ),
             )
 
-        cartItemService.addOrUpdate(CartItemRequestDTO(option1.id, 1), member1.id)
-        cartItemService.addOrUpdate(CartItemRequestDTO(option2.id, 2), member1.id)
-        cartItemService.addOrUpdate(CartItemRequestDTO(option2.id, 1), member2.id)
+        cartItemService.addOrUpdate(CartItemRequestDTO(meal1.id, 1), member1.id)
+        cartItemService.addOrUpdate(CartItemRequestDTO(meal2.id, 2), member1.id)
+        cartItemService.addOrUpdate(CartItemRequestDTO(meal2.id, 1), member2.id)
     }
 
     @Test
