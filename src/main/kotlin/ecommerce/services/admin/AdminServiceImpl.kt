@@ -5,7 +5,6 @@ import ecommerce.controller.admin.usecase.FindTopProductsUseCase
 import ecommerce.dto.ActiveMemberDTO
 import ecommerce.dto.TopProductDTO
 import ecommerce.repositories.CartItemRepository
-import ecommerce.repositories.MealRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
