@@ -28,12 +28,12 @@ class CouponEntity(
     val expiresAt: LocalDateTime = LocalDateTime.now().plusDays(30),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val id: Long = 0L,
 ) : Auditable() {
     enum class DiscountRate(val value: Int) {
         FIVE_PERCENT(5),
         TEN_PERCENT(10),
         FIFTEEN_PERCENT(15),
-        TWENTY_PERCENT(20);
+        TWENTY_PERCENT(20),
     }
 }

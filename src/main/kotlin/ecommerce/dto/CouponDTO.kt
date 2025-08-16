@@ -6,5 +6,5 @@ class CouponDTO(
     val name: String,
     val discountRate: String,
     val expiresAt: LocalDateTime,
-    val id: Long
+    val id: Long,
 )
