@@ -2,9 +2,10 @@ package ecommerce.dto
 
 import java.time.LocalDateTime
 
-class CouponDTO(
+data class CouponDTO(
     val name: String,
-    val discountRate: String,
-    val expiresAt: LocalDateTime,
-    val id: Long,
+    val memberId: Long,
+    val discountRate: String? = null,
+    val expiresAt: LocalDateTime? = null,
+    var id: Long = 0L,
 )
