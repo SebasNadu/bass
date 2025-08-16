@@ -36,4 +36,25 @@ class CouponEntity(
         FIFTEEN_PERCENT(15),
         TWENTY_PERCENT(20),
     }
+
+    companion object {
+        fun createFrom(
+            name: String,
+            member: MemberEntity,
+        ): CouponEntity {
+            val discountRate =
+                when (name.uppercase()) {
+                    "FIRST_RANK" -> DiscountRate.FIVE_PERCENT
+                    "SECOND_RANK" -> DiscountRate.TEN_PERCENT
+                    "THIRD_RANK" -> DiscountRate.FIFTEEN_PERCENT
+                    "FOURTH_RANK" -> DiscountRate.TWENTY_PERCENT
+                    else -> throw IllegalArgumentException("Invalid or unknown coupon name: $name")
+                }
+            return CouponEntity(
+                name = name,
+                discountRate = discountRate,
+                member = member,
+            )
+        }
+    }
 }
