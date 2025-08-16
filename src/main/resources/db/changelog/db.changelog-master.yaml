@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: changes/002-add-indexes.sql
       relativeToChangelogFile: true
+  - include:
+      file: changes/004-create-tag-table.sql
+      relativeToChangelogFile: true
