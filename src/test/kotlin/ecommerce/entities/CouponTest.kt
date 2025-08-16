@@ -15,13 +15,11 @@ class CouponTest {
 
         val coupon =
             CouponEntity(
-                name = "First Rank discount",
+                name = "FIRST_RANK",
                 discountRate = CouponEntity.DiscountRate.FIVE_PERCENT,
                 member = newMember,
             )
-        println("Coupon creation: ${coupon.createdAt}")
-        println("Coupon expiration: ${coupon.expiresAt}")
-        assertEquals("First Rank discount", coupon.name)
+        assertEquals("FIRST_RANK", coupon.name)
         assertEquals(CouponEntity.DiscountRate.FIVE_PERCENT, coupon.discountRate)
         assertEquals("New member", coupon.member.name)
     }
