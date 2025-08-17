@@ -4,8 +4,8 @@ import bass.exception.AuthorizationException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
-import bass.exception.InvalidOptionNameException
-import bass.exception.InvalidOptionQuantityException
+import bass.exception.InvalidMealNameException
+import bass.exception.InvalidMealQuantityException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
@@ -113,8 +113,8 @@ class ApiErrorControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
     }
 
-    @ExceptionHandler(InvalidOptionNameException::class)
-    fun handleInvalidOptionNameException(e: InvalidOptionNameException): ResponseEntity<Map<String, Any>> {
+    @ExceptionHandler(InvalidMealNameException::class)
+    fun handleInvalidOptionNameException(e: InvalidMealNameException): ResponseEntity<Map<String, Any>> {
         val errorMessage = e.message ?: "Invalid option name"
         log.warn("InvalidOptionNameException: $errorMessage", e)
         val body =
@@ -127,8 +127,8 @@ class ApiErrorControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
     }
 
-    @ExceptionHandler(InvalidOptionQuantityException::class)
-    fun handleInvalidOptionQuantityException(e: InvalidOptionQuantityException): ResponseEntity<Map<String, Any>> {
+    @ExceptionHandler(InvalidMealQuantityException::class)
+    fun handleInvalidOptionQuantityException(e: InvalidMealQuantityException): ResponseEntity<Map<String, Any>> {
         val errorMessage = e.message ?: "Invalid option quantity"
         log.warn("InvalidOptionQuantityException: $errorMessage", e)
         val body =

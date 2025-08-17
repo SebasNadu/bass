@@ -1,12 +1,12 @@
 package bass.entities
 
 import bass.exception.InsufficientStockException
-import bass.exception.InvalidOptionQuantityException
+import bass.exception.InvalidMealQuantityException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class OptionTest {
+class MealTest {
     @Test
     fun `subtract should reduce quantity correctly`() {
         val meal =
@@ -23,7 +23,7 @@ class OptionTest {
     @Test
     fun `subtract should throw if quantity is less than 1`() {
         val meal = MealEntity(name = "Test", quantity = 10, price = 100.0, imageUrl = "https://niceimage")
-        assertThrows<InvalidOptionQuantityException> {
+        assertThrows<InvalidMealQuantityException> {
             meal.subtract(0)
         }
     }
