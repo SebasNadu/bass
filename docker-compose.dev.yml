@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: dev.dockerfile
-    container_name: spring-ecommerce-app
+    container_name: bass
     restart: always
     ports:
       - "8080:8080"
@@ -26,7 +26,7 @@ services:
       - ./gradle:/home/gradle/project/gradle
       - ~/.gradle:/home/gradle/.gradle
     networks:
-      - ecommerce-network
+      - bass-network
 
   db:
     image: postgres:15
@@ -35,17 +35,17 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ecommerce
+      POSTGRES_DB: bass
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - ecommerce-network
+      - bass-network
 
 volumes:
   pgdata:
 
 networks:
-  ecommerce-network:
+  bass-network:
     driver: bridge

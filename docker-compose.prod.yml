@@ -24,13 +24,13 @@ services:
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ecommerce
+      POSTGRES_DB: bass
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - ecommerce-network
+      - bass-network
 
   nginx:
     image: nginx:stable-alpine
@@ -45,11 +45,11 @@ services:
     depends_on:
       - app
     networks:
-      - ecommerce-network
+      - bass-network
 
 volumes:
   pgdata:
 
 networks:
-  ecommerce-network:
+  bass-network:
     driver: bridge
