@@ -35,6 +35,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenvVersion")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     runtimeOnly("com.h2database:h2:$h2Version")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
