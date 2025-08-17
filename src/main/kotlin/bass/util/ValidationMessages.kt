@@ -25,4 +25,3 @@ object ValidationMessages {
     const val OPTION_PRODUCT_ID_REQUIRED = "Product ID cannot be blank"
     const val ID_REQUIRED = "Id cannot be less or equal to zero"
 }
-

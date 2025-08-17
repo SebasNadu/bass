@@ -22,4 +22,3 @@ class AdminServiceImpl(
         return cartItemRepository.findDistinctMembersWithCartActivityInLast7Days()
     }
 }
-
