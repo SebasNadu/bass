@@ -3,17 +3,24 @@ package bass.entities
 import bass.dto.MealDTO
 import bass.dto.MealPatchDTO
 import bass.exception.InsufficientStockException
-import bass.exception.InvalidOptionNameException
-import bass.exception.InvalidOptionQuantityException
+import bass.exception.InvalidMealImageUrlException
+import bass.exception.InvalidMealNameException
+import bass.exception.InvalidMealPriceException
+import bass.exception.InvalidMealQuantityException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+
 
 @Entity
 @Table(
@@ -23,14 +30,19 @@ import jakarta.persistence.UniqueConstraint
 class MealEntity(
     name: String,
     quantity: Int,
-    @Column(nullable = false)
-    var price: Double,
+    price: Double,
+    imageUrl: String,
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
-    @Column(nullable = false)
-    var imageUrl: String,
 //    @Column(nullable = false)
 //    var description: String,
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "tag_meal",
+        joinColumns = [JoinColumn(name = "meal_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")],
+    )
+    val tags: MutableSet<TagEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -49,11 +61,25 @@ class MealEntity(
             field = value
         }
 
+    @Column(name = "image_url", nullable = false)
+    var imageUrl: String = imageUrl
+        set(value) {
+            validateImageUrl(value)
+            field = value
+        }
+
+    @Column(name = "price", nullable = false)
+    var price: Double = price
+        set(value) {
+            validatePrice(value)
+            field = value
+        }
+
     init {
         this.name = name
         this.quantity = quantity
-        // TODO: validate image URL
-        // TODO: validate price
+        this.imageUrl = imageUrl
+        this.price = price
         // TODO: validate description
     }
 
@@ -63,13 +89,13 @@ class MealEntity(
     }
 
     fun subtract(quantity: Int) {
-        if (quantity < 1) throw InvalidOptionQuantityException("Subtract amount must be >= 1")
+        if (quantity < 1) throw InvalidMealQuantityException("Subtract amount must be >= 1")
         if (this.quantity < quantity) throw InsufficientStockException("Not enough stock")
         this.quantity -= quantity
     }
 
     fun validateStock(quantity: Int) {
-        if (this.quantity < quantity) throw InsufficientStockException("Not enough stock for option $id")
+        if (this.quantity < quantity) throw InsufficientStockException("Not enough stock for meal $id")
     }
 
     fun copyFrom(meal: MealDTO): MealEntity {
@@ -100,12 +126,28 @@ class MealEntity(
     }
 
     private fun validateName(name: String) {
-        if (name.length > 50) throw InvalidOptionNameException("Option name too long")
+        if (name.length > 50) throw InvalidMealNameException("Option name too long")
         val allowed = Regex("^[\\p{Alnum} ()\\[\\]+\\-&/_]+$")
-        if (!allowed.matches(name)) throw InvalidOptionNameException("Option names contains invalid characters: '$name'")
+        if (!allowed.matches(name)) throw InvalidMealNameException("Option names contains invalid characters: '$name'")
     }
 
     private fun validateQuantity(quantity: Int) {
-        if (quantity !in 1..<100_000_000) throw InvalidOptionQuantityException("Quantity must be between 1 and 99,999,999")
+        if (quantity !in 1..<100_000_000) throw InvalidMealQuantityException("Quantity must be between 1 and 99,999,999")
+    }
+
+    private fun validateImageUrl(imageUrl: String) {
+        if (!imageUrl.startsWith("http") && !imageUrl.startsWith("https")) {
+            throw InvalidMealImageUrlException("ImageUrl must be http or https")
+        }
+    }
+
+    private fun validatePrice(price: Double) {
+        if (price <= 0) throw InvalidMealPriceException("Price must be positive")
+    }
+
+    fun addTag(tag: TagEntity) {
+        if (tags.any { it.name == tag.name }) {
+            throw InvalidMealNameException("Tag with name '${tag.name}' already exists")
+        }
     }
 }
