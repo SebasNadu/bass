@@ -24,6 +24,7 @@ phases:
 artifacts:
   files:
     - build/libs/*.jar
+    - prod.dockerfile
     - docker-compose.prod.yml
     - appspec.yml
     - scripts/**/*
