@@ -21,5 +21,7 @@ data class MealDTO(
     @field:NotBlank(message = ValidationMessages.IMAGE_REQUIRED)
     @field:Pattern(regexp = "^https?://.*$", message = ValidationMessages.IMAGE_FORMAT)
     var imageUrl: String,
+    @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
+    var description: String,
     var id: Long = 0L,
 )

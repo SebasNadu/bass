@@ -21,7 +21,6 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 
-
 @Entity
 @Table(
     name = "meal",
@@ -32,10 +31,9 @@ class MealEntity(
     quantity: Int,
     price: Double,
     imageUrl: String,
+    description: String,
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
-//    @Column(nullable = false)
-//    var description: String,
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "tag_meal",
@@ -75,12 +73,19 @@ class MealEntity(
             field = value
         }
 
+    @Column(name = "description", nullable = false)
+    var description: String = description
+        set(value) {
+            validateDescription(value)
+            field = value
+        }
+
     init {
         this.name = name
         this.quantity = quantity
         this.imageUrl = imageUrl
         this.price = price
-        // TODO: validate description
+        this.description = description
     }
 
     fun checkStock(quantity: Int) {
@@ -103,6 +108,7 @@ class MealEntity(
         this.quantity = meal.quantity
         this.imageUrl = meal.imageUrl
         this.price = meal.price
+        this.description = meal.description
         return this
     }
 
@@ -126,9 +132,9 @@ class MealEntity(
     }
 
     private fun validateName(name: String) {
-        if (name.length > 50) throw InvalidMealNameException("Option name too long")
+        if (name.length > 50) throw InvalidMealNameException("Meal name too long")
         val allowed = Regex("^[\\p{Alnum} ()\\[\\]+\\-&/_]+$")
-        if (!allowed.matches(name)) throw InvalidMealNameException("Option names contains invalid characters: '$name'")
+        if (!allowed.matches(name)) throw InvalidMealNameException("Meal names contains invalid characters: '$name'")
     }
 
     private fun validateQuantity(quantity: Int) {
@@ -143,6 +149,10 @@ class MealEntity(
 
     private fun validatePrice(price: Double) {
         if (price <= 0) throw InvalidMealPriceException("Price must be positive")
+    }
+
+    private fun validateDescription(description: String) {
+        if (description.isEmpty()) throw InvalidMealNameException("Provide a description")
     }
 
     fun addTag(tag: TagEntity) {
