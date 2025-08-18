@@ -1,1 +1,1 @@
-rootProject.name = "spring-ecommerce"
+rootProject.name = "bass"

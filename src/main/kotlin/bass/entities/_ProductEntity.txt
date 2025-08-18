@@ -1,0 +1,69 @@
+
+// @Entity
+// @Table(name = "product")
+// class _ProductEntity(
+//    @Column(name = "name", nullable = false, length = 15)
+//    var name: String,
+//    @Column(name = "price", nullable = false)
+//    var price: Double,
+//    @Column(name = "image_url", nullable = false, length = 255)
+//    var imageUrl: String,
+//    @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], orphanRemoval = true)
+//    private val _options: MutableSet<MealEntity> = mutableSetOf(),
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    val id: Long = 0L,
+// ) {
+//    var options: List<MealEntity>
+//        get() = _options.toList()
+//        set(value) {
+//            _options.clear()
+//            _options.addAll(value)
+//        }
+//
+//    fun addOption(option: MealEntity) {
+//        if (_options.any { it.name == option.name }) {
+//            throw InvalidOptionNameException("Option with name '${option.name}' already exists")
+//        }
+//        _options.add(option)
+//    }
+//
+//    fun copyFrom(
+//        other: ProductRequestDTO,
+//        mealDTOs: Set<MealDTO> = emptySet(),
+//    ) {
+//        this.name = other.name
+//        this.price = other.price
+//        this.imageUrl = other.imageUrl
+//        this.options = mapOptionDTOs(mealDTOs)
+//    }
+//
+//    fun copyFrom(
+//        other: ProductPatchDTO,
+//        mealDTOs: Set<MealDTO> = emptySet(),
+//    ) {
+//        other.name?.let { if (it.isNotBlank()) this.name = it }
+//        other.price?.let { this.price = it }
+//        other.imageUrl?.let { if (it.isNotBlank()) this.imageUrl = it }
+//        if (mealDTOs.isNotEmpty()) {
+//            this.options = mapOptionDTOs(mealDTOs)
+//        }
+//    }
+//
+//    private fun mapOptionDTOs(mealDTOs: Set<MealDTO>): List<MealEntity> {
+//        return mealDTOs.map { dto ->
+//            _options.find { it.id == dto.id }?.apply {
+//                name = dto.name
+//                quantity = dto.quantity
+//            } ?: dto.toEntity(this)
+//        }
+//    }
+//
+//    override fun equals(other: Any?): Boolean {
+//        if (this === other) return true
+//        if (other !is _ProductEntity) return false
+//        return id != 0L && id == other.id
+//    }
+//
+//    override fun hashCode(): Int = id.hashCode()
+// }
