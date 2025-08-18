@@ -74,6 +74,8 @@ class CouponServiceTest {
         val isValid = couponService.validateUsability(coupon.id)
 
         assertThat(isValid).isTrue()
+        assertThat(coupon.createdAt).isInThePast
+        assertThat(coupon.expiresAt).isInTheFuture
     }
 
     @Test
