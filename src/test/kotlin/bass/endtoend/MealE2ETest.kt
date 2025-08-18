@@ -133,7 +133,7 @@ class MealE2ETest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.body().jsonPath().getInt("status")).isEqualTo(400)
         assertThat(
-            response.body().jsonPath().getString("message.name"),
+            response.body().jsonPath().getString("errors.find { it.field = 'name' }.message"),
         ).isEqualTo("Invalid characters in product name.")
     }
 
@@ -158,7 +158,7 @@ class MealE2ETest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.body().jsonPath().getInt("status")).isEqualTo(400)
         assertThat(
-            response.body().jsonPath().getString("message.name"),
+            response.body().jsonPath().getString("errors.find { it.field = 'name' }.message"),
         ).isEqualTo("The product name must contain between 1 and 15 characters")
     }
 
@@ -208,7 +208,7 @@ class MealE2ETest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
         assertThat(response.body().jsonPath().getInt("status")).isEqualTo(400)
         assertThat(
-            response.body().jsonPath().getString("message.price"),
+            response.body().jsonPath().getString("errors.find { it.field == 'price' }.message"),
         ).contains("must be greater than zero")
     }
 
