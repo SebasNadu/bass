@@ -6,8 +6,8 @@ import bass.exception.AuthorizationException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
-import bass.exception.InvalidOptionNameException
-import bass.exception.InvalidOptionQuantityException
+import bass.exception.InvalidMealNameException
+import bass.exception.InvalidMealQuantityException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.ResourceAccessException
 import java.time.Instant
+import kotlin.Exception
+import kotlin.NoSuchElementException
+import kotlin.String
+import kotlin.apply
+import kotlin.arrayOf
 
 @RestControllerAdvice(annotations = [RestController::class])
 class ApiErrorControllerAdvice {
@@ -89,18 +94,18 @@ class ApiErrorControllerAdvice {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid cart item quantity", errorMessage)
     }
 
-    @ExceptionHandler(InvalidOptionNameException::class)
-    fun handleInvalidOptionNameException(e: InvalidOptionNameException): ResponseEntity<ErrorResponse> {
-        val errorMessage = e.message ?: "Invalid option name"
-        log.warn("InvalidOptionNameException: $errorMessage", e)
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid option name", errorMessage)
+    @ExceptionHandler(InvalidMealNameException::class)
+    fun handleInvalidMealNameException(e: InvalidMealNameException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Invalid Meal name"
+        log.warn("InvalidMealNameException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Meal name", errorMessage)
     }
 
-    @ExceptionHandler(InvalidOptionQuantityException::class)
-    fun handleInvalidOptionQuantityException(e: InvalidOptionQuantityException): ResponseEntity<ErrorResponse> {
-        val errorMessage = e.message ?: "Invalid option quantity"
-        log.warn("InvalidOptionQuantityException: $errorMessage", e)
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid option quantity", errorMessage)
+    @ExceptionHandler(InvalidMealQuantityException::class)
+    fun handleInvalidMealQuantityException(e: InvalidMealQuantityException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Invalid Meal quantity"
+        log.warn("InvalidMealQuantityException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Meal quantity", errorMessage)
     }
 
     @ExceptionHandler(InsufficientStockException::class)
