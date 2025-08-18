@@ -14,18 +14,44 @@ fi
 echo ">>> [ApplicationStart] Starting new ${NEW_COLOR} container..."
 docker-compose -f /home/ubuntu/app/docker-compose.prod.yml up -d ${APP_NAME}-${NEW_COLOR}
 
-echo ">>> [ApplicationStart] Waiting for health check..."
-until curl -f http://localhost:$( [ "$NEW_COLOR" == "blue" ] && echo 8081 || echo 8082 )/actuator/health > /dev/null 2>&1; do
-  echo "Waiting for ${NEW_COLOR} container..."
+# Determine ports based on color
+if [ "$NEW_COLOR" == "blue" ]; then
+    NEW_PORT=8081
+    OLD_PORT=8082
+else
+    NEW_PORT=8082
+    OLD_PORT=8081
+fi
+
+# Wait for health check
+timeout=60
+elapsed=0
+until curl -f http://localhost:$NEW_PORT/actuator/health > /dev/null 2>&1; do
+  echo "Waiting for ${NEW_COLOR} container to be healthy..."
   sleep 5
+  elapsed=$((elapsed + 5))
+  if [ $elapsed -ge $timeout ]; then
+    echo "Health check failed for ${NEW_COLOR} container after $timeout seconds."
+    exit 1
+  fi
 done
 
-echo ">>> [ApplicationStart] Switch ALB target group to ${NEW_COLOR}"
-# Here you need AWS CLI command to register new target group and deregister old one
-# Example (replace with actual target group ARNs):
-# aws elbv2 register-targets --target-group-arn <NEW_TG_ARN> --targets Id=<EC2_ID>,Port=<PORT>
-# aws elbv2 deregister-targets --target-group-arn <OLD_TG_ARN> --targets Id=<EC2_ID>,Port=<PORT>
+echo ">>> [ApplicationStart] Fetching Target Group ARNs..."
+TG_BLUE=$(aws elbv2 describe-target-groups --names tg-bass-blue --query "TargetGroups[0].TargetGroupArn" --output text)
+TG_GREEN=$(aws elbv2 describe-target-groups --names tg-bass-green --query "TargetGroups[0].TargetGroupArn" --output text)
+
+NEW_TG=$( [ "$NEW_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
+OLD_TG=$( [ "$OLD_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
+
+# Get current instance ID
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+echo ">>> [ApplicationStart] Switching ALB target group to ${NEW_COLOR}..."
+aws elbv2 register-targets --target-group-arn $NEW_TG --targets Id=$INSTANCE_ID,Port=$NEW_PORT
+aws elbv2 deregister-targets --target-group-arn $OLD_TG --targets Id=$INSTANCE_ID,Port=$OLD_PORT
 
 echo ">>> [ApplicationStart] Stopping old ${OLD_COLOR} container..."
 docker-compose -f /home/ubuntu/app/docker-compose.prod.yml stop ${APP_NAME}-${OLD_COLOR} || true
 docker-compose -f /home/ubuntu/app/docker-compose.prod.yml rm -f ${APP_NAME}-${OLD_COLOR} || true
+
+echo ">>> [ApplicationStart] Deployment of ${NEW_COLOR} complete."
