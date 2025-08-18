@@ -141,19 +141,4 @@ class AdminE2ETest {
 
         return response.body().jsonPath().getString("accessToken")
     }
-
-//        @Test
-//        fun `should timeout after configured time`() {
-//            val start = System.currentTimeMillis()
-//            val e = assertThrows<ResourceAccessException> {
-//                restClient.get()
-//                    .uri("http://localhost:8080/admin/slow")
-//                    .retrieve()
-//                    .body(String::class.java)
-//            }
-//            val duration = System.currentTimeMillis() - start
-//            println("Request failed in $duration ms")
-//            assertTrue(duration < 11000)
-//            println(e.message)
-//        }
 }
