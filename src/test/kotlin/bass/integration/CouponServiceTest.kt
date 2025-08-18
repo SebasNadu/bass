@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Transactional
 @SpringBootTest
@@ -83,7 +84,7 @@ class CouponServiceTest {
                     name = "EXPIRED",
                     discountRate = CouponEntity.DiscountRate.FIVE_PERCENT,
                     member = member,
-                    expiresAt = LocalDateTime.now().minusDays(1),
+                    expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                 ),
             )
 
