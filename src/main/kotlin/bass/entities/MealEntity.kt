@@ -34,7 +34,8 @@ class MealEntity(
     description: String,
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
+    //add CascadeType.PERSIST if we create tags together with meals
     @JoinTable(
         name = "tag_meal",
         joinColumns = [JoinColumn(name = "meal_id")],
@@ -121,14 +122,14 @@ class MealEntity(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this == other) return true
-        if (other !is MealEntity) return false
-        return name == other.name
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as MealEntity
+        return id != 0L && id == other.id
     }
 
     override fun hashCode(): Int {
-        val result = id.hashCode()
-        return result
+        return id.hashCode()
     }
 
     private fun validateName(name: String) {
@@ -159,5 +160,7 @@ class MealEntity(
         if (tags.any { it.name == tag.name }) {
             throw InvalidMealNameException("Tag with name '${tag.name}' already exists")
         }
+        this.tags.add(tag)
+        tag.meals.add(this)
     }
 }
