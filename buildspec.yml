@@ -1,0 +1,30 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO: bass
+    AWS_REGION: ap-northeast-2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+  pre_build:
+    commands:
+      - echo ">>> Cleaning project..."
+      - ./gradlew clean
+  build:
+    commands:
+      - echo ">>> Building jar..."
+      - ./gradlew bootJar --no-daemon
+  post_build:
+    commands:
+      - echo ">>> Build completed"
+      - echo ">>> Copy docker-compose file and scripts"
+artifacts:
+  files:
+    - build/libs/*.jar
+    - docker-compose.prod.yml
+    - appspec.yml
+    - scripts/**/*
+  discard-paths: no
