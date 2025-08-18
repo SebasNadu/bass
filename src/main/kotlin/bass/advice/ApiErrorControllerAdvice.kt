@@ -40,8 +40,10 @@ class ApiErrorControllerAdvice {
                 errorLabel = errorLabel,
                 message = message,
                 errors = errors,
-                timestamp = Instant.now(),
-            )
+            ).apply {
+                createdAt = Instant.now()
+                updatedAt = Instant.now()
+            }
         return ResponseEntity.status(status).body(body)
     }
 

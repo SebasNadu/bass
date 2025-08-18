@@ -1,11 +1,10 @@
 package bass.dto.error
 
-import java.time.Instant
+import bass.entities.Auditable
 
 data class ErrorResponse(
     val status: Int,
     val errorLabel: String,
     val message: Any,
-    val timestamp: Instant,
     val errors: List<ErrorMessage>? = null,
-)
+) : Auditable()
