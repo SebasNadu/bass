@@ -6,5 +6,8 @@ databaseChangeLog:
       file: changes/20250815-1600-add-indexes.sql
       relativeToChangelogFile: true
   - include:
+      file: changes/20250817-1700-create-coupon.sql
+      relativeToChangelogFile: true
+  - include:
       file: changes/20250816-1600-create-tag-table.sql
       relativeToChangelogFile: true
