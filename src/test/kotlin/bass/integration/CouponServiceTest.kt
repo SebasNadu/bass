@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
+
 @Transactional
 @SpringBootTest
 class CouponServiceTest {
@@ -74,6 +75,8 @@ class CouponServiceTest {
         val isValid = couponService.validateUsability(coupon.id)
 
         assertThat(isValid).isTrue()
+        assertThat(coupon.createdAt).isInThePast
+        assertThat(coupon.expiresAt).isInTheFuture
     }
 
     @Test
