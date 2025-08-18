@@ -104,6 +104,7 @@ class OrderControllerE2ETest(
                 price = 100.0,
                 imageUrl = "https://example.com/image.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val mealResponse =

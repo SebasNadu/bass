@@ -15,6 +15,7 @@ class MealTest {
                 quantity = 10,
                 price = 100.0,
                 imageUrl = "https://niceimage",
+                description = "description",
             )
         meal.subtract(3)
         assertEquals(7, meal.quantity)
@@ -22,7 +23,7 @@ class MealTest {
 
     @Test
     fun `subtract should throw if quantity is less than 1`() {
-        val meal = MealEntity(name = "Test", quantity = 10, price = 100.0, imageUrl = "https://niceimage")
+        val meal = MealEntity(name = "Test", quantity = 10, price = 100.0, description = "description", imageUrl = "https://niceimage")
         assertThrows<InvalidMealQuantityException> {
             meal.subtract(0)
         }
@@ -30,7 +31,7 @@ class MealTest {
 
     @Test
     fun `subtract should throw if subtracting more than stock`() {
-        val meal = MealEntity(name = "Test", quantity = 5, imageUrl = "https://niceimage", price = 100.0)
+        val meal = MealEntity(name = "Test", quantity = 5, imageUrl = "https://niceimage", description = "description", price = 100.0)
         assertThrows<InsufficientStockException> {
             meal.subtract(10)
         }

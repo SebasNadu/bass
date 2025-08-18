@@ -59,6 +59,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
         val id =
             RestAssured.given()
@@ -97,6 +98,7 @@ class MealE2ETest {
                 price = 150.0,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val response =
@@ -120,6 +122,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val response =
@@ -145,6 +148,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val response =
@@ -170,6 +174,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         RestAssured.given().auth().oauth2(token)
@@ -195,6 +200,7 @@ class MealE2ETest {
                 price = -99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val response =
@@ -220,6 +226,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
         val id =
             RestAssured.given()
@@ -235,6 +242,7 @@ class MealE2ETest {
                 price = 45.0,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
 
         val response =
@@ -258,6 +266,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
         val id =
             RestAssured.given()
@@ -289,6 +298,7 @@ class MealE2ETest {
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
+                description = "description",
             )
         val id =
             RestAssured.given()

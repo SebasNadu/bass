@@ -40,6 +40,7 @@ class CartItemServiceTest {
                     quantity = 2,
                     imageUrl = "https://lalal.com",
                     price = 100.0,
+                    description = "description",
                 ),
             ).id
     }

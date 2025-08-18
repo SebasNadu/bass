@@ -30,6 +30,7 @@ class MealServiceTest(
                 price = 19.99,
                 imageUrl = "https://example.com/test.png",
                 quantity = 4,
+                description = "description",
             )
     }
 
@@ -63,6 +64,7 @@ class MealServiceTest(
                 price = updated.price,
                 imageUrl = updated.imageUrl,
                 quantity = 4,
+                description = "description",
             )
         val result = mealService.updateById(saved.id, request)
 
@@ -101,7 +103,7 @@ class MealServiceTest(
             PageRequest.of(0, 999, Sort.by("name"))
         val all = mealService.findAll(sortedByName)
 
-        assertThat(all).hasSize(27)
+        assertThat(all).hasSize(10)
     }
 
     @Test
@@ -110,7 +112,7 @@ class MealServiceTest(
         val page = mealService.findAll(pageable)
 
         assertThat(page.content).hasSize(4)
-        assertThat(page.totalElements).isEqualTo(25)
+        assertThat(page.totalElements).isEqualTo(8)
     }
 
     @Test
