@@ -145,4 +145,11 @@ class MealServiceTest(
 
         assertThat(ex.message).contains("Meal with id=")
     }
+
+    @Test
+    fun `should return meals matching with tag`() {
+        val allMealsWithTag = mealService.findByTag("Healthy")
+
+        assertThat(allMealsWithTag).hasSize(3)
+    }
 }
