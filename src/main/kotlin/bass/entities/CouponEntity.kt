@@ -11,7 +11,17 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+
+/*
+doc about coupon creation:
+- a DTO containing member and coupon name is received.
+- fun createFrom determines the corresponding discountRate (the percentage to be discounted from the order)
+using the name of the coupon as reference.
+- expiresAt calculates the moment when the coupon was created plus 30 days.
+- in service there is a function validateUsability which checks if the coupon is expiring after the current day.
+*/
 
 @Entity
 @Table(name = "coupon")
@@ -25,7 +35,7 @@ class CouponEntity(
     @JoinColumn(name = "member_id", nullable = false)
     val member: MemberEntity,
     @Column(name = "expires_at", nullable = false)
-    val expiresAt: LocalDateTime = LocalDateTime.now().plusDays(30),
+    val expiresAt: Instant = Instant.now().plus(30, ChronoUnit.DAYS),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,

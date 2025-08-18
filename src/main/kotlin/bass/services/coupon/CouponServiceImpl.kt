@@ -9,7 +9,7 @@ import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Service
 class CouponServiceImpl(
@@ -35,7 +35,7 @@ class CouponServiceImpl(
         val coupon =
             couponRepository.findByIdOrNull(couponId)
                 ?: throw NotFoundException("Coupon not found")
-        return coupon.expiresAt > LocalDateTime.now()
+        return coupon.expiresAt > Instant.now()
     }
 
     override fun delete(couponId: Long) {
