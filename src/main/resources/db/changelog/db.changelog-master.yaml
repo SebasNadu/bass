@@ -1,10 +1,10 @@
 databaseChangeLog:
   - include:
-      file: changes/001-initial-schema.sql
+      file: changes/20250814-1600-initial-schema.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/002-add-indexes.sql
+      file: changes/20250815-1600-add-indexes.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/16082025-1600-create-coupon.sql
+      file: changes/20250817-1700-create-coupon.sql
       relativeToChangelogFile: true
