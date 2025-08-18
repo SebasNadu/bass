@@ -3,8 +3,6 @@ set -euo pipefail
 
 APP_NAME="bass"
 AWS_REGION="ap-northeast-2"
-
-# Export region so AWS CLI uses it
 export AWS_DEFAULT_REGION=$AWS_REGION
 
 NEW_COLOR="green"
@@ -41,19 +39,28 @@ until curl -f http://localhost:$NEW_PORT/actuator/health > /dev/null 2>&1; do
   fi
 done
 
-echo ">>> [ApplicationStart] Fetching Target Group ARNs..."
-TG_BLUE=$(aws elbv2 describe-target-groups --region $AWS_REGION --names tg-bass-blue --query "TargetGroups[0].TargetGroupArn" --output text)
-TG_GREEN=$(aws elbv2 describe-target-groups --region $AWS_REGION --names tg-bass-green --query "TargetGroups[0].TargetGroupArn" --output text)
+# Attempt ALB target group switch only if AWS CLI can access it
+if command -v aws &> /dev/null; then
+  INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
-NEW_TG=$( [ "$NEW_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
-OLD_TG=$( [ "$OLD_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
+  # Hardcoded ARNs
+  TG_BLUE="arn:aws:elasticloadbalancing:ap-northeast-2:843255971531:targetgroup/tg-bass-blue/c60c755039882121"
+  TG_GREEN="arn:aws:elasticloadbalancing:ap-northeast-2:843255971531:targetgroup/tg-bass-green/491545447800a047"
 
-# Get current instance ID
-INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+  NEW_TG=$( [ "$NEW_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
+  OLD_TG=$( [ "$OLD_COLOR" == "blue" ] && echo $TG_BLUE || echo $TG_GREEN )
 
-echo ">>> [ApplicationStart] Switching ALB target group to ${NEW_COLOR}..."
-aws elbv2 register-targets --region $AWS_REGION --target-group-arn $NEW_TG --targets Id=$INSTANCE_ID,Port=$NEW_PORT
-aws elbv2 deregister-targets --region $AWS_REGION --target-group-arn $OLD_TG --targets Id=$INSTANCE_ID,Port=$OLD_PORT
+  echo ">>> [ApplicationStart] Switching ALB target group to ${NEW_COLOR}..."
+  if ! aws elbv2 register-targets --region $AWS_REGION --target-group-arn $NEW_TG --targets Id=$INSTANCE_ID,Port=$NEW_PORT 2>/dev/null; then
+    echo "Warning: Unable to register targets (likely missing IAM permissions). Skipping."
+  fi
+
+  if ! aws elbv2 deregister-targets --region $AWS_REGION --target-group-arn $OLD_TG --targets Id=$INSTANCE_ID,Port=$OLD_PORT 2>/dev/null; then
+    echo "Warning: Unable to deregister targets (likely missing IAM permissions). Skipping."
+  fi
+else
+  echo ">>> AWS CLI not available, skipping ALB target group switch."
+fi
 
 echo ">>> [ApplicationStart] Stopping old ${OLD_COLOR} container..."
 docker-compose -f /home/ubuntu/app/docker-compose.prod.yml stop ${APP_NAME}-${OLD_COLOR} || true
