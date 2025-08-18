@@ -104,4 +104,8 @@ class MealServiceImpl(
             throw OperationFailedException("Meal with name '$name' already exists")
         }
     }
+
+    override fun findByTag(tag: String): List<MealDTO> {
+        return mealRepository.findByTagsName(tag).map { it.toDTO() }
+    }
 }

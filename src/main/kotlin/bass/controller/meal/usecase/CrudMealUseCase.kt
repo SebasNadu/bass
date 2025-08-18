@@ -27,4 +27,6 @@ interface CrudMealUseCase {
     fun deleteAll()
 
     fun validateMealNameUniqueness(name: String)
+
+    fun findByTag(tag: String): List<MealDTO>
 }
