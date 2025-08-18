@@ -27,7 +27,6 @@ import kotlin.Exception
 import kotlin.NoSuchElementException
 import kotlin.String
 import kotlin.apply
-import kotlin.arrayOf
 
 @RestControllerAdvice(annotations = [RestController::class])
 class ApiErrorControllerAdvice {
