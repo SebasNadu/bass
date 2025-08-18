@@ -5,9 +5,13 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
@@ -23,8 +27,18 @@ class MemberEntity(
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     val role: Role = Role.CUSTOMER,
+
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "member_achievement",
+        joinColumns = [JoinColumn(name = "member_id")],
+        inverseJoinColumns = [JoinColumn(name = "achievement_id")]
+    )
+    val achievements: MutableSet<Achievement> = mutableSetOf(),
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
