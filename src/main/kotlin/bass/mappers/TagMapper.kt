@@ -5,6 +5,6 @@ import bass.entities.TagEntity
 
 fun TagEntity.toDTO(): TagDTO =
     TagDTO(
-        name = name.toString(),
+        name = name,
         id = this.id,
     )
