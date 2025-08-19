@@ -4,7 +4,7 @@ import bass.annotation.LoginMember
 import bass.controller.cart.usecase.ManageCartItemUseCase
 import bass.dto.CartItemRequestDTO
 import bass.dto.CartItemResponseDTO
-import bass.dto.MemberLoginDTO
+import bass.dto.member.MemberLoginDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

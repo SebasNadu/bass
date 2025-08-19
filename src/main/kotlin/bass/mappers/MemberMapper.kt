@@ -1,7 +1,7 @@
 package bass.mappers
 
-import bass.dto.MemberLoginDTO
-import bass.dto.MemberRegisterDTO
+import bass.dto.member.MemberLoginDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.entities.MemberEntity
 import bass.model.Member
 

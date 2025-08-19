@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.member
 
 import bass.util.ValidationMessages.EMAIL_BLANK
 import bass.util.ValidationMessages.EMAIL_INVALID

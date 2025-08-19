@@ -2,7 +2,7 @@ package bass.controller.order
 
 import bass.annotation.LoginMember
 import bass.controller.order.usecase.OrderCreationUseCase
-import bass.dto.MemberLoginDTO
+import bass.dto.member.MemberLoginDTO
 import bass.dto.OrderDTO
 import bass.model.PaymentRequest
 import org.springframework.http.ResponseEntity

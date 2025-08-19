@@ -1,7 +1,7 @@
 package bass.services.member
 
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.MemberRegisterDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity

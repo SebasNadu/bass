@@ -1,6 +1,6 @@
 package bass.integration
 
-import bass.dto.MemberLoginDTO
+import bass.dto.member.MemberLoginDTO
 import bass.dto.OrderDTO
 import bass.entities.CartItemEntity
 import bass.entities.MealEntity

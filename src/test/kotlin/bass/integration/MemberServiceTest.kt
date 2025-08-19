@@ -1,6 +1,6 @@
 package bass.integration
 
-import bass.dto.MemberRegisterDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.entities.MemberEntity
 import bass.exception.OperationFailedException
 import bass.repositories.MemberRepository
