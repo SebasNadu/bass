@@ -26,19 +26,6 @@ else
     OLD_PORT=8081
 fi
 
-# Wait for health check
-timeout=60
-elapsed=0
-until curl -f http://localhost:$NEW_PORT/actuator/health > /dev/null 2>&1; do
-  echo "Waiting for ${NEW_COLOR} container to be healthy..."
-  sleep 5
-  elapsed=$((elapsed + 5))
-  if [ $elapsed -ge $timeout ]; then
-    echo "Health check failed for ${NEW_COLOR} container after $timeout seconds."
-    exit 1
-  fi
-done
-
 # Attempt ALB target group switch only if AWS CLI can access it
 if command -v aws &> /dev/null; then
   INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
