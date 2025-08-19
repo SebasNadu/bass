@@ -1,19 +1,29 @@
 #!/bin/bash
 set -euo pipefail
 
-APP_NAME="bass"
+DEPLOY_DIR="/home/ubuntu/app"
+
 echo ">>> [BeforeInstall] Preparing environment..."
 
+# Update system
 echo ">>> Updating system packages..."
 sudo apt-get update -y && sudo apt-get upgrade -y
 
-echo ">>> Installing AWS CLI if missing..."
-if ! command -v aws &> /dev/null; then
-  sudo apt-get install -y awscli
+# Install AWS CLI v2 if missing or old version
+echo ">>> Installing AWS CLI v2 if missing..."
+if ! command -v aws &> /dev/null || [[ $(aws --version 2>&1) != *aws-cli/2* ]]; then
+  sudo apt-get update -y && sudo apt-get upgrade -y
+  sudo apt-get remove -y awscli || true
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o "awscliv2.zip"
+  unzip -o awscliv2.zip
+  sudo ./aws/install
+  aws --version
+  rm -rf awscliv2.zip aws
 else
-  echo "AWS CLI already installed."
+  echo "AWS CLI v2 already installed."
 fi
 
+# Install Docker if missing
 echo ">>> Installing Docker if missing..."
 if ! command -v docker &> /dev/null; then
   sudo apt-get install -y docker.io
@@ -24,6 +34,7 @@ else
   echo "Docker already installed."
 fi
 
+# Install Docker Compose if missing
 echo ">>> Installing Docker Compose if missing..."
 if ! command -v docker-compose &> /dev/null; then
   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -32,11 +43,7 @@ else
   echo "Docker Compose already installed."
 fi
 
-echo ">>> [BeforeInstall] Stopping old containers if running..."
-docker ps -q --filter "name=${APP_NAME}-blue" | grep -q . && docker stop ${APP_NAME}-blue || true
-docker ps -q --filter "name=${APP_NAME}-green" | grep -q . && docker stop ${APP_NAME}-green || true
-docker ps -aq --filter "name=${APP_NAME}-blue" | grep -q . && docker rm ${APP_NAME}-blue || true
-docker ps -aq --filter "name=${APP_NAME}-green" | grep -q . && docker rm ${APP_NAME}-green || true
-
-echo ">>> [BeforeInstall] Prepare deploy directory"
-sudo chown -R ubuntu:ubuntu /home/ubuntu/app
+# Prepare deploy directory
+echo ">>> [BeforeInstall] Preparing deploy directory..."
+sudo mkdir -p $DEPLOY_DIR
+sudo chown -R ubuntu:ubuntu $DEPLOY_DIR
