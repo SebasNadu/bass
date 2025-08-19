@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
+// TODO fix pagination
 @RestController
 class MealController(private val crudMealUseCase: CrudMealUseCase) {
     @IgnoreCheckLogin
@@ -31,7 +32,6 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
         pageable: Pageable,
     ): Page<MealResponseDTO> = crudMealUseCase.findAll(pageable)
 
-    // TODO: create if necessary the request and response DTO to meal
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH_ID)
     fun getMealById(
