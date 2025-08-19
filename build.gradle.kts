@@ -24,6 +24,7 @@ val assureVersion = "5.5.5"
 val h2Version = "2.2.224"
 val jwtVersion = "0.12.6"
 val dotenvVersion = "6.5.1"
+val openapiVersion = "2.8.9"
 val mockkVersion = "1.13.8"
 dependencies {
     implementation("org.liquibase:liquibase-core")
@@ -36,15 +37,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenvVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion")
+
     runtimeOnly("com.h2database:h2:$h2Version")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.rest-assured:rest-assured:$assureVersion")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:$mockkVersion")
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
