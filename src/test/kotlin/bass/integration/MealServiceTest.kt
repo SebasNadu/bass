@@ -26,7 +26,7 @@ class MealServiceTest(
     fun setup() {
         meal =
             MealDTO(
-                name = "Test Product",
+                name = "Test Meal",
                 price = 19.99,
                 imageUrl = "https://example.com/test.png",
                 quantity = 4,
@@ -43,6 +43,13 @@ class MealServiceTest(
         assertThat(saved.name).isEqualTo(meal.name)
         assertThat(saved.price).isEqualTo(meal.price)
         assertThat(saved.imageUrl).isEqualTo(meal.imageUrl)
+    }
+
+    @Test
+    fun `should save meal and assign right tags`() {
+        val saved = mealService.save(meal)
+        assertThat(saved.tags.first().name).isEqualTo("Healthy")
+        assertThat(saved.tags.size).isEqualTo(2)
     }
 
     @Test
@@ -154,5 +161,13 @@ class MealServiceTest(
         val allMealsWithTag = mealService.findByTag("Healthy")
 
         assertThat(allMealsWithTag).hasSize(3)
+    }
+
+    @Test
+    fun `should return meal with tags`() {
+        val currentMeal = mealService.findById(1L)
+
+        assertThat(currentMeal.tags.size).isEqualTo(2)
+        assertThat(currentMeal.tags.map { it.name }).containsExactlyInAnyOrder("Healthy", "Bowl")
     }
 }
