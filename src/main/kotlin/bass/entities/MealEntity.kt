@@ -1,8 +1,9 @@
 package bass.entities
 
-import bass.dto.MealDTO
-import bass.dto.MealPatchDTO
+import bass.dto.meal.MealDTO
+import bass.dto.meal.MealPatchDTO
 import bass.exception.InsufficientStockException
+import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealImageUrlException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealPriceException
@@ -35,7 +36,7 @@ class MealEntity(
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
-    //add CascadeType.PERSIST if we create tags together with meals
+    // add CascadeType.PERSIST if we create tags together with meals
     @JoinTable(
         name = "tag_meal",
         joinColumns = [JoinColumn(name = "meal_id")],
@@ -90,7 +91,7 @@ class MealEntity(
     }
 
     fun checkStock(quantity: Int) {
-        if (this.quantity == 0) throw InsufficientStockException("Option is out of stock")
+        if (this.quantity == 0) throw InsufficientStockException("Meal is out of stock")
         if (this.quantity < quantity) throw InsufficientStockException("Not enough stock")
     }
 
@@ -153,7 +154,7 @@ class MealEntity(
     }
 
     private fun validateDescription(description: String) {
-        if (description.isEmpty()) throw InvalidMealNameException("Provide a description")
+        if (description.isEmpty()) throw InvalidMealDescriptionException("Provide a description")
     }
 
     fun addTag(tag: TagEntity) {
