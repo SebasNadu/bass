@@ -11,12 +11,12 @@ services:
       - "8081:8080"
     networks:
       - bass-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 60s
 
   bass-green:
     build:
@@ -30,12 +30,12 @@ services:
       - "8082:8080"
     networks:
       - bass-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 60s
 
   db:
     image: postgres:15
@@ -43,18 +43,18 @@ services:
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: bass
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - bass-network
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DB_USERNAME}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_NAME}"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
 
 volumes:
   pgdata:
