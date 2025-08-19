@@ -1,8 +1,8 @@
 package bass.integration
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.MealDTO
-import bass.dto.MealPatchDTO
+import bass.dto.meal.MealDTO
+import bass.dto.meal.MealPatchDTO
 import bass.exception.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -31,6 +31,7 @@ class MealServiceTest(
                 imageUrl = "https://example.com/test.png",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
     }
 
@@ -56,6 +57,7 @@ class MealServiceTest(
     @Test
     fun `should update meal by id`() {
         val saved = mealService.save(meal)
+
         val updated = saved.copy(name = "Updated", price = 49.99)
 
         val request =
@@ -65,6 +67,7 @@ class MealServiceTest(
                 imageUrl = updated.imageUrl,
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
         val result = mealService.updateById(saved.id, request)
 

@@ -1,7 +1,8 @@
 package bass.endtoend
 
-import bass.dto.MealDTO
 import bass.dto.PageResponseDTO
+import bass.dto.meal.MealDTO
+import bass.dto.meal.MealResponseDTO
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
@@ -46,7 +47,7 @@ class MealE2ETest {
                 .then().log().all().extract()
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        val page = response.body().`as`(object : TypeRef<PageResponseDTO<MealDTO>>() {})
+        val page = response.body().`as`(object : TypeRef<PageResponseDTO<MealResponseDTO>>() {})
         assertThat(page.content).isNotEmpty()
         assertThat(page.content.size).isEqualTo(10)
     }
@@ -60,6 +61,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
         val id =
             RestAssured.given()
@@ -99,6 +101,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val response =
@@ -123,6 +126,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val response =
@@ -149,6 +153,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val response =
@@ -175,6 +180,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         RestAssured.given().auth().oauth2(token)
@@ -201,6 +207,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val response =
@@ -227,6 +234,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
         val id =
             RestAssured.given()
@@ -243,6 +251,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val response =
@@ -267,6 +276,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
         val id =
             RestAssured.given()
@@ -299,6 +309,7 @@ class MealE2ETest {
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
         val id =
             RestAssured.given()

@@ -1,13 +1,14 @@
 package bass.endtoend
 
-import bass.dto.MealDTO
 import bass.dto.OrderDTO
 import bass.dto.TokenRequestDTO
+import bass.dto.meal.MealDTO
+import bass.dto.meal.MealResponseDTO
 import bass.entities.CartItemEntity
 import bass.entities.MemberEntity
-import bass.mappers.toEntity
 import bass.model.PaymentRequest
 import bass.repositories.CartItemRepository
+import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -25,6 +26,8 @@ class OrderControllerE2ETest(
     var cartItemRepository: CartItemRepository,
     @param:Autowired
     var memberRepository: MemberRepository,
+    @param:Autowired
+    var mealRepository: MealRepository,
 ) {
     private lateinit var token: String
     private var memberId: Long = 0L
@@ -105,6 +108,7 @@ class OrderControllerE2ETest(
                 imageUrl = "https://example.com/image.jpg",
                 quantity = 4,
                 description = "description",
+                tagsIds = setOf(1L, 2L),
             )
 
         val mealResponse =
@@ -114,12 +118,14 @@ class OrderControllerE2ETest(
                 .body(mealDTO)
                 .post("/api/meals")
                 .then().statusCode(HttpStatus.CREATED.value())
-                .extract().`as`(MealDTO::class.java)
+                .extract().`as`(MealResponseDTO::class.java)
+
+        val savedMealEntity = mealRepository.findById(mealResponse.id).get()
 
         val cartItem =
             CartItemEntity(
                 member = member,
-                meal = mealResponse.toEntity(),
+                meal = savedMealEntity,
                 quantity = 2,
                 addedAt = LocalDateTime.now(),
             )
