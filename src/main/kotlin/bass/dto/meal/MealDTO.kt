@@ -1,7 +1,8 @@
-package bass.dto
+package bass.dto.meal
 
 import bass.util.ValidationMessages
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
@@ -23,5 +24,7 @@ data class MealDTO(
     var imageUrl: String,
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     var description: String,
+    @field:NotEmpty(message = ValidationMessages.TAGS_REQUIRED)
+    var tagsIds: Set<Long>,
     var id: Long = 0L,
 )

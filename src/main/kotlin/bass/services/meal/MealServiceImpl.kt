@@ -1,8 +1,9 @@
 package bass.services.meal
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.MealDTO
-import bass.dto.MealPatchDTO
+import bass.dto.meal.MealDTO
+import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealResponseDTO
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
@@ -22,14 +23,14 @@ class MealServiceImpl(
     private val mealRepository: MealRepository,
 ) : CrudMealUseCase {
     @Transactional(readOnly = true)
-    override fun findAll(pageable: Pageable): Page<MealDTO> {
+    override fun findAll(pageable: Pageable): Page<MealResponseDTO> {
         val meals = mealRepository.findAll(pageable)
         val mealDTOs = meals.map { it.toDTO() }
         return mealDTOs
     }
 
     @Transactional(readOnly = true)
-    override fun findById(id: Long): MealDTO {
+    override fun findById(id: Long): MealResponseDTO {
         val meal =
             mealRepository.findByIdOrNull(id)
                 ?: throw NotFoundException("Meal with id=$id not found")
@@ -37,7 +38,7 @@ class MealServiceImpl(
     }
 
     @Transactional
-    override fun save(mealDTO: MealDTO): MealDTO {
+    override fun save(mealDTO: MealDTO): MealResponseDTO {
         validateMealNameUniqueness(mealDTO.name)
 
         val meal = mealDTO.toEntity()
@@ -56,7 +57,7 @@ class MealServiceImpl(
     override fun updateById(
         id: Long,
         mealDTO: MealDTO,
-    ): MealDTO {
+    ): MealResponseDTO {
         val existing =
             mealRepository.findByIdOrNull(id)
                 ?: throw NotFoundException("Meal with id=$id not found")
@@ -75,7 +76,7 @@ class MealServiceImpl(
     override fun patchById(
         id: Long,
         mealPatchDTO: MealPatchDTO,
-    ): MealDTO {
+    ): MealResponseDTO {
         val existing =
             mealRepository.findByIdOrNull(id)
                 ?: throw NotFoundException("Meal with id=$id not found")
@@ -105,7 +106,7 @@ class MealServiceImpl(
         }
     }
 
-    override fun findByTag(tag: String): List<MealDTO> {
+    override fun findByTag(tag: String): List<MealResponseDTO> {
         return mealRepository.findByTagsName(tag).map { it.toDTO() }
     }
 }

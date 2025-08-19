@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.meal
 
 import bass.util.ValidationMessages
 import jakarta.validation.constraints.Pattern
