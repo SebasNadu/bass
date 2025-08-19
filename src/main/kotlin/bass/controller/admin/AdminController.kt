@@ -17,7 +17,7 @@ class AdminController(
     private val findTopProductsUseCase: FindTopProductsUseCase,
     private val findMembersWithRecentCartActivityUseCase: FindMembersWithRecentCartActivityUseCase,
 ) {
-    @GetMapping("/top-products")
+    @GetMapping("/top-meals")
     fun getTopProducts(): List<TopProductDTO> = findTopProductsUseCase.findProducts()
 
     @GetMapping("/active-members")

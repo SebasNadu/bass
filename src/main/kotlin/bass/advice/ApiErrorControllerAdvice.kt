@@ -6,6 +6,7 @@ import bass.exception.AuthorizationException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
+import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealQuantityException
 import bass.exception.NotFoundException
@@ -105,6 +106,13 @@ class ApiErrorControllerAdvice {
         val errorMessage = e.message ?: "Invalid Meal quantity"
         log.warn("InvalidMealQuantityException: $errorMessage", e)
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Meal quantity", errorMessage)
+    }
+
+    @ExceptionHandler(InvalidMealDescriptionException::class)
+    fun handleInvalidMealDescriptionException(e: InvalidMealDescriptionException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Invalid Meal description"
+        log.warn("InvalidMealDescriptionException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Meal description", errorMessage)
     }
 
     @ExceptionHandler(InsufficientStockException::class)
