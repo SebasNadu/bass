@@ -2,7 +2,7 @@ package bass.services.admin
 
 import bass.controller.admin.usecase.FindMembersWithRecentCartActivityUseCase
 import bass.controller.admin.usecase.FindTopProductsUseCase
-import bass.dto.ActiveMemberDTO
+import bass.dto.member.ActiveMemberDTO
 import bass.dto.TopProductDTO
 import bass.repositories.CartItemRepository
 import org.springframework.stereotype.Service
