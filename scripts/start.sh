@@ -9,8 +9,8 @@ NEW_COLOR="green"
 OLD_COLOR="blue"
 
 # Check db availability
-if ! docker ps -q --filter "name=bass-db-1" | grep -q .; then
-  docker-compose -f /home/ubuntu/app/docker-compose.prod.yml up -d bass-db-1
+if ! docker ps -q --filter "name=bass-db" | grep -q .; then
+  docker-compose -f /home/ubuntu/app/docker-compose.prod.yml up -d db
 fi
 
 # Check which container is currently running
