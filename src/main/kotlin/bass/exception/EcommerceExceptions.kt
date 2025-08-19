@@ -19,6 +19,8 @@ class InvalidMealQuantityException(message: String? = null) : RuntimeException(m
 
 class InvalidMealPriceException(message: String? = null) : RuntimeException(message)
 
+class InvalidMealDescriptionException(message: String? = null) : RuntimeException(message)
+
 class InvalidMealImageUrlException(message: String? = null) : RuntimeException(message)
 
 class InsufficientStockException(message: String? = null) : RuntimeException(message)
