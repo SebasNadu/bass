@@ -8,6 +8,11 @@ export AWS_DEFAULT_REGION=$AWS_REGION
 NEW_COLOR="green"
 OLD_COLOR="blue"
 
+# Check db availability
+if ! docker ps -q --filter "name=bass-db" | grep -q .; then
+  docker-compose -f /home/ubuntu/app/docker-compose.prod.yml up -d db
+fi
+
 # Check which container is currently running
 if docker ps -q --filter "name=${APP_NAME}-green" | grep -q .; then
   NEW_COLOR="blue"
