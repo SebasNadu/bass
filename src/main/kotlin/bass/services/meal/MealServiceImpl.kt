@@ -9,6 +9,7 @@ import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.repositories.MealRepository
+import bass.repositories.TagRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 @Primary
 class MealServiceImpl(
     private val mealRepository: MealRepository,
+    private val tagRepository: TagRepository,
 ) : CrudMealUseCase {
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<MealResponseDTO> {
@@ -40,15 +42,14 @@ class MealServiceImpl(
     @Transactional
     override fun save(mealDTO: MealDTO): MealResponseDTO {
         validateMealNameUniqueness(mealDTO.name)
-
         val meal = mealDTO.toEntity()
 
-        // TODO: save tags, refactor following code from options to tags
-//        mealDTO.options.forEach { optionDTO ->
-//            val option = optionDTO.toEntity(meal)
-//            meal.addOption(option)
-//        }
-
+        mealDTO.tagsIds.forEach { id ->
+            val tag =
+                tagRepository.findByIdOrNull(id)
+                    ?: throw NotFoundException("Tag with id=$id not found")
+            meal.addTag(tag)
+        }
         val savedMeal = mealRepository.save(meal)
         return savedMeal.toDTO()
     }
