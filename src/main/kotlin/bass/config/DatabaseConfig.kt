@@ -1,17 +1,10 @@
 package bass.config
 
-import bass.entities.CartItemEntity
-import bass.entities.MealEntity
-import bass.entities.MemberEntity
-import bass.entities.TagEntity
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
 import bass.repositories.TagRepository
-import org.springframework.boot.CommandLineRunner
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.time.LocalDateTime
 
 @Configuration
 class DatabaseConfig(
@@ -19,8 +12,9 @@ class DatabaseConfig(
     private val mealRepository: MealRepository,
     private val cartItemRepository: CartItemRepository,
     private val tagRepository: TagRepository,
-) {
-    @Bean
+)
+/*{
+   @Bean
     fun databaseInitializer(): CommandLineRunner =
         CommandLineRunner {
             val tags =
@@ -167,4 +161,4 @@ class DatabaseConfig(
 
             cartItemRepository.saveAll(cartItems)
         }
-}
+}*/
