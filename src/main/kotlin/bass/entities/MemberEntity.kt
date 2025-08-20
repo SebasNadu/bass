@@ -37,7 +37,7 @@ class MemberEntity(
         joinColumns = [JoinColumn(name = "member_id")],
         inverseJoinColumns = [JoinColumn(name = "achievement_id")]
     )
-    val achievements: MutableSet<Achievement> = mutableSetOf(),
+    val achievements: MutableSet<AchievementEntity> = mutableSetOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
