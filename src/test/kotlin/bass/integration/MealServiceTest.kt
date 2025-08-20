@@ -74,12 +74,14 @@ class MealServiceTest(
                 imageUrl = updated.imageUrl,
                 quantity = 4,
                 description = "description",
-                tagsIds = setOf(1L, 2L),
+                tagsIds = setOf(3L, 4L),
             )
         val result = mealService.updateById(saved.id, request)
 
         assertThat(result.name).isEqualTo("Updated")
         assertThat(result.price).isEqualTo(49.99)
+        assertThat(result.tags.size).isEqualTo(2)
+        assertThat(result.tags.map { it.name }).containsExactlyInAnyOrder("High-Protein", "Salad")
     }
 
     @Test
