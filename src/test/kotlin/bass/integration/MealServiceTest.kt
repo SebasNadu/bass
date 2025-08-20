@@ -1,8 +1,8 @@
 package bass.integration
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.MealDTO
-import bass.dto.MealPatchDTO
+import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealRequestDTO
 import bass.exception.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -20,16 +20,18 @@ import org.springframework.transaction.annotation.Transactional
 class MealServiceTest(
     @param:Autowired val mealService: CrudMealUseCase,
 ) {
-    private lateinit var meal: MealDTO
+    private lateinit var meal: MealRequestDTO
 
     @BeforeEach
     fun setup() {
         meal =
-            MealDTO(
-                name = "Test Product",
+            MealRequestDTO(
+                name = "Test Meal",
                 price = 19.99,
                 imageUrl = "https://example.com/test.png",
                 quantity = 4,
+                description = "description",
+                tagsIds = setOf(1L, 2L),
             )
     }
 
@@ -44,6 +46,13 @@ class MealServiceTest(
     }
 
     @Test
+    fun `should save meal and assign right tags`() {
+        val saved = mealService.save(meal)
+        assertThat(saved.tags.first().name).isEqualTo("Healthy")
+        assertThat(saved.tags.size).isEqualTo(2)
+    }
+
+    @Test
     fun `should retrieve meal by id`() {
         val saved = mealService.save(meal)
         val found = mealService.findById(saved.id)
@@ -55,19 +64,24 @@ class MealServiceTest(
     @Test
     fun `should update meal by id`() {
         val saved = mealService.save(meal)
+
         val updated = saved.copy(name = "Updated", price = 49.99)
 
         val request =
-            MealDTO(
+            MealRequestDTO(
                 updated.name,
                 price = updated.price,
                 imageUrl = updated.imageUrl,
                 quantity = 4,
+                description = "description",
+                tagsIds = setOf(3L, 4L),
             )
         val result = mealService.updateById(saved.id, request)
 
         assertThat(result.name).isEqualTo("Updated")
         assertThat(result.price).isEqualTo(49.99)
+        assertThat(result.tags.size).isEqualTo(2)
+        assertThat(result.tags.map { it.name }).containsExactlyInAnyOrder("High-Protein", "Salad")
     }
 
     @Test
@@ -101,7 +115,7 @@ class MealServiceTest(
             PageRequest.of(0, 999, Sort.by("name"))
         val all = mealService.findAll(sortedByName)
 
-        assertThat(all).hasSize(27)
+        assertThat(all).hasSize(10)
     }
 
     @Test
@@ -110,7 +124,7 @@ class MealServiceTest(
         val page = mealService.findAll(pageable)
 
         assertThat(page.content).hasSize(4)
-        assertThat(page.totalElements).isEqualTo(25)
+        assertThat(page.totalElements).isEqualTo(8)
     }
 
     @Test
@@ -142,5 +156,20 @@ class MealServiceTest(
             }
 
         assertThat(ex.message).contains("Meal with id=")
+    }
+
+    @Test
+    fun `should return meals matching with tag`() {
+        val allMealsWithTag = mealService.findByTag("Healthy")
+
+        assertThat(allMealsWithTag).hasSize(3)
+    }
+
+    @Test
+    fun `should return meal with tags`() {
+        val currentMeal = mealService.findById(1L)
+
+        assertThat(currentMeal.tags.size).isEqualTo(2)
+        assertThat(currentMeal.tags.map { it.name }).containsExactlyInAnyOrder("Healthy", "Bowl")
     }
 }

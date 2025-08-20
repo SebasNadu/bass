@@ -3,8 +3,9 @@ package bass.controller.meal
 import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.MealDTO
-import bass.dto.MealPatchDTO
+import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealRequestDTO
+import bass.dto.meal.MealResponseDTO
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
+// TODO fix pagination
 @RestController
 class MealController(private val crudMealUseCase: CrudMealUseCase) {
     @IgnoreCheckLogin
@@ -28,37 +30,36 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
     fun getMeals(
         @PageableDefault(size = 10, sort = ["name"], direction = Sort.Direction.ASC)
         pageable: Pageable,
-    ): Page<MealDTO> = crudMealUseCase.findAll(pageable)
+    ): Page<MealResponseDTO> = crudMealUseCase.findAll(pageable)
 
-    // TODO: create if necessary the request and response DTO to meal
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH_ID)
     fun getMealById(
         @PathVariable id: Long,
-    ): ResponseEntity<MealDTO> = ResponseEntity.ok(crudMealUseCase.findById(id))
+    ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.findById(id))
 
     @CheckAdminOnly
     @PostMapping(MEAL_PATH)
     fun createMeal(
-        @Valid @RequestBody productRequestDTO: MealDTO,
-    ): ResponseEntity<MealDTO> {
-        val saved = crudMealUseCase.save(productRequestDTO)
+        @Valid @RequestBody mealRequestDTO: MealRequestDTO,
+    ): ResponseEntity<MealResponseDTO> {
+        val saved = crudMealUseCase.save(mealRequestDTO)
         return ResponseEntity.created(URI.create("$MEAL_PATH/${saved.id}")).body(saved)
     }
 
     @CheckAdminOnly
     @PutMapping(MEAL_PATH_ID)
     fun updateMealById(
-        @Valid @RequestBody productDTO: MealDTO,
+        @Valid @RequestBody mealRequestDTO: MealRequestDTO,
         @PathVariable id: Long,
-    ): ResponseEntity<MealDTO> = ResponseEntity.ok(crudMealUseCase.updateById(id, productDTO))
+    ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.updateById(id, mealRequestDTO))
 
     @CheckAdminOnly
     @PatchMapping(MEAL_PATH_ID)
     fun patchMealById(
-        @Valid @RequestBody productPatchDTO: MealPatchDTO,
+        @Valid @RequestBody mealPatchDTO: MealPatchDTO,
         @PathVariable id: Long,
-    ): ResponseEntity<MealDTO> = ResponseEntity.ok(crudMealUseCase.patchById(id, productPatchDTO))
+    ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.patchById(id, mealPatchDTO))
 
     @CheckAdminOnly
     @DeleteMapping(MEAL_PATH_ID)

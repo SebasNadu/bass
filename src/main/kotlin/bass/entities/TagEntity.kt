@@ -19,6 +19,8 @@ class TagEntity(
     @Column(nullable = false)
     val name: String,
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    val meals: MutableSet<MealEntity> = mutableSetOf(),
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     val members: MutableSet<MemberEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

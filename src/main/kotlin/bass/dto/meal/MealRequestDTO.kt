@@ -1,13 +1,14 @@
-package bass.dto
+package bass.dto.meal
 
 import bass.util.ValidationMessages
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
 
-data class MealDTO(
+data class MealRequestDTO(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     @field:Size(min = 1, max = 15, message = ValidationMessages.PRODUCT_NAME_SIZE)
     @field:Pattern(regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$", message = ValidationMessages.NAME_PATTERN)
@@ -21,5 +22,9 @@ data class MealDTO(
     @field:NotBlank(message = ValidationMessages.IMAGE_REQUIRED)
     @field:Pattern(regexp = "^https?://.*$", message = ValidationMessages.IMAGE_FORMAT)
     var imageUrl: String,
+    @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
+    var description: String,
+    @field:NotEmpty(message = ValidationMessages.TAG_REQUIRED)
+    var tagsIds: Set<Long>,
     var id: Long = 0L,
 )

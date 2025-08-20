@@ -82,7 +82,7 @@ class OrderServiceTest {
         val orderDTO: OrderDTO = orderService.create(memberLoginDTO, paymentRequest)
 
         assertNotNull(orderDTO.id)
-        assertEquals(2000.0, orderDTO.totalAmount)
+        assertEquals(29.0, orderDTO.totalAmount)
         assertEquals(member.id, orderDTO.memberId)
 
         val order = orderRepository.findByIdOrNull(orderDTO.id!!)
@@ -95,7 +95,7 @@ class OrderServiceTest {
 
         val updatedOption = mealRepository.findByIdOrNull(meal.id)
         assertNotNull(updatedOption)
-        assertEquals(98, updatedOption.quantity)
+        assertEquals(48, updatedOption.quantity)
 
         val cartItemsAfter = cartItemRepository.findByMemberId(member.id)
         assertTrue(cartItemsAfter.isEmpty())

@@ -60,6 +60,7 @@ class AdminServiceTest {
                     imageUrl = "https://lalala.com",
                     quantity = 3,
                     price = 100.0,
+                    description = "description",
                 ),
             )
 
@@ -70,6 +71,7 @@ class AdminServiceTest {
                     imageUrl = "https://lalala.com",
                     quantity = 3,
                     price = 100.0,
+                    description = "description",
                 ),
             )
 

@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jdk-jammy
 
 RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
 
-RUN apt-get update && apt-get upgrade && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
