@@ -2,28 +2,35 @@ package bass.services.coupon
 
 import bass.controller.coupon.usecase.ManageCouponUseCase
 import bass.dto.CouponDTO
+import bass.entities.AchievementEntity
 import bass.entities.CouponEntity
+import bass.entities.MemberEntity
 import bass.exception.NotFoundException
 import bass.mappers.toDTO
+import bass.repositories.AchievementRepository
 import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Service
 class CouponServiceImpl(
     private val couponRepository: CouponRepository,
     private val memberRepository: MemberRepository,
 ) : ManageCouponUseCase {
-    override fun create(couponDTO: CouponDTO): CouponDTO {
-        val member =
-            memberRepository.findByIdOrNull(couponDTO.memberId)
-                ?: throw NotFoundException("Member not found")
-        val coupon = CouponEntity.createFrom(couponDTO.name, member)
-        val savedCoupon = couponRepository.save(coupon)
-        return savedCoupon.toDTO()
-    }
+//    override fun create(couponDTO: CouponDTO): CouponDTO {
+//        val member =
+//            memberRepository.findByIdOrNull(couponDTO.memberId)
+//                ?: throw NotFoundException("Member not found")
+//        val coupon = CouponEntity.createFrom(couponDTO.name, member)
+//        val savedCoupon = couponRepository.save(coupon)
+//        return savedCoupon.toDTO()
+//    }
 
     override fun findAll(memberId: Long): List<CouponDTO> {
         val coupons = couponRepository.findByMemberId(memberId)

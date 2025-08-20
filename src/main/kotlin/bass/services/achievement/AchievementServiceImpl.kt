@@ -1,49 +1,51 @@
 package bass.services.achievement
 
+import bass.entities.AchievementEntity
+import bass.entities.CouponEntity
+import bass.entities.MemberEntity
 import bass.repositories.AchievementRepository
+import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+
 
 @Service
 @Transactional
-class AchievementServiceImpl(
+class AchievementService(
     private val memberRepository: MemberRepository,
     private val achievementRepository: AchievementRepository,
-//    private val couponRepository: CouponRepository
+    private val couponRepository: CouponRepository
 ) {
 
-//    fun awardAchievement(memberId: Long, achievementId: Long): Coupon? {
-//        val member = memberRepository.findById(memberId).orElseThrow()
-//        val achievement = achievementRepository.findById(achievementId).orElseThrow()
-//
-//        // Add achievement to member
-//        member.achievements.add(achievement)
-//        memberRepository.save(member)
-//
-//        // Generate coupon if achievement has one
-//        return if (achievement.generatesCoupon()) {
-//            generateCoupon(member, achievement)
-//        } else null
-//    }
+    fun awardAchievement(memberId: Long, achievementId: Long): CouponEntity? {
+        val member = memberRepository.findById(memberId).orElseThrow()
+        val achievement = achievementRepository.findById(achievementId).orElseThrow()
 
-//    private fun generateCoupon(member: Member, achievement: Achievement): Coupon {
-//        val couponCode = achievement.generateCouponCode(member.id) ?:
-//        throw IllegalStateException("Cannot generate coupon code")
-//
-//        val expiresAt = LocalDateTime.now().plusDays(
-//            achievement.couponValidityDays?.toLong() ?: 30L
-//        )
-//
-//        val coupon = Coupon(
-//            code = couponCode,
-//            member = member,
-//            achievement = achievement,
-//            type = achievement.couponType!!,
-//            discountValue = achievement.discountValue ?: BigDecimal.ZERO,
-//            expiresAt = expiresAt
-//        )
-//
-//        return couponRepository.save(coupon)
-//    }
+        member.achievements.add(achievement)
+        memberRepository.save(member)
+
+        return if (achievement.generatesCoupon()) {
+            generateCoupon(member, achievement)
+        } else null
+    }
+
+    private fun generateCoupon(member: MemberEntity, achievement: AchievementEntity): CouponEntity {
+        val couponCode = achievement.generateCouponCode(member.id)
+        val expiresAt = LocalDateTime.now()
+            .plusDays(achievement.couponType?.validityDays ?: 30L)
+            .toInstant(ZoneOffset.UTC)
+
+        val coupon = CouponEntity(
+            code = couponCode,
+            member = member,
+            achievement = achievement,
+            couponType = achievement.couponType!!,
+            expiresAt = expiresAt
+        )
+
+        return couponRepository.save(coupon)
+    }
 }
