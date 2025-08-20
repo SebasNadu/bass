@@ -42,7 +42,7 @@ class MealEntity(
         joinColumns = [JoinColumn(name = "meal_id")],
         inverseJoinColumns = [JoinColumn(name = "tag_id")],
     )
-    val tags: MutableSet<TagEntity> = mutableSetOf(),
+    var tags: MutableSet<TagEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -119,6 +119,7 @@ class MealEntity(
         meal.quantity?.let { this.quantity = it }
         meal.price?.let { this.price = it }
         meal.imageUrl?.let { this.imageUrl = it }
+        meal.description?.let { this.description = it }
         return this
     }
 
@@ -163,5 +164,9 @@ class MealEntity(
         }
         this.tags.add(tag)
         tag.meals.add(this)
+    }
+
+    fun clearTags() {
+        this.tags.clear()
     }
 }
