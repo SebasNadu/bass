@@ -20,3 +20,5 @@ class InvalidOptionQuantityException(message: String? = null) : RuntimeException
 class InsufficientStockException(message: String? = null) : RuntimeException(message)
 
 class PaymentFailedException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+
+class InvalidTagNameException(message: String? = null) : RuntimeException(message)

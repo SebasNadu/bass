@@ -8,6 +8,7 @@ import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
 import bass.exception.InvalidOptionNameException
 import bass.exception.InvalidOptionQuantityException
+import bass.exception.InvalidTagNameException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
@@ -163,5 +164,12 @@ class ApiErrorControllerAdvice {
             }
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", errorMessage, errors = errors)
+    }
+
+    @ExceptionHandler(InvalidTagNameException::class)
+    fun handleInvalidTagNameException(e: InvalidTagNameException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Invalid tag name"
+        log.warn("InvalidTagNameException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid tag name", errorMessage)
     }
 }

@@ -1,28 +1,36 @@
 package bass.endtoend
 
 import bass.dto.TokenResponseDTO
+import bass.entities.TagEntity
 import bass.model.Member
+import bass.repositories.TagRepository
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class MemberE2ETest {
+class MemberE2ETest(
+    @param:Autowired
+    var tagRepository: TagRepository,
+) {
     lateinit var token: String
 
     @BeforeEach
     fun loginAndGetToken() {
+        val tag = tagRepository.save(TagEntity(name = "Vegan"))
         val loginPayload =
             mapOf(
                 "email" to "sebas@sebas.com",
                 "password" to "123456",
+                "tagsIds" to listOf(tag.id),
             )
 
         val response =
@@ -38,10 +46,18 @@ class MemberE2ETest {
 
     @Test
     fun createMember() {
+        val tag = tagRepository.save(TagEntity(name = "Vegan"))
+        val registerPayload =
+            mapOf(
+                "name" to NAME,
+                "email" to EMAIL,
+                "password" to PASSWORD,
+                "tagIds" to listOf(tag.id),
+            )
         val accessToken =
             RestAssured
                 .given().log().all()
-                .body(Member(name = NAME, email = EMAIL, password = PASSWORD))
+                .body(registerPayload)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .`when`().post("/api/members/register")

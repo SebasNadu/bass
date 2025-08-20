@@ -7,13 +7,17 @@ import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.model.Member
 import bass.repositories.MemberRepository
+import bass.repositories.TagRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class MemberServiceImpl(private val memberRepository: MemberRepository) : CrudMemberUseCase {
+class MemberServiceImpl(
+    private val memberRepository: MemberRepository,
+    private val tagRepository: TagRepository,
+) : CrudMemberUseCase {
     @Transactional(readOnly = true)
     override fun findAll(): List<Member> {
         return memberRepository.findAll().map { it.toDTO() }
@@ -33,8 +37,9 @@ class MemberServiceImpl(private val memberRepository: MemberRepository) : CrudMe
     @Transactional
     override fun save(memberRegisterDTO: MemberRegisterDTO): Member {
         validateEmailUniqueness(memberRegisterDTO.email)
+        val selectedTags = tagRepository.findAllById(memberRegisterDTO.tagIds).toMutableSet()
         val saved =
-            memberRepository.save(memberRegisterDTO.toEntity())
+            memberRepository.save(memberRegisterDTO.toEntity(selectedTags))
                 ?: throw OperationFailedException("Failed to save product")
         return saved.toDTO()
     }

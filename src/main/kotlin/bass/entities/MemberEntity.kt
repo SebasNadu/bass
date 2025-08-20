@@ -1,13 +1,18 @@
 package bass.entities
 
+import bass.exception.InvalidTagNameException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
@@ -25,10 +30,31 @@ class MemberEntity(
     val role: Role = Role.CUSTOMER,
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "member_tag",
+        joinColumns = [JoinColumn(name = "member_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")],
+    )
+    val tags: MutableSet<TagEntity> = mutableSetOf(),
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val coupons: List<CouponEntity> = mutableListOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 ) {
+    fun addTag(tag: TagEntity) {
+        if (tags.any { it.name == tag.name }) {
+            throw InvalidTagNameException("Tag with name '${tag.name}' already exists")
+        }
+        this.tags.add(tag)
+        tag.members.add(this)
+    }
+
+    fun clearTags() {
+        this.tags.clear()
+    }
+
     enum class Role { CUSTOMER, ADMIN }
 
     override fun equals(other: Any?): Boolean {
