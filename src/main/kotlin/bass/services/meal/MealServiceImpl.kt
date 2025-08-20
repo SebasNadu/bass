@@ -1,8 +1,8 @@
 package bass.services.meal
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
 import bass.exception.NotFoundException
@@ -11,7 +11,6 @@ import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.repositories.MealRepository
 import bass.repositories.TagRepository
-import org.springframework.context.annotation.Primary
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull

@@ -1,7 +1,7 @@
 package bass.entities
 
-import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealRequestDTO
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealImageUrlException

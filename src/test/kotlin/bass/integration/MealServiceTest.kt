@@ -1,8 +1,8 @@
 package bass.integration
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
+import bass.dto.meal.MealRequestDTO
 import bass.exception.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
