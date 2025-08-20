@@ -1,7 +1,7 @@
 package bass.services.meal
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional
 
 // this was ProductServiceImpl
 @Service
-@Primary
 class MealServiceImpl(
     private val mealRepository: MealRepository,
     private val tagRepository: TagRepository,
@@ -28,8 +27,8 @@ class MealServiceImpl(
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<MealResponseDTO> {
         val meals = mealRepository.findAll(pageable)
-        val mealDTOs = meals.map { it.toDTO() }
-        return mealDTOs
+        val mealRequestDTOs = meals.map { it.toDTO() }
+        return mealRequestDTOs
     }
 
     @Transactional(readOnly = true)
@@ -41,10 +40,10 @@ class MealServiceImpl(
     }
 
     @Transactional
-    override fun save(mealDTO: MealDTO): MealResponseDTO {
-        validateMealNameUniqueness(mealDTO.name)
-        val meal = mealDTO.toEntity()
-        addTags(meal, mealDTO.tagsIds)
+    override fun save(mealRequestDTO: MealRequestDTO): MealResponseDTO {
+        validateMealNameUniqueness(mealRequestDTO.name)
+        val meal = mealRequestDTO.toEntity()
+        addTags(meal, mealRequestDTO.tagsIds)
         val savedMeal = mealRepository.save(meal)
         return savedMeal.toDTO()
     }
@@ -52,19 +51,19 @@ class MealServiceImpl(
     @Transactional
     override fun updateById(
         id: Long,
-        mealDTO: MealDTO,
+        mealRequestDTO: MealRequestDTO,
     ): MealResponseDTO {
         val existing =
             mealRepository.findByIdOrNull(id)
                 ?: throw NotFoundException("Meal with id=$id not found")
 
-        if (existing.name != mealDTO.name) {
-            validateMealNameUniqueness(mealDTO.name)
+        if (existing.name != mealRequestDTO.name) {
+            validateMealNameUniqueness(mealRequestDTO.name)
         }
-        existing.copyFrom(mealDTO)
-        if (mealDTO.tagsIds.isNotEmpty()) {
+        existing.copyFrom(mealRequestDTO)
+        if (mealRequestDTO.tagsIds.isNotEmpty()) {
             existing.clearTags()
-            addTags(existing, mealDTO.tagsIds)
+            addTags(existing, mealRequestDTO.tagsIds)
         }
         return mealRepository.save(existing).toDTO()
     }

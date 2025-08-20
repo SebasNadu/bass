@@ -1,6 +1,6 @@
 package bass.mappers
 
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
 
@@ -15,7 +15,7 @@ fun MealEntity.toDTO(): MealResponseDTO =
         id = id,
     )
 
-fun MealDTO.toEntity(): MealEntity =
+fun MealRequestDTO.toEntity(): MealEntity =
     MealEntity(
         name = name,
         quantity = quantity,

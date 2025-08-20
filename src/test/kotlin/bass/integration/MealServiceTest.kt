@@ -1,7 +1,7 @@
 package bass.integration
 
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
 import bass.exception.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
@@ -20,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional
 class MealServiceTest(
     @param:Autowired val mealService: CrudMealUseCase,
 ) {
-    private lateinit var meal: MealDTO
+    private lateinit var meal: MealRequestDTO
 
     @BeforeEach
     fun setup() {
         meal =
-            MealDTO(
+            MealRequestDTO(
                 name = "Test Meal",
                 price = 19.99,
                 imageUrl = "https://example.com/test.png",
@@ -68,7 +68,7 @@ class MealServiceTest(
         val updated = saved.copy(name = "Updated", price = 49.99)
 
         val request =
-            MealDTO(
+            MealRequestDTO(
                 updated.name,
                 price = updated.price,
                 imageUrl = updated.imageUrl,

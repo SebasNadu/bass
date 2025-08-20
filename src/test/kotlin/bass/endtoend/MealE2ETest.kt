@@ -1,7 +1,7 @@
 package bass.endtoend
 
 import bass.dto.PageResponseDTO
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
@@ -55,7 +55,7 @@ class MealE2ETest {
     @Test
     fun getMeal() {
         val productDTO =
-            MealDTO(
+            MealRequestDTO(
                 name = "TV",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -95,7 +95,7 @@ class MealE2ETest {
     @Test
     fun createMeal() {
         val newMealDTO =
-            MealDTO(
+            MealRequestDTO(
                 name = "Monitor",
                 price = 150.0,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -120,7 +120,7 @@ class MealE2ETest {
     @Test
     fun `Should return error when product name use invalid characters`() {
         val newMealDTO =
-            MealDTO(
+            MealRequestDTO(
                 name = "!@#$%^&*()_+}{",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -147,7 +147,7 @@ class MealE2ETest {
     @Test
     fun `Should return error when product name is bigger than 15 characters`() {
         val newMealDTO =
-            MealDTO(
+            MealRequestDTO(
                 name = "SpeakersareLovemyDearDearDear",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -174,7 +174,7 @@ class MealE2ETest {
     @Test
     fun `Should return error when product name already exists`() {
         val dto =
-            MealDTO(
+            MealRequestDTO(
                 name = "Speaker",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -201,7 +201,7 @@ class MealE2ETest {
     @Test
     fun `Should return error when product price is negative value`() {
         val newMealDTO =
-            MealDTO(
+            MealRequestDTO(
                 name = "Speaker2",
                 price = -99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -228,7 +228,7 @@ class MealE2ETest {
     @Test
     fun updateMeal() {
         val created =
-            MealDTO(
+            MealRequestDTO(
                 name = "Speaker3",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -245,7 +245,7 @@ class MealE2ETest {
                 .then().extract().jsonPath().getLong("id")
 
         val updated =
-            MealDTO(
+            MealRequestDTO(
                 name = "Gaming Mouse",
                 price = 45.0,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -270,7 +270,7 @@ class MealE2ETest {
     @Test
     fun patchMeal() {
         val created =
-            MealDTO(
+            MealRequestDTO(
                 name = "Tv",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",
@@ -303,7 +303,7 @@ class MealE2ETest {
     @Test
     fun deleteMeal() {
         val created =
-            MealDTO(
+            MealRequestDTO(
                 name = "Toilet",
                 price = 99.99,
                 imageUrl = "https://example.com/speaker.jpg",

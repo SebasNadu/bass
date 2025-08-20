@@ -2,7 +2,7 @@ package bass.endtoend
 
 import bass.dto.OrderDTO
 import bass.dto.TokenRequestDTO
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.CartItemEntity
 import bass.entities.MemberEntity
@@ -101,8 +101,8 @@ class OrderControllerE2ETest(
     }
 
     private fun createCartItem() {
-        val mealDTO =
-            MealDTO(
+        val mealRequestDTO =
+            MealRequestDTO(
                 name = "Test Product",
                 price = 100.0,
                 imageUrl = "https://example.com/image.jpg",
@@ -115,7 +115,7 @@ class OrderControllerE2ETest(
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(mealDTO)
+                .body(mealRequestDTO)
                 .post("/api/meals")
                 .then().statusCode(HttpStatus.CREATED.value())
                 .extract().`as`(MealResponseDTO::class.java)

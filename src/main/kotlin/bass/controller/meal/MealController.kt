@@ -3,7 +3,7 @@ package bass.controller.meal
 import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
 import bass.controller.meal.usecase.CrudMealUseCase
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealResponseDTO
 import jakarta.validation.Valid
@@ -41,7 +41,7 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
     @CheckAdminOnly
     @PostMapping(MEAL_PATH)
     fun createMeal(
-        @Valid @RequestBody mealRequestDTO: MealDTO,
+        @Valid @RequestBody mealRequestDTO: MealRequestDTO,
     ): ResponseEntity<MealResponseDTO> {
         val saved = crudMealUseCase.save(mealRequestDTO)
         return ResponseEntity.created(URI.create("$MEAL_PATH/${saved.id}")).body(saved)
@@ -50,9 +50,9 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
     @CheckAdminOnly
     @PutMapping(MEAL_PATH_ID)
     fun updateMealById(
-        @Valid @RequestBody mealDTO: MealDTO,
+        @Valid @RequestBody mealRequestDTO: MealRequestDTO,
         @PathVariable id: Long,
-    ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.updateById(id, mealDTO))
+    ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.updateById(id, mealRequestDTO))
 
     @CheckAdminOnly
     @PatchMapping(MEAL_PATH_ID)

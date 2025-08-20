@@ -1,6 +1,6 @@
 package bass.controller.meal.usecase
 
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealResponseDTO
 import org.springframework.data.domain.Page
@@ -11,11 +11,11 @@ interface CrudMealUseCase {
 
     fun findById(id: Long): MealResponseDTO
 
-    fun save(mealDTO: MealDTO): MealResponseDTO
+    fun save(mealRequestDTO: MealRequestDTO): MealResponseDTO
 
     fun updateById(
         id: Long,
-        mealDTO: MealDTO,
+        mealRequestDTO: MealRequestDTO,
     ): MealResponseDTO
 
     fun patchById(

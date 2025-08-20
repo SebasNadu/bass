@@ -1,6 +1,6 @@
 package bass.entities
 
-import bass.dto.meal.MealDTO
+import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealPatchDTO
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidMealDescriptionException
@@ -36,7 +36,6 @@ class MealEntity(
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
-    // add CascadeType.PERSIST if we create tags together with meals
     @JoinTable(
         name = "tag_meal",
         joinColumns = [JoinColumn(name = "meal_id")],
@@ -105,7 +104,7 @@ class MealEntity(
         if (this.quantity < quantity) throw InsufficientStockException("Not enough stock for meal $id")
     }
 
-    fun copyFrom(meal: MealDTO): MealEntity {
+    fun copyFrom(meal: MealRequestDTO): MealEntity {
         this.name = meal.name
         this.quantity = meal.quantity
         this.imageUrl = meal.imageUrl
