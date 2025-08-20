@@ -6,7 +6,7 @@ enum class CouponType(
     val displayName: String,
     val discountValue: Int, // percentage or fixed amount
     val discountType: DiscountType,
-    val validityDays: Int = 30
+    val validityDays: Long = 30
 ) {
     FIRST_RANK("First Rank Reward", 5, DiscountType.PERCENTAGE, 30),
     SECOND_RANK("Second Rank Reward", 10, DiscountType.PERCENTAGE, 45),
