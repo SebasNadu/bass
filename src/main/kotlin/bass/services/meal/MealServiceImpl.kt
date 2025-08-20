@@ -4,6 +4,7 @@ import bass.controller.meal.usecase.CrudMealUseCase
 import bass.dto.meal.MealDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealResponseDTO
+import bass.entities.MealEntity
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
@@ -43,13 +44,7 @@ class MealServiceImpl(
     override fun save(mealDTO: MealDTO): MealResponseDTO {
         validateMealNameUniqueness(mealDTO.name)
         val meal = mealDTO.toEntity()
-
-        mealDTO.tagsIds.forEach { id ->
-            val tag =
-                tagRepository.findByIdOrNull(id)
-                    ?: throw NotFoundException("Tag with id=$id not found")
-            meal.addTag(tag)
-        }
+        addTags(meal, mealDTO.tagsIds)
         val savedMeal = mealRepository.save(meal)
         return savedMeal.toDTO()
     }
@@ -66,10 +61,11 @@ class MealServiceImpl(
         if (existing.name != mealDTO.name) {
             validateMealNameUniqueness(mealDTO.name)
         }
-
-        // TODO: copy tags into existing
         existing.copyFrom(mealDTO)
-
+        if (mealDTO.tagsIds.isNotEmpty()) {
+            existing.clearTags()
+            addTags(existing, mealDTO.tagsIds)
+        }
         return mealRepository.save(existing).toDTO()
     }
 
@@ -84,9 +80,11 @@ class MealServiceImpl(
         if (mealPatchDTO.name != null && existing.name != mealPatchDTO.name) {
             validateMealNameUniqueness(mealPatchDTO.name!!)
         }
-
-        // TODO: copy tags into existing
         existing.copyFrom(mealPatchDTO)
+        if (mealPatchDTO.tagsIds.isNotEmpty()) {
+            existing.clearTags()
+            addTags(existing, mealPatchDTO.tagsIds)
+        }
         return mealRepository.save(existing).toDTO()
     }
 
@@ -109,5 +107,17 @@ class MealServiceImpl(
 
     override fun findByTag(tag: String): List<MealResponseDTO> {
         return mealRepository.findByTagsName(tag).map { it.toDTO() }
+    }
+
+    private fun addTags(
+        meal: MealEntity,
+        tagsIds: Set<Long>,
+    ) {
+        tagsIds.forEach { id ->
+            val tag =
+                tagRepository.findByIdOrNull(id)
+                    ?: throw NotFoundException("Tag with id=$id not found")
+            meal.addTag(tag)
+        }
     }
 }
