@@ -11,16 +11,17 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-
 @Service
 @Transactional
-class AchievementService(
+class AchievementServiceImpl(
     private val memberRepository: MemberRepository,
     private val achievementRepository: AchievementRepository,
-    private val couponRepository: CouponRepository
-) {
-
-    fun awardAchievement(memberId: Long, achievementId: Long): CouponEntity? {
+    private val couponRepository: CouponRepository,
+): AchievementService {
+    override fun awardAchievement(
+        memberId: Long,
+        achievementId: Long,
+    ): CouponEntity? {
         val member = memberRepository.findById(memberId).orElseThrow()
         val achievement = achievementRepository.findById(achievementId).orElseThrow()
 
@@ -29,22 +30,29 @@ class AchievementService(
 
         return if (achievement.generatesCoupon()) {
             generateCoupon(member, achievement)
-        } else null
+        } else {
+            null
+        }
     }
 
-    private fun generateCoupon(member: MemberEntity, achievement: AchievementEntity): CouponEntity {
+    private fun generateCoupon(
+        member: MemberEntity,
+        achievement: AchievementEntity,
+    ): CouponEntity {
         val couponCode = achievement.generateCouponCode(member.id)
-        val expiresAt = LocalDateTime.now()
-            .plusDays(achievement.couponType?.validityDays ?: 30L)
-            .toInstant(ZoneOffset.UTC)
+        val expiresAt =
+            LocalDateTime.now()
+                .plusDays(achievement.couponType?.validityDays ?: 30L)
+                .toInstant(ZoneOffset.UTC)
 
-        val coupon = CouponEntity(
-            code = couponCode,
-            member = member,
-            achievement = achievement,
-            couponType = achievement.couponType!!,
-            expiresAt = expiresAt
-        )
+        val coupon =
+            CouponEntity(
+                code = couponCode,
+                member = member,
+                achievement = achievement,
+                couponType = achievement.couponType!!,
+                expiresAt = expiresAt,
+            )
 
         return couponRepository.save(coupon)
     }
