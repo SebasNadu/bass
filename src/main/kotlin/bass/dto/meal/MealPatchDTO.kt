@@ -15,5 +15,6 @@ data class MealPatchDTO(
     var imageUrl: String? = null,
     @field:Positive(message = ValidationMessages.QUANTITY_NON_NEGATIVE)
     var quantity: Int? = null,
-    val options: Set<MealDTO> = emptySet(),
+    var description: String? = null,
+    var tagsIds: Set<Long> = emptySet(),
 )
