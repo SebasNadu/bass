@@ -39,7 +39,10 @@ class DatabaseConfig(
                         name = "Salmon Poke Bowl",
                         price = 14.50,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1604259596863-57153177d40b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1604259596863-" +
+                                "57153177d40b?q=80&w=687&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Sushi rice, raw salmon, avocado, edamame, and mango.",
                     ).apply {
                         addTag(savedTags[0])
@@ -49,7 +52,10 @@ class DatabaseConfig(
                         name = "Quinoa Buddha Bowl",
                         price = 12.50,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1679279726937-122c49626802?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1679279726937-122c49626802?" +
+                                "q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=" +
+                                "M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Quinoa, roasted chickpeas, sweet potato, and kale.",
                     ).apply {
                         addTag(savedTags[0])
@@ -59,7 +65,10 @@ class DatabaseConfig(
                         name = "Greek Salad",
                         price = 10.50,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1599021419847-d8a7a6aba5b4?q=80&w=979&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1599021419847-" +
+                                "d8a7a6aba5b4?q=80&w=979&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Feta cheese, olives, cucumber, tomatoes, and red onion.",
                     ).apply {
                         addTag(savedTags[0])
@@ -70,35 +79,50 @@ class DatabaseConfig(
                         name = "Lentil Salad with Goat Cheese",
                         price = 11.00,
                         quantity = 50,
-                        imageUrl = "https://plus.unsplash.com/premium_photo-1699881082655-ce3f5590b380?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://plus.unsplash.com/premium_photo-1699881082655-" +
+                                "ce3f5590b380?q=80&w=1170&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Brown lentils, goat cheese, walnuts, and balsamic vinaigrette.",
                     ),
                     MealEntity(
                         name = "Chicken Caesar Salad",
                         price = 12.00,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1580013759032-c96505e24c1f?q=80&w=909&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1580013759032-" +
+                                "c96505e24c1f?q=80&w=909&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Grilled chicken, romaine lettuce, parmesan, and croutons.",
                     ),
                     MealEntity(
                         name = "Vegan Tofu Scramble Bowl",
                         price = 11.50,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1631255325918-1ca2886508a5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1631255325918-" +
+                                "1ca2886508a5?q=80&w=1170&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Turmeric-spiced tofu with black beans and avocado.",
                     ),
                     MealEntity(
                         name = "Teriyaki Chicken Bowl",
                         price = 13.00,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1706703200723-822e740c7e6b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1706703200723-" +
+                                "822e740c7e6b?q=80&w=735&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Grilled chicken in teriyaki sauce with rice and broccoli.",
                     ),
                     MealEntity(
                         name = "Halloumi & Couscous Salad",
                         price = 12.50,
                         quantity = 50,
-                        imageUrl = "https://images.unsplash.com/photo-1673960802455-ec189a6207e5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        imageUrl =
+                            "https://images.unsplash.com/photo-1673960802455-" +
+                                "ec189a6207e5?q=80&w=1170&auto=format&fit=crop&ixlib=" +
+                                "rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         description = "Grilled halloumi, couscous, mint, and pomegranate seeds.",
                     ),
                 )
