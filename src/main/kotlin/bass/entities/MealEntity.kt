@@ -34,7 +34,7 @@ class MealEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) {
+) : Auditable() {
     @Column(name = "name", nullable = false, length = 50)
     var name: String = name
         set(value) {

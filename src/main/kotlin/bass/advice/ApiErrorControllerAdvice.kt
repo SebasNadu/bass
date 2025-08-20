@@ -3,6 +3,8 @@ package bass.advice
 import bass.dto.error.ErrorMessage
 import bass.dto.error.ErrorResponse
 import bass.exception.AuthorizationException
+import bass.exception.CouponAlreadyUsedException
+import bass.exception.CouponExpiredException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
@@ -163,5 +165,19 @@ class ApiErrorControllerAdvice {
             }
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", errorMessage, errors = errors)
+    }
+
+    @ExceptionHandler(CouponAlreadyUsedException::class)
+    fun handleCouponAlreadyUsedException(e: CouponAlreadyUsedException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Coupon already used"
+        log.warn("CouponAlreadyUsedException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, "Coupon already used", errorMessage)
+    }
+
+    @ExceptionHandler(CouponExpiredException::class)
+    fun handleCouponExpiredException(e: CouponExpiredException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Coupon expired"
+        log.warn("CouponExpiredException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.GONE, "Coupon expired", errorMessage)
     }
 }

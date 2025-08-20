@@ -27,22 +27,19 @@ class MemberEntity(
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
     val role: Role = Role.CUSTOMER,
-
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     val cartItems: MutableSet<CartItemEntity> = mutableSetOf(),
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "member_achievement",
         joinColumns = [JoinColumn(name = "member_id")],
-        inverseJoinColumns = [JoinColumn(name = "achievement_id")]
+        inverseJoinColumns = [JoinColumn(name = "achievement_id")],
     )
     val achievements: MutableSet<AchievementEntity> = mutableSetOf(),
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) {
+) : Auditable() {
     enum class Role { CUSTOMER, ADMIN }
 
     override fun equals(other: Any?): Boolean {
