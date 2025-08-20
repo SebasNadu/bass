@@ -2,8 +2,8 @@ package bass.endtoend
 
 import bass.dto.CartItemRequestDTO
 import bass.dto.CartItemResponseDTO
-import bass.dto.MealDTO
 import bass.dto.PageResponseDTO
+import bass.dto.meal.MealResponseDTO
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
@@ -46,7 +46,7 @@ class CartItemE2ETest {
     fun `add cart item`() {
         val cartItem = addCartItemAndReturn()
 
-        assertThat(cartItem.meal).isInstanceOf(MealDTO::class.java)
+        assertThat(cartItem.meal).isInstanceOf(MealResponseDTO::class.java)
         assertThat(cartItem.meal.id).isEqualTo(mealId)
         assertThat(cartItem.quantity).isEqualTo(2)
         assertThat(cartItem.addedAt).isBefore(LocalDateTime.now().plusMinutes(1))
@@ -85,7 +85,7 @@ class CartItemE2ETest {
             .get("/api/meals")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .extract().body().`as`(object : TypeRef<PageResponseDTO<MealDTO>>() {})
+            .extract().body().`as`(object : TypeRef<PageResponseDTO<MealResponseDTO>>() {})
 
         RestAssured.given()
             .header("Authorization", "Bearer $token")
@@ -100,7 +100,7 @@ class CartItemE2ETest {
                 .header("Authorization", "Bearer $token")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .get("/api/cart")
-                .then().extract().body().jsonPath().getList("", MealDTO::class.java)
+                .then().extract().body().jsonPath().getList("", MealResponseDTO::class.java)
 
         assertThat(items).isEmpty()
     }

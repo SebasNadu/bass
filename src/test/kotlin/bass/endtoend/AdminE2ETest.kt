@@ -1,8 +1,8 @@
 package bass.endtoend
 
 import bass.dto.ActiveMemberDTO
-import bass.dto.MealDTO
 import bass.dto.TopProductDTO
+import bass.dto.meal.MealResponseDTO
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import jakarta.transaction.Transactional
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestClient
 import java.time.LocalDateTime
-import kotlin.jvm.java
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -33,7 +32,7 @@ class AdminE2ETest {
 
     lateinit var token: String
 
-    lateinit var product: MealDTO
+    lateinit var meal: MealResponseDTO
 
     @Autowired
     lateinit var restClient: RestClient
@@ -56,23 +55,23 @@ class AdminE2ETest {
         token = response.body().jsonPath().getString("accessToken")
         assertThat(token).isNotBlank()
 
-        product =
+        meal =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .get("/api/meals/2")
                 .then().log().all()
-                .extract().`as`(MealDTO::class.java)
+                .extract().`as`(MealResponseDTO::class.java)
     }
 
     @Test
-    @DisplayName("GET /admin/top-products returns 200 and product list")
+    @DisplayName("GET /admin/top-meals returns 200 and meal list")
     fun getTopProducts() {
-        val products =
+        val meals =
             RestAssured.given()
                 .header("Authorization", "Bearer $token")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .get("/admin/top-products")
+                .get("/admin/top-meals")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -80,8 +79,8 @@ class AdminE2ETest {
                 .jsonPath()
                 .getList("$.data", TopProductDTO::class.java)
 
-        assertThat(products).isNotNull()
-        assertThat(products).allSatisfy {
+        assertThat(meals).isNotNull()
+        assertThat(meals).allSatisfy {
             assertThat(it.name).isNotBlank()
             assertThat(it.count).isGreaterThan(0)
             assertThat(it.mostRecentAddedAt).isBefore(LocalDateTime.now().plusMinutes(1))
@@ -111,14 +110,14 @@ class AdminE2ETest {
     }
 
     @Test
-    @DisplayName("GET /admin/top-products fails for non-admin token")
+    @DisplayName("GET /admin/top-meals fails for non-admin token")
     fun getTopProductsUnauthorized() {
         val nonAdminToken = loginAsUser()
 
         RestAssured.given()
             .header("Authorization", "Bearer $nonAdminToken")
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .get("/admin/top-products")
+            .get("/admin/top-meals")
             .then()
             .statusCode(HttpStatus.FORBIDDEN.value())
     }

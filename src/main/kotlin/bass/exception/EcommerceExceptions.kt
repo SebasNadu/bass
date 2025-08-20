@@ -13,9 +13,15 @@ class InvalidCartItemQuantityException(quantity: Int) :
 
 class NoSuchElementException(message: String? = null) : RuntimeException(message)
 
-class InvalidOptionNameException(message: String? = null) : RuntimeException(message)
+class InvalidMealNameException(message: String? = null) : RuntimeException(message)
 
-class InvalidOptionQuantityException(message: String? = null) : RuntimeException(message)
+class InvalidMealQuantityException(message: String? = null) : RuntimeException(message)
+
+class InvalidMealPriceException(message: String? = null) : RuntimeException(message)
+
+class InvalidMealDescriptionException(message: String? = null) : RuntimeException(message)
+
+class InvalidMealImageUrlException(message: String? = null) : RuntimeException(message)
 
 class InsufficientStockException(message: String? = null) : RuntimeException(message)
 
