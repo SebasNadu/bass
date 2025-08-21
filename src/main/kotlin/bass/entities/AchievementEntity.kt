@@ -21,8 +21,8 @@ class AchievementEntity(
     val name: String,
     @Column(name = "image_url")
     val imageUrl: String? = null,
-    @Column(name = "strikes_required", nullable = false, unique = true)
-    val strikesRequired: Int,
+    @Column(name = "streaks_required", nullable = false, unique = true)
+    val streaksRequired: Int,
     @Enumerated(EnumType.STRING)
     @Column(name = "coupon_type")
     val couponType: CouponType? = null,
@@ -64,7 +64,7 @@ class AchievementEntity(
     override fun hashCode(): Int = id.hashCode()
 
     override fun toString(): String {
-        return "AchievementEntity(id=$id, name='$name', strikesRequired=$strikesRequired, couponType=$couponType, " +
+        return "AchievementEntity(id=$id, name='$name', strikesRequired=$streaksRequired, couponType=$couponType, " +
             "description='$description', imageUrl=$imageUrl)"
     }
 }

@@ -45,27 +45,27 @@ class CouponServiceTest {
                     email = "a@a.com",
                     password = "123",
                     role = MemberEntity.Role.CUSTOMER,
-                )
+                ),
             )!!
 
         firstRankAchievement =
             achievementRepository.save(
                 AchievementEntity(
                     name = "First Rank",
-                    strikesRequired = 1,
+                    streaksRequired = 1,
                     couponType = CouponType.FIRST_RANK,
-                    description = "First rank achievement"
-                )
+                    description = "First rank achievement",
+                ),
             )
 
         secondRankAchievement =
             achievementRepository.save(
                 AchievementEntity(
                     name = "Second Rank",
-                    strikesRequired = 2,
+                    streaksRequired = 2,
                     couponType = CouponType.SECOND_RANK,
-                    description = "Second rank achievement"
-                )
+                    description = "Second rank achievement",
+                ),
             )
     }
 
@@ -78,7 +78,7 @@ class CouponServiceTest {
                 achievement = firstRankAchievement,
                 couponType = CouponType.FIRST_RANK,
                 expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
-            )
+            ),
         )
         couponRepository.save(
             CouponEntity(
@@ -87,7 +87,7 @@ class CouponServiceTest {
                 achievement = secondRankAchievement,
                 couponType = CouponType.SECOND_RANK,
                 expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
-            )
+            ),
         )
 
         val coupons = couponService.findAll(member.id)
@@ -99,15 +99,16 @@ class CouponServiceTest {
 
     @Test
     fun `validateUsability should return true for a non-expired coupon`() {
-        val coupon = couponRepository.save(
-            CouponEntity(
-                code = "FIRST_RANK",
-                member = member,
-                achievement = firstRankAchievement,
-                couponType = CouponType.FIRST_RANK,
-                expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+        val coupon =
+            couponRepository.save(
+                CouponEntity(
+                    code = "FIRST_RANK",
+                    member = member,
+                    achievement = firstRankAchievement,
+                    couponType = CouponType.FIRST_RANK,
+                    expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+                ),
             )
-        )
 
         val isValid = couponService.validateUsability(coupon.id)
 
@@ -125,7 +126,7 @@ class CouponServiceTest {
                     achievement = firstRankAchievement,
                     couponType = CouponType.FIRST_RANK,
                     expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
-                )
+                ),
             )
 
         val isValid = couponService.validateUsability(expiredCoupon.id)
@@ -134,15 +135,16 @@ class CouponServiceTest {
 
     @Test
     fun `delete should remove the coupon from the database`() {
-        val coupon = couponRepository.save(
-            CouponEntity(
-                code = "FIRST_RANK",
-                member = member,
-                achievement = firstRankAchievement,
-                couponType = CouponType.FIRST_RANK,
-                expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+        val coupon =
+            couponRepository.save(
+                CouponEntity(
+                    code = "FIRST_RANK",
+                    member = member,
+                    achievement = firstRankAchievement,
+                    couponType = CouponType.FIRST_RANK,
+                    expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+                ),
             )
-        )
         assertThat(couponRepository.findById(coupon.id)).isPresent
 
         couponService.delete(coupon.id)
