@@ -40,7 +40,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 20250820-2
-      author: your-name
+      author: arekiu
       comment: "Load meal-tag relationships and cart items"
       changes:
         - loadData:
