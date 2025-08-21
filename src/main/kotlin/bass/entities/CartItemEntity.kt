@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
@@ -32,8 +33,8 @@ class CartItemEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 ) {
-    val totalPrice: Double
-        get() = meal.price * quantity
+    val totalPrice: BigDecimal
+        get() = meal.price * quantity.toBigDecimal()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
