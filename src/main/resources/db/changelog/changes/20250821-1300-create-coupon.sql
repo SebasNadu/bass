@@ -8,6 +8,6 @@ CREATE TABLE coupon
     expires_at     TIMESTAMP    NOT NULL,
     is_used        BOOLEAN      NOT NULL DEFAULT FALSE,
     used_at        TIMESTAMP,
-    created_at     TIMESTAMP    NOT NULL,
-    updated_at     TIMESTAMP    NOT NULL
+    created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
