@@ -13,7 +13,6 @@ import java.time.Instant
 @Service
 class CouponServiceImpl(
     private val couponRepository: CouponRepository,
-    private val memberRepository: MemberRepository,
 ) : ManageCouponUseCase {
     override fun findAll(memberId: Long): List<CouponDTO> {
         val coupons = couponRepository.findByMemberId(memberId)
