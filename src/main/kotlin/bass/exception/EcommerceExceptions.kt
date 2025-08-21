@@ -32,3 +32,7 @@ class InvalidTagNameException(message: String? = null) : RuntimeException(messag
 class CouponAlreadyUsedException(message: String? = null) : RuntimeException(message)
 
 class CouponExpiredException(message: String? = null) : RuntimeException(message)
+
+class DaysSizeAlreadyMaximumException(message: String? = null) : RuntimeException(message)
+
+class DayNameAlreadyExistsException(message: String? = null) : RuntimeException(message)
