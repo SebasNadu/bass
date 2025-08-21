@@ -14,7 +14,8 @@ class DatabaseConfig(
     private val tagRepository: TagRepository,
 )
 
-//TODO delete DirtiestContext when using this in dev
+// TODO delete DirtiestContext when using this in dev
+
 /*{
    @Bean
     fun databaseInitializer(): CommandLineRunner =
