@@ -8,4 +8,4 @@ COPY build.gradle.kts settings.gradle.kts ./
 
 RUN chmod +x gradlew
 
-CMD ["./gradlew", "bootRun", "--no-daemon"]
+CMD ["./gradlew", "bootRun", "--no-daemon", "--args=--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
