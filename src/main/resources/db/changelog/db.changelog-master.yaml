@@ -20,4 +20,9 @@ databaseChangeLog:
   - include:
       file: changes/20250818-1850-create-join-tag-meal.sql
       relativeToChangelogFile: true
-
+  - include:
+      file: changes/20250820-1900-load-initial-data.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/20250820-2000-reset-id-sequences.sql
+      relativeToChangelogFile: true

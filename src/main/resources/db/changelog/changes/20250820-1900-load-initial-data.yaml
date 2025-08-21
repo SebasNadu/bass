@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250820-1
+      author: your-name
+      comment: "Load initial tags, meals, and members"
+      changes:
+        - loadData:
+            tableName: tag
+            file: ../data/tags.csv
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+        - loadData:
+            tableName: meal
+            file: ../data/meals.csv
+            relativeToChangelogFile: true
+            columns:
+              - column: { name: id, type: NUMERIC }
+              - column: { name: name, type: STRING }
+              - column: { name: price, type: NUMERIC }
+              - column: { name: quantity, type: NUMERIC }
+              - column: { name: image_url, type: STRING }
+              - column: { name: description, type: STRING }
+
+        - loadData:
+            tableName: member
+            file: ../data/members.csv
+            relativeToChangelogFile: true
+            columns:
+              - column: { name: id, type: NUMERIC }
+              - column: { name: name, type: STRING }
+              - column: { name: email, type: STRING }
+              - column: { name: password, type: STRING }
+              - column: { name: role, type: STRING }
+
+  - changeSet:
+      id: 20250820-2
+      author: arekiu
+      comment: "Load meal-tag relationships and cart items"
+      changes:
+        - loadData:
+            tableName: tag_meal
+            file: ../data/tag_meal.csv
+            relativeToChangelogFile: true
+            columns:
+              - column: { name: meal_id, type: NUMERIC }
+              - column: { name: tag_id, type: NUMERIC }
+
+        - loadData:
+            tableName: cart_item
+            file: ../data/cart_items.csv
+            relativeToChangelogFile: true
+            columns:
+              - column: { name: id, type: NUMERIC }
+              - column: { name: member_id, type: NUMERIC }
+              - column: { name: meal_id, type: NUMERIC }
+              - column: { name: quantity, type: NUMERIC }
+              - column: { name: added_at, type: DATETIME }
