@@ -17,16 +17,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
-/*
-doc about coupon creation:
-- a DTO containing member and coupon name is received.
-- fun createFrom determines the corresponding discountRate (the percentage to be discounted from the order)
-using the name of the coupon as reference.
-- expiresAt calculates the moment when the coupon was created plus 30 days.
-- in service there is a function validateUsability which checks if the coupon is expiring after the current day.
-*/
 @Entity
 @Table(name = "coupon")
 class CouponEntity(

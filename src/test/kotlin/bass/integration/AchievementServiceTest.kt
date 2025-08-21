@@ -18,7 +18,6 @@ import java.time.Instant
 @Transactional
 @SpringBootTest
 class AchievementServiceTest {
-
     @Autowired
     private lateinit var achievementService: AchievementService
 
@@ -37,32 +36,35 @@ class AchievementServiceTest {
 
     @BeforeEach
     fun setup() {
-        member = memberRepository.save(
-            MemberEntity(
-                name = "Test User",
-                email = "test@example.com",
-                password = "123",
-                role = MemberEntity.Role.CUSTOMER
-            )
-        )!!
+        member =
+            memberRepository.save(
+                MemberEntity(
+                    name = "Test User",
+                    email = "test@example.com",
+                    password = "123",
+                    role = MemberEntity.Role.CUSTOMER,
+                ),
+            )!!
 
-        couponAchievement = achievementRepository.save(
-            AchievementEntity(
-                name = "Coupon Achievement",
-                strikesRequired = 1,
-                couponType = CouponType.FIRST_RANK,
-                description = "Generates a coupon"
+        couponAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "Coupon Achievement",
+                    streaksRequired = 1,
+                    couponType = CouponType.FIRST_RANK,
+                    description = "Generates a coupon",
+                ),
             )
-        )
 
-        nonCouponAchievement = achievementRepository.save(
-            AchievementEntity(
-                name = "Non-Coupon Achievement",
-                strikesRequired = 2,
-                couponType = null,
-                description = "Does not generate a coupon"
+        nonCouponAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "Non-Coupon Achievement",
+                    streaksRequired = 2,
+                    couponType = null,
+                    description = "Does not generate a coupon",
+                ),
             )
-        )
     }
 
     @Test

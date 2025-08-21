@@ -17,7 +17,7 @@ class AchievementServiceImpl(
     private val memberRepository: MemberRepository,
     private val achievementRepository: AchievementRepository,
     private val couponRepository: CouponRepository,
-): AchievementService {
+) : AchievementService {
     override fun awardAchievement(
         memberId: Long,
         achievementId: Long,
