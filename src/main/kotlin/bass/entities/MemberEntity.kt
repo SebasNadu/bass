@@ -50,6 +50,8 @@ class MemberEntity(
     val achievements: MutableSet<AchievementEntity> = mutableSetOf(),
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE], orphanRemoval = true)
     val days: MutableSet<DayEntity> = mutableSetOf(),
+    @Column(name = "streak", nullable = false)
+    var streak: Int = 0,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
