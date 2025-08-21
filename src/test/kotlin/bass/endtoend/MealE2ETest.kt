@@ -53,6 +53,34 @@ class MealE2ETest {
     }
 
     @Test
+    fun getMealsByTag() {
+        val tag = "Healthy"
+        val response =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/meals/tag?tagName=$tag")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val content = response.body().jsonPath().getList("", MealResponseDTO::class.java)
+        assertThat(content).isNotEmpty()
+    }
+
+    @Test
+    fun getMealsByTag_emptyTag() {
+        val tag = ""
+        val response =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/meals/tag?tagName=$tag")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
+
+    @Test
     fun getMeal() {
         val productDTO =
             MealRequestDTO(
@@ -203,7 +231,7 @@ class MealE2ETest {
         val newMealDTO =
             MealRequestDTO(
                 name = "Speaker2",
-                price = -99.99.toBigDecimal(),
+                price = (-99.99).toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",

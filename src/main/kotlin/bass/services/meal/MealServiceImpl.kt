@@ -5,6 +5,7 @@ import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
+import bass.exception.InvalidTagNameException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
@@ -103,7 +104,8 @@ class MealServiceImpl(
         }
     }
 
-    override fun findByTag(tag: String): List<MealResponseDTO> {
+    override fun findAllByTag(tag: String): List<MealResponseDTO> {
+        if (tag.isBlank()) throw InvalidTagNameException("Tag name cannot be blank")
         return mealRepository.findByTagsName(tag).map { it.toDTO() }
     }
 
