@@ -22,7 +22,7 @@ import org.springframework.test.annotation.DirtiesContext
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class OrderControllerE2ETest(
     @param:Autowired

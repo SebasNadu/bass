@@ -9,25 +9,24 @@ import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MemberE2ETest(
     @param:Autowired
     var tagRepository: TagRepository,
 ) {
     lateinit var token: String
+    lateinit var tag: TagEntity
 
     @BeforeEach
     fun loginAndGetToken() {
-        val tag = tagRepository.save(TagEntity(name = "Vegan"))
+        tag = tagRepository.save(TagEntity(name = "SomeTag"))
         val loginPayload =
             mapOf(
                 "email" to "sebas@sebas.com",
@@ -48,7 +47,7 @@ class MemberE2ETest(
 
     @Test
     fun createMember() {
-        val tag = tagRepository.save(TagEntity(name = "Vegan"))
+//        val tag = tagRepository.save(TagEntity(name = "Vegan"))
         val registerPayload =
             mapOf(
                 "name" to NAME,
