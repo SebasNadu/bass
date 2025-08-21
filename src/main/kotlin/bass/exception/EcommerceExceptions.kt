@@ -26,3 +26,5 @@ class InvalidMealImageUrlException(message: String? = null) : RuntimeException(m
 class InsufficientStockException(message: String? = null) : RuntimeException(message)
 
 class PaymentFailedException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
+
+class InvalidTagNameException(message: String? = null) : RuntimeException(message)

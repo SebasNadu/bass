@@ -2,9 +2,9 @@ package bass.controller.member
 
 import bass.controller.member.usecase.AuthUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.MemberRegisterDTO
 import bass.dto.TokenRequestDTO
 import bass.dto.TokenResponseDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.infrastructure.AuthorizationExtractor
 import bass.model.Member
 import jakarta.servlet.http.HttpServletRequest
