@@ -6,8 +6,8 @@ CREATE TABLE achievement
     streaks_required INT          NOT NULL UNIQUE,
     coupon_type      VARCHAR(50),
     description      TEXT         NOT NULL,
-    created_at       TIMESTAMP    NOT NULL,
-    updated_at       TIMESTAMP    NOT NULL
+    created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE member_achievement
