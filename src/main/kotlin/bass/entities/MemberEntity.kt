@@ -1,5 +1,7 @@
 package bass.entities
 
+import bass.exception.DayNameAlreadyExistsException
+import bass.exception.DaysSizeAlreadyMaximumException
 import bass.exception.InvalidTagNameException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -46,10 +48,27 @@ class MemberEntity(
         inverseJoinColumns = [JoinColumn(name = "achievement_id")],
     )
     val achievements: MutableSet<AchievementEntity> = mutableSetOf(),
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE], orphanRemoval = true)
+    val days: MutableSet<DayEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 ) {
+    init {
+        require(days.size in DAYS_SIZE_MIN..DAYS_SIZE_MAX) { "A member must have 0 to 2 days assigned." }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MemberEntity) return false
+        if (id == 0L || other.id == 0L) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
+
+    enum class Role { CUSTOMER, ADMIN }
+
     fun addTag(tag: TagEntity) {
         if (tags.any { it.name == tag.name }) {
             throw InvalidTagNameException("Tag with name '${tag.name}' already exists")
@@ -62,14 +81,30 @@ class MemberEntity(
         this.tags.clear()
     }
 
-    enum class Role { CUSTOMER, ADMIN }
+    fun addDay(day: DayEntity) {
+        if (this.days.size == DAYS_SIZE_MAX) {
+            throw DaysSizeAlreadyMaximumException("A member already has 2 days assigned.")
+        }
+        val dayNames = days.map { it.dayName.name }
+        if (dayNames.contains(day.dayName.name)) {
+            throw DayNameAlreadyExistsException("A member already has a day of ${day.dayName.name}!")
+        }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is MemberEntity) return false
-        if (id == 0L || other.id == 0L) return false
-        return id == other.id
+        days.add(day)
+        day.setMemberEntity(this)
     }
 
-    override fun hashCode(): Int = id.hashCode()
+    fun removeDay(day: DayEntity) {
+        assert(days.isNotEmpty()) { "A member does not have any day" }
+        val dayNames = days.map { it.dayName.name }
+        assert(dayNames.contains(day.dayName.name)) { "A member does not have a day of ${day.dayName.name}!" }
+
+        days.remove(day)
+        day.setMemberEntity(null)
+    }
+
+    companion object {
+        const val DAYS_SIZE_MIN = 0
+        const val DAYS_SIZE_MAX = 2
+    }
 }
