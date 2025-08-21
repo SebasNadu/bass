@@ -1,8 +1,8 @@
 package bass.endtoend
 
-import bass.dto.member.ActiveMemberDTO
 import bass.dto.TopProductDTO
 import bass.dto.meal.MealResponseDTO
+import bass.dto.member.ActiveMemberDTO
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import jakarta.transaction.Transactional
