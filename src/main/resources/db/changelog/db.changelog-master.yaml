@@ -6,10 +6,13 @@ databaseChangeLog:
       file: changes/20250815-1600-add-indexes.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/20250817-1700-create-coupon.sql
+      file: changes/20250820-1549-create-achievement.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/20250818-1600-create-tag.sql
+      file: changes/20250821-1300-create-coupon.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/20250821-1600-create-tag.sql
       relativeToChangelogFile: true
   - include:
       file: changes/20250819-1400-create-join-member-tag.sql

@@ -32,7 +32,7 @@ class CartItemEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) {
+) : Auditable() {
     val totalPrice: BigDecimal
         get() = meal.price * quantity.toBigDecimal()
 

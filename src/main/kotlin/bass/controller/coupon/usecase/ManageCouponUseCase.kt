@@ -1,10 +1,8 @@
 package bass.controller.coupon.usecase
 
-import bass.dto.CouponDTO
+import bass.dto.coupon.CouponDTO
 
 interface ManageCouponUseCase {
-    fun create(couponDTO: CouponDTO): CouponDTO
-
     fun findAll(memberId: Long): List<CouponDTO>
 
     fun validateUsability(couponId: Long): Boolean

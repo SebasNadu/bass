@@ -28,4 +28,4 @@ class OrderItemEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-)
+) : Auditable()
