@@ -1,1 +1,0 @@
-ALTER TABLE meal ADD COLUMN description VARCHAR(255);
