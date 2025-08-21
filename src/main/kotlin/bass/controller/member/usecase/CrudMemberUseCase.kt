@@ -1,6 +1,6 @@
 package bass.controller.member.usecase
 
-import bass.dto.MemberRegisterDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.model.Member
 
 interface CrudMemberUseCase {

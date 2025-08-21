@@ -24,7 +24,7 @@ data class MealRequestDTO(
     var imageUrl: String,
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
     var description: String,
-    @field:NotEmpty(message = ValidationMessages.TAGS_REQUIRED)
+    @field:NotEmpty(message = ValidationMessages.TAG_REQUIRED)
     var tagsIds: Set<Long>,
     var id: Long = 0L,
 )
