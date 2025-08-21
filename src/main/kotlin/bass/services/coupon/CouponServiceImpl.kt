@@ -7,18 +7,21 @@ import bass.mappers.toDTO
 import bass.repositories.CouponRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
 class CouponServiceImpl(
     private val couponRepository: CouponRepository,
 ) : ManageCouponUseCase {
+    @Transactional(readOnly = true)
     override fun findAll(memberId: Long): List<CouponDTO> {
         val coupons = couponRepository.findByMemberId(memberId)
         val couponDTOs = coupons.map { it.toDTO() }
         return couponDTOs
     }
 
+    @Transactional(readOnly = true)
     override fun validateUsability(couponId: Long): Boolean {
         val coupon =
             couponRepository.findByIdOrNull(couponId)
@@ -26,6 +29,7 @@ class CouponServiceImpl(
         return coupon.expiresAt > Instant.now()
     }
 
+    @Transactional
     override fun delete(couponId: Long) {
         couponRepository.deleteById(couponId)
     }
