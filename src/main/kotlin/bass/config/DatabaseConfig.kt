@@ -13,6 +13,8 @@ class DatabaseConfig(
     private val cartItemRepository: CartItemRepository,
     private val tagRepository: TagRepository,
 )
+
+//TODO delete DirtiestContext when using this in dev
 /*{
    @Bean
     fun databaseInitializer(): CommandLineRunner =
