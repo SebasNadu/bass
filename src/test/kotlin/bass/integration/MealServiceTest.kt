@@ -27,7 +27,7 @@ class MealServiceTest(
         meal =
             MealRequestDTO(
                 name = "Test Meal",
-                price = 19.99,
+                price = 19.99.toBigDecimal(),
                 imageUrl = "https://example.com/test.png",
                 quantity = 4,
                 description = "description",
@@ -65,7 +65,7 @@ class MealServiceTest(
     fun `should update meal by id`() {
         val saved = mealService.save(meal)
 
-        val updated = saved.copy(name = "Updated", price = 49.99)
+        val updated = saved.copy(name = "Updated", price = 49.99.toBigDecimal())
 
         val request =
             MealRequestDTO(
@@ -79,7 +79,7 @@ class MealServiceTest(
         val result = mealService.updateById(saved.id, request)
 
         assertThat(result.name).isEqualTo("Updated")
-        assertThat(result.price).isEqualTo(49.99)
+        assertThat(result.price).isEqualTo(49.99.toBigDecimal())
         assertThat(result.tags.size).isEqualTo(2)
         assertThat(result.tags.map { it.name }).containsExactlyInAnyOrder("High-Protein", "Salad")
     }

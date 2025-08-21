@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @SpringBootTest
@@ -74,7 +75,7 @@ class OrderServiceTest {
         val memberLoginDTO = MemberLoginDTO(id = member.id)
         val paymentRequest =
             PaymentRequest(
-                amount = 2000.0,
+                amount = "29.00".toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
@@ -82,7 +83,7 @@ class OrderServiceTest {
         val orderDTO: OrderDTO = orderService.create(memberLoginDTO, paymentRequest)
 
         assertNotNull(orderDTO.id)
-        assertEquals(29.0, orderDTO.totalAmount)
+        assertEquals(BigDecimal("29.00"), orderDTO.totalAmount)
         assertEquals(member.id, orderDTO.memberId)
 
         val order = orderRepository.findByIdOrNull(orderDTO.id!!)
@@ -106,7 +107,7 @@ class OrderServiceTest {
         val invalidMemberDTO = MemberLoginDTO(id = 999999L) // non-existent id
         val paymentRequest =
             PaymentRequest(
-                amount = 1000.0,
+                amount = 1000.0.toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
@@ -123,7 +124,7 @@ class OrderServiceTest {
         val memberLoginDTO = MemberLoginDTO(id = member.id)
         val paymentRequest =
             PaymentRequest(
-                amount = 1000.0,
+                amount = 1000.0.toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
