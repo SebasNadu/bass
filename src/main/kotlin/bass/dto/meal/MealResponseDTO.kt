@@ -1,10 +1,11 @@
 package bass.dto.meal
 
 import bass.dto.tag.TagDTO
+import java.math.BigDecimal
 
 data class MealResponseDTO(
     val name: String,
-    val price: Double,
+    val price: BigDecimal,
     val quantity: Int,
     val imageUrl: String,
     var description: String,

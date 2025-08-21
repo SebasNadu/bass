@@ -1,6 +1,6 @@
 package bass.integration
 
-import bass.dto.MemberRegisterDTO
+import bass.dto.member.MemberRegisterDTO
 import bass.entities.MemberEntity
 import bass.exception.OperationFailedException
 import bass.repositories.MemberRepository
@@ -71,7 +71,7 @@ class MemberServiceTest {
 
     @Test
     fun `save should persist member and return DTO`() {
-        val dto = MemberRegisterDTO(name = "new", email = "new@test.com", password = "secure")
+        val dto = MemberRegisterDTO(name = "new", email = "new@test.com", password = "secure", tagIds = setOf(1L))
 
         val saved = memberService.save(dto)
 
@@ -85,7 +85,7 @@ class MemberServiceTest {
 
         val ex =
             assertThrows<OperationFailedException> {
-                memberService.save(MemberRegisterDTO(name = "exists2", email = "exists@test.com", password = "new"))
+                memberService.save(MemberRegisterDTO(name = "exists2", email = "exists@test.com", password = "new", tagIds = setOf(1L, 2L)))
             }
 
         assertThat(ex.message).contains("already exists")

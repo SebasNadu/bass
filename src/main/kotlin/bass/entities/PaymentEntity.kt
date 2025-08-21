@@ -11,6 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "payment")
@@ -20,8 +21,8 @@ class PaymentEntity(
     var id: Long? = null,
     @Column(nullable = false, unique = true)
     val stripePaymentIntentId: String,
-    @Column(nullable = false)
-    val amount: Long,
+    @Column(nullable = false, precision = 10, scale = 2)
+    val amount: BigDecimal,
     @Column(nullable = false)
     val currency: String,
     @Enumerated(EnumType.STRING)

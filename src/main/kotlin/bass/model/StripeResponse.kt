@@ -1,5 +1,8 @@
 package bass.model
 
+import java.math.BigDecimal
+import java.math.RoundingMode
+
 data class StripeResponse(
     val id: String?,
     val amount: Long?,
@@ -14,6 +17,9 @@ data class StripeResponse(
     val paymentMethod: String?,
     val latestCharge: String?,
 ) {
-    val amountDecimal: Double
-        get() = amount?.div(100.0) ?: 0.0
+    val amountDecimal: BigDecimal
+        get() =
+            amount?.toBigDecimal()?.divide(
+                BigDecimal("100"), 2, RoundingMode.HALF_UP,
+            ) ?: BigDecimal.ZERO
 }

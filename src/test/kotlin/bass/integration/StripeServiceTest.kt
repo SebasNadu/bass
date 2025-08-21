@@ -32,7 +32,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 1000.0,
+                amount = 1000.0.toBigDecimal(),
                 currency = "usd",
                 paymentMethod = "pm_card_visa",
             )
@@ -83,7 +83,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 500.0,
+                amount = 500.00.toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_mastercard",
             )
@@ -129,7 +129,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 99.99,
+                amount = 99.99.toBigDecimal(),
                 currency = "usd",
                 paymentMethod = "pm_card_visa",
             )
@@ -175,7 +175,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 1000.0,
+                amount = 1000.0.toBigDecimal(),
                 currency = "usd",
                 paymentMethod = "pm_card_visa",
             )
@@ -201,7 +201,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 2000.0,
+                amount = 2000.0.toBigDecimal(),
                 currency = "gbp",
                 paymentMethod = "pm_card_amex",
             )
@@ -225,7 +225,7 @@ class StripeServiceTest {
         // Given
         val paymentRequest =
             PaymentRequest(
-                amount = 100.0,
+                amount = 100.0.toBigDecimal(),
                 currency = "usd",
                 paymentMethod = "pm_card_visa",
             )

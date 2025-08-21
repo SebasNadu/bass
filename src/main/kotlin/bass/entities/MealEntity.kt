@@ -8,6 +8,7 @@ import bass.exception.InvalidMealImageUrlException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealPriceException
 import bass.exception.InvalidMealQuantityException
+import bass.exception.InvalidTagNameException
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -21,6 +22,7 @@ import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import java.math.BigDecimal
 
 @Entity
 @Table(
@@ -30,7 +32,7 @@ import jakarta.persistence.UniqueConstraint
 class MealEntity(
     name: String,
     quantity: Int,
-    price: Double,
+    price: BigDecimal,
     imageUrl: String,
     description: String,
     @OneToMany(mappedBy = "meal", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -45,7 +47,7 @@ class MealEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) {
+) : Auditable() {
     @Column(name = "name", nullable = false, length = 50)
     var name: String = name
         set(value) {
@@ -67,8 +69,8 @@ class MealEntity(
             field = value
         }
 
-    @Column(name = "price", nullable = false)
-    var price: Double = price
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    var price: BigDecimal = price
         set(value) {
             validatePrice(value)
             field = value
@@ -149,8 +151,8 @@ class MealEntity(
         }
     }
 
-    private fun validatePrice(price: Double) {
-        if (price <= 0) throw InvalidMealPriceException("Price must be positive")
+    private fun validatePrice(price: BigDecimal) {
+        if (price <= BigDecimal.ZERO) throw InvalidMealPriceException("Price must be positive")
     }
 
     private fun validateDescription(description: String) {
@@ -159,7 +161,7 @@ class MealEntity(
 
     fun addTag(tag: TagEntity) {
         if (tags.any { it.name == tag.name }) {
-            throw InvalidMealNameException("Tag with name '${tag.name}' already exists")
+            throw InvalidTagNameException("Tag with name '${tag.name}' already exists")
         }
         this.tags.add(tag)
         tag.meals.add(this)

@@ -18,8 +18,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class OrderControllerE2ETest(
     @param:Autowired
@@ -59,7 +62,7 @@ class OrderControllerE2ETest(
         createCartItem()
         val paymentRequest =
             PaymentRequest(
-                amount = 100.0,
+                amount = 100.00.toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
@@ -75,7 +78,7 @@ class OrderControllerE2ETest(
                 .extract().`as`(OrderDTO::class.java)
 
         Assertions.assertThat(response).isNotNull
-        Assertions.assertThat(response.totalAmount).isEqualTo(200.0)
+        Assertions.assertThat(response.totalAmount).isEqualTo(BigDecimal("200.00"))
         Assertions.assertThat(response.status.toString()).isEqualTo("CREATED")
     }
 
@@ -86,7 +89,7 @@ class OrderControllerE2ETest(
 
         val paymentRequest =
             PaymentRequest(
-                amount = 100.0,
+                amount = 100.0.toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
@@ -104,7 +107,7 @@ class OrderControllerE2ETest(
         val mealRequestDTO =
             MealRequestDTO(
                 name = "Test Product",
-                price = 100.0,
+                price = 100.0.toBigDecimal(),
                 imageUrl = "https://example.com/image.jpg",
                 quantity = 4,
                 description = "description",

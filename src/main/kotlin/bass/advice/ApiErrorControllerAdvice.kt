@@ -3,12 +3,17 @@ package bass.advice
 import bass.dto.error.ErrorMessage
 import bass.dto.error.ErrorResponse
 import bass.exception.AuthorizationException
+import bass.exception.CouponAlreadyUsedException
+import bass.exception.CouponExpiredException
+import bass.exception.DayNameAlreadyExistsException
+import bass.exception.DaysSizeAlreadyMaximumException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
 import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealQuantityException
+import bass.exception.InvalidTagNameException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
@@ -175,5 +180,42 @@ class ApiErrorControllerAdvice {
             }
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", errorMessage, errors = errors)
+    }
+
+    @ExceptionHandler(InvalidTagNameException::class)
+    fun handleInvalidTagNameException(e: InvalidTagNameException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Invalid tag name"
+        log.warn("InvalidTagNameException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid tag name", errorMessage)
+    }
+
+    @ExceptionHandler(CouponAlreadyUsedException::class)
+    fun handleCouponAlreadyUsedException(e: CouponAlreadyUsedException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Coupon already used"
+        log.warn("CouponAlreadyUsedException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, "Coupon already used", errorMessage)
+    }
+
+    @ExceptionHandler(CouponExpiredException::class)
+    fun handleCouponExpiredException(e: CouponExpiredException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Coupon expired"
+        log.warn("CouponExpiredException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.GONE, "Coupon expired", errorMessage)
+    }
+
+    @ExceptionHandler(DaysSizeAlreadyMaximumException::class)
+    fun handleDaysSizeAlreadyMaximumException(e: DaysSizeAlreadyMaximumException): ResponseEntity<ErrorResponse> {
+        val defaultMessage = "Days size for member already at maximum"
+        val errorMessage = e.message ?: defaultMessage
+        log.warn("DaysSizeAlreadyMaximumException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
+    }
+
+    @ExceptionHandler(DayNameAlreadyExistsException::class)
+    fun handleDayNameAlreadyExistsException(e: DayNameAlreadyExistsException): ResponseEntity<ErrorResponse> {
+        val defaultMessage = "Day name already exists"
+        val errorMessage = e.message ?: defaultMessage
+        log.warn("DayNameAlreadyExistsException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
     }
 }

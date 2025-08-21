@@ -17,9 +17,9 @@ class WebMvcConfiguration(
     private val loginMemberArgumentResolver: LoginMemberArgumentResolver,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(checkLogin).addPathPatterns("/api/**", "/products", "/admin/**")
+        registry.addInterceptor(checkLogin).addPathPatterns("/api/**", "/meals", "/admin/**")
             .excludePathPatterns("/api/members/**")
-        registry.addInterceptor(checkRole).addPathPatterns("/admin/**", "/api/products/**")
+        registry.addInterceptor(checkRole).addPathPatterns("/admin/**", "/api/meals/**")
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
@@ -28,6 +28,18 @@ class WebMvcConfiguration(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/api/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders(HttpHeaders.LOCATION)
+            .maxAge(3600)
+        registry.addMapping("/swagger-ui/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders(HttpHeaders.LOCATION)
+            .maxAge(3600)
+        registry.addMapping("/h2/**")
             .allowedOrigins("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")

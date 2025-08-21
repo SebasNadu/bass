@@ -1,36 +1,27 @@
 package bass.services.coupon
 
 import bass.controller.coupon.usecase.ManageCouponUseCase
-import bass.dto.CouponDTO
-import bass.entities.CouponEntity
+import bass.dto.coupon.CouponDTO
 import bass.exception.NotFoundException
 import bass.mappers.toDTO
 import bass.repositories.CouponRepository
-import bass.repositories.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
 class CouponServiceImpl(
     private val couponRepository: CouponRepository,
-    private val memberRepository: MemberRepository,
 ) : ManageCouponUseCase {
-    override fun create(couponDTO: CouponDTO): CouponDTO {
-        val member =
-            memberRepository.findByIdOrNull(couponDTO.memberId)
-                ?: throw NotFoundException("Member not found")
-        val coupon = CouponEntity.createFrom(couponDTO.name, member)
-        val savedCoupon = couponRepository.save(coupon)
-        return savedCoupon.toDTO()
-    }
-
+    @Transactional(readOnly = true)
     override fun findAll(memberId: Long): List<CouponDTO> {
         val coupons = couponRepository.findByMemberId(memberId)
         val couponDTOs = coupons.map { it.toDTO() }
         return couponDTOs
     }
 
+    @Transactional(readOnly = true)
     override fun validateUsability(couponId: Long): Boolean {
         val coupon =
             couponRepository.findByIdOrNull(couponId)
@@ -38,6 +29,7 @@ class CouponServiceImpl(
         return coupon.expiresAt > Instant.now()
     }
 
+    @Transactional
     override fun delete(couponId: Long) {
         couponRepository.deleteById(couponId)
     }

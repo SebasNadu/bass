@@ -3,18 +3,14 @@ databaseChangeLog:
       file: changes/20250814-1600-initial-schema.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/20250815-1600-add-indexes.sql
+      file: changes/20250816-1600-create-tag-tables.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/20250817-1700-create-coupon.sql
+      file: changes/20250820-1549-create-achievement-coupon-tables.sql
       relativeToChangelogFile: true
   - include:
-      file: changes/20250818-1600-create-tag.sql
+      file: changes/20250821-1000-load-initial-data.yaml
       relativeToChangelogFile: true
   - include:
-      file: changes/20250818-1840-add-description-to-meal.sql
+      file: changes/20250827-2000-reset-id-sequences.sql
       relativeToChangelogFile: true
-  - include:
-      file: changes/20250818-1850-create-join-tag-meal.sql
-      relativeToChangelogFile: true
-

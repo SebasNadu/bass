@@ -1,8 +1,10 @@
 package bass.integration
 
-import bass.dto.CouponDTO
+import bass.entities.AchievementEntity
 import bass.entities.CouponEntity
 import bass.entities.MemberEntity
+import bass.enums.CouponType
+import bass.repositories.AchievementRepository
 import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import bass.services.coupon.CouponServiceImpl
@@ -11,12 +13,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 @Transactional
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CouponServiceTest {
     @Autowired
     private lateinit var couponService: CouponServiceImpl
@@ -27,7 +31,12 @@ class CouponServiceTest {
     @Autowired
     private lateinit var memberRepository: MemberRepository
 
+    @Autowired
+    private lateinit var achievementRepository: AchievementRepository
+
     private lateinit var member: MemberEntity
+    private lateinit var firstRankAchievement: AchievementEntity
+    private lateinit var secondRankAchievement: AchievementEntity
 
     @BeforeEach
     fun setup() {
@@ -40,41 +49,72 @@ class CouponServiceTest {
                     role = MemberEntity.Role.CUSTOMER,
                 ),
             )!!
-    }
 
-    @Test
-    fun `should create a coupon for a valid member and name`() {
-        val couponDTO = CouponDTO(name = "FIRST_RANK", memberId = member.id)
+        firstRankAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "First Rank",
+                    streaksRequired = 1,
+                    couponType = CouponType.FIRST_RANK,
+                    description = "First rank achievement",
+                ),
+            )
 
-        val result = couponService.create(couponDTO)
-
-        assertThat(result.id).isNotNull().isGreaterThan(0L)
-        assertThat(result.name).isEqualTo("FIRST_RANK")
-        assertThat(result.memberId).isEqualTo(member.id)
-
-        val savedEntity = couponRepository.findById(result.id).get()
-        assertThat(savedEntity.discountRate).isEqualTo(CouponEntity.DiscountRate.FIVE_PERCENT)
+        secondRankAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "Second Rank",
+                    streaksRequired = 2,
+                    couponType = CouponType.SECOND_RANK,
+                    description = "Second rank achievement",
+                ),
+            )
     }
 
     @Test
     fun `findAll should return all coupons for a given member`() {
-        couponRepository.save(CouponEntity.createFrom("FIRST_RANK", member))
-        couponRepository.save(CouponEntity.createFrom("SECOND_RANK", member))
+        couponRepository.save(
+            CouponEntity(
+                code = "FIRST_RANK",
+                member = member,
+                achievement = firstRankAchievement,
+                couponType = CouponType.FIRST_RANK,
+                expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+            ),
+        )
+        couponRepository.save(
+            CouponEntity(
+                code = "SECOND_RANK",
+                member = member,
+                achievement = secondRankAchievement,
+                couponType = CouponType.SECOND_RANK,
+                expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+            ),
+        )
 
         val coupons = couponService.findAll(member.id)
 
         assertThat(coupons).hasSize(2)
-        assertThat(coupons.map { it.name }).containsExactlyInAnyOrder("FIRST_RANK", "SECOND_RANK")
+        assertThat(coupons.map { it.code })
+            .containsExactlyInAnyOrder("FIRST_RANK", "SECOND_RANK")
     }
 
     @Test
     fun `validateUsability should return true for a non-expired coupon`() {
-        val coupon = couponRepository.save(CouponEntity.createFrom("FIRST_RANK", member))
+        val coupon =
+            couponRepository.save(
+                CouponEntity(
+                    code = "FIRST_RANK",
+                    member = member,
+                    achievement = firstRankAchievement,
+                    couponType = CouponType.FIRST_RANK,
+                    expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+                ),
+            )
 
         val isValid = couponService.validateUsability(coupon.id)
 
         assertThat(isValid).isTrue()
-        assertThat(coupon.createdAt).isInThePast
         assertThat(coupon.expiresAt).isInTheFuture
     }
 
@@ -83,9 +123,10 @@ class CouponServiceTest {
         val expiredCoupon =
             couponRepository.save(
                 CouponEntity(
-                    name = "EXPIRED",
-                    discountRate = CouponEntity.DiscountRate.FIVE_PERCENT,
+                    code = "EXPIRED",
                     member = member,
+                    achievement = firstRankAchievement,
+                    couponType = CouponType.FIRST_RANK,
                     expiresAt = Instant.now().minus(1, ChronoUnit.DAYS),
                 ),
             )
@@ -96,7 +137,16 @@ class CouponServiceTest {
 
     @Test
     fun `delete should remove the coupon from the database`() {
-        val coupon = couponRepository.save(CouponEntity.createFrom("FIRST_RANK", member))
+        val coupon =
+            couponRepository.save(
+                CouponEntity(
+                    code = "FIRST_RANK",
+                    member = member,
+                    achievement = firstRankAchievement,
+                    couponType = CouponType.FIRST_RANK,
+                    expiresAt = Instant.now().plus(7, ChronoUnit.DAYS),
+                ),
+            )
         assertThat(couponRepository.findById(coupon.id)).isPresent
 
         couponService.delete(coupon.id)

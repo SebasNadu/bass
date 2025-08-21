@@ -9,11 +9,11 @@ import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class MealE2ETest {
     lateinit var token: String
@@ -53,11 +53,39 @@ class MealE2ETest {
     }
 
     @Test
+    fun getMealsByTag() {
+        val tag = "Healthy"
+        val response =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/meals/tag?tagName=$tag")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val content = response.body().jsonPath().getList("", MealResponseDTO::class.java)
+        assertThat(content).isNotEmpty()
+    }
+
+    @Test
+    fun getMealsByTag_emptyTag() {
+        val tag = ""
+        val response =
+            RestAssured.given().log().all()
+                .auth().oauth2(token)
+                .accept(ContentType.JSON)
+                .`when`().get("/api/meals/tag?tagName=$tag")
+                .then().log().all().extract()
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
+
+    @Test
     fun getMeal() {
         val productDTO =
             MealRequestDTO(
                 name = "TV",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -97,7 +125,7 @@ class MealE2ETest {
         val newMealDTO =
             MealRequestDTO(
                 name = "Monitor",
-                price = 150.0,
+                price = 150.0.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -122,7 +150,7 @@ class MealE2ETest {
         val newMealDTO =
             MealRequestDTO(
                 name = "!@#$%^&*()_+}{",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -149,7 +177,7 @@ class MealE2ETest {
         val newMealDTO =
             MealRequestDTO(
                 name = "SpeakersareLovemyDearDearDear",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -176,7 +204,7 @@ class MealE2ETest {
         val dto =
             MealRequestDTO(
                 name = "Speaker",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -203,7 +231,7 @@ class MealE2ETest {
         val newMealDTO =
             MealRequestDTO(
                 name = "Speaker2",
-                price = -99.99,
+                price = (-99.99).toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -230,7 +258,7 @@ class MealE2ETest {
         val created =
             MealRequestDTO(
                 name = "Speaker3",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -247,7 +275,7 @@ class MealE2ETest {
         val updated =
             MealRequestDTO(
                 name = "Gaming Mouse",
-                price = 45.0,
+                price = 45.0.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -272,7 +300,7 @@ class MealE2ETest {
         val created =
             MealRequestDTO(
                 name = "Tv",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",
@@ -305,7 +333,7 @@ class MealE2ETest {
         val created =
             MealRequestDTO(
                 name = "Toilet",
-                price = 99.99,
+                price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
                 description = "description",

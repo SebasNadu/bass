@@ -17,7 +17,7 @@ class PaymentService(private val paymentRepository: PaymentRepository) {
         val payment =
             PaymentEntity(
                 stripePaymentIntentId = stripeResponse.id!!,
-                amount = stripeResponse.amount ?: 0,
+                amount = stripeResponse.amountDecimal,
                 currency = stripeResponse.currency ?: "EUR",
                 status = PaymentEntity.PaymentStatus.fromValue(stripeResponse.status!!),
                 failureCode = stripeResponse.failureCode,

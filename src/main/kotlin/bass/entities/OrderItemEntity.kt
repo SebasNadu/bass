@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 // TODO: check if price is necessary here
 @Entity
@@ -23,8 +24,8 @@ class OrderItemEntity(
     @Column(nullable = false)
     val quantity: Int,
     @Column(nullable = false)
-    val price: Double,
+    val price: BigDecimal,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-)
+) : Auditable()

@@ -22,5 +22,5 @@ object ValidationMessages {
     const val MEAL_NAME_PATTERN = "Invalid characters in product name."
     const val MEAL_QUANTITY_SIZE = "The Meal quantity must be between 1 and 99,999,999"
     const val ID_REQUIRED = "Id cannot be less or equal to zero"
-    const val TAGS_REQUIRED = "At least one tag must be present"
+    const val TAG_REQUIRED = "Tag is required"
 }
