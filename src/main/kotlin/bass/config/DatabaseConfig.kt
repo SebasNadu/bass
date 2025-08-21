@@ -39,7 +39,7 @@ class DatabaseConfig(
                 listOf(
                     MealEntity(
                         name = "Salmon Poke Bowl",
-                        price = 14.50,
+                        price = 14.50.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1604259596863-" +
@@ -52,7 +52,7 @@ class DatabaseConfig(
                     },
                     MealEntity(
                         name = "Quinoa Buddha Bowl",
-                        price = 12.50,
+                        price = 12.50.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1679279726937-122c49626802?" +
@@ -65,7 +65,7 @@ class DatabaseConfig(
                     },
                     MealEntity(
                         name = "Greek Salad",
-                        price = 10.50,
+                        price = 10.50.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1599021419847-" +
@@ -79,7 +79,7 @@ class DatabaseConfig(
                     },
                     MealEntity(
                         name = "Lentil Salad with Goat Cheese",
-                        price = 11.00,
+                        price = 11.00.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://plus.unsplash.com/premium_photo-1699881082655-" +
@@ -89,7 +89,7 @@ class DatabaseConfig(
                     ),
                     MealEntity(
                         name = "Chicken Caesar Salad",
-                        price = 12.00,
+                        price = 12.00.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1580013759032-" +
@@ -99,7 +99,7 @@ class DatabaseConfig(
                     ),
                     MealEntity(
                         name = "Vegan Tofu Scramble Bowl",
-                        price = 11.50,
+                        price = 11.50.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1631255325918-" +
@@ -109,7 +109,7 @@ class DatabaseConfig(
                     ),
                     MealEntity(
                         name = "Teriyaki Chicken Bowl",
-                        price = 13.00,
+                        price = 13.00.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1706703200723-" +
@@ -119,7 +119,7 @@ class DatabaseConfig(
                     ),
                     MealEntity(
                         name = "Halloumi & Couscous Salad",
-                        price = 12.50,
+                        price = 12.50.toBigDecimal(),
                         quantity = 50,
                         imageUrl =
                             "https://images.unsplash.com/photo-1673960802455-" +
