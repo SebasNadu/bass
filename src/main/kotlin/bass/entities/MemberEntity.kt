@@ -39,6 +39,13 @@ class MemberEntity(
     val tags: MutableSet<TagEntity> = mutableSetOf(),
     @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true)
     val coupons: List<CouponEntity> = mutableListOf(),
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "member_achievement",
+        joinColumns = [JoinColumn(name = "member_id")],
+        inverseJoinColumns = [JoinColumn(name = "achievement_id")],
+    )
+    val achievements: MutableSet<AchievementEntity> = mutableSetOf(),
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,

@@ -28,3 +28,7 @@ class InsufficientStockException(message: String? = null) : RuntimeException(mes
 class PaymentFailedException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
 class InvalidTagNameException(message: String? = null) : RuntimeException(message)
+
+class CouponAlreadyUsedException(message: String? = null) : RuntimeException(message)
+
+class CouponExpiredException(message: String? = null) : RuntimeException(message)
