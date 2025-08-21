@@ -5,7 +5,6 @@ import bass.dto.coupon.CouponDTO
 import bass.exception.NotFoundException
 import bass.mappers.toDTO
 import bass.repositories.CouponRepository
-import bass.repositories.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.Instant
