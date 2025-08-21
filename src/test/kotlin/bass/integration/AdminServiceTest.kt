@@ -61,7 +61,7 @@ class AdminServiceTest {
                     name = "Mouse",
                     imageUrl = "https://lalala.com",
                     quantity = 3,
-                    price = 100.0,
+                    price = 100.0.toBigDecimal(),
                     description = "description",
                 ),
             )
@@ -72,7 +72,7 @@ class AdminServiceTest {
                     name = "Keyboard",
                     imageUrl = "https://lalala.com",
                     quantity = 3,
-                    price = 100.0,
+                    price = 100.0.toBigDecimal(),
                     description = "description",
                 ),
             )
