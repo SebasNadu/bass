@@ -12,6 +12,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "\"order\"")
@@ -19,8 +20,8 @@ class OrderEntity(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val status: OrderStatus,
-    @Column(nullable = false)
-    val totalAmount: Long,
+    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
+    val totalAmount: BigDecimal,
     @ManyToOne(fetch = FetchType.LAZY)
     val member: MemberEntity,
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)

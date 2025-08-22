@@ -27,3 +27,17 @@ CREATE INDEX idx_member_achievement_member_id
 
 CREATE INDEX idx_member_achievement_achievement_id
     ON member_achievement (achievement_id);
+
+CREATE TABLE coupon
+(
+    id             BIGSERIAL PRIMARY KEY,
+    code           VARCHAR(255) NOT NULL UNIQUE,
+    member_id      BIGINT       NOT NULL REFERENCES member (id),
+    achievement_id BIGINT       NOT NULL REFERENCES achievement (id),
+    coupon_type    VARCHAR(50)  NOT NULL,
+    expires_at     TIMESTAMP    NOT NULL,
+    is_used        BOOLEAN      NOT NULL DEFAULT FALSE,
+    used_at        TIMESTAMP,
+    created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

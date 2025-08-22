@@ -67,7 +67,7 @@ class OrderServiceImpl(
         val order =
             OrderEntity(
                 status = OrderEntity.OrderStatus.CREATED,
-                totalAmount = stripeResponse.amount!!,
+                totalAmount = stripeResponse.amountDecimal,
                 member = member,
             )
         val orderItems = cartItems.map { OrderItemEntity(order, it.meal, it.quantity, it.meal.price) }

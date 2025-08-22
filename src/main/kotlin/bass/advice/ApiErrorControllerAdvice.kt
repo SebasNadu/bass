@@ -5,6 +5,8 @@ import bass.dto.error.ErrorResponse
 import bass.exception.AuthorizationException
 import bass.exception.CouponAlreadyUsedException
 import bass.exception.CouponExpiredException
+import bass.exception.DayNameAlreadyExistsException
+import bass.exception.DaysSizeAlreadyMaximumException
 import bass.exception.ForbiddenException
 import bass.exception.InsufficientStockException
 import bass.exception.InvalidCartItemQuantityException
@@ -199,5 +201,21 @@ class ApiErrorControllerAdvice {
         val errorMessage = e.message ?: "Coupon expired"
         log.warn("CouponExpiredException: $errorMessage", e)
         return buildErrorResponse(HttpStatus.GONE, "Coupon expired", errorMessage)
+    }
+
+    @ExceptionHandler(DaysSizeAlreadyMaximumException::class)
+    fun handleDaysSizeAlreadyMaximumException(e: DaysSizeAlreadyMaximumException): ResponseEntity<ErrorResponse> {
+        val defaultMessage = "Days size for member already at maximum"
+        val errorMessage = e.message ?: defaultMessage
+        log.warn("DaysSizeAlreadyMaximumException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
+    }
+
+    @ExceptionHandler(DayNameAlreadyExistsException::class)
+    fun handleDayNameAlreadyExistsException(e: DayNameAlreadyExistsException): ResponseEntity<ErrorResponse> {
+        val defaultMessage = "Day name already exists"
+        val errorMessage = e.message ?: defaultMessage
+        log.warn("DayNameAlreadyExistsException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
     }
 }

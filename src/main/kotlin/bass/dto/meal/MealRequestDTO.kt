@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.Size
+import java.math.BigDecimal
 
 data class MealRequestDTO(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
@@ -15,7 +16,7 @@ data class MealRequestDTO(
     var name: String,
     @field:NotNull(message = ValidationMessages.PRICE_REQUIRED)
     @field:Positive(message = ValidationMessages.PRICE_POSITIVE)
-    var price: Double,
+    var price: BigDecimal,
     @field:NotNull(message = ValidationMessages.MEAL_QUANTITY_SIZE)
     @field:Positive(message = ValidationMessages.PRICE_POSITIVE)
     var quantity: Int,

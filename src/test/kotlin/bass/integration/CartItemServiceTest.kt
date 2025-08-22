@@ -39,7 +39,7 @@ class CartItemServiceTest {
                     name = "Mechanical Keyboard",
                     quantity = 2,
                     imageUrl = "https://lalal.com",
-                    price = 100.0,
+                    price = 100.0.toBigDecimal(),
                     description = "description",
                 ),
             ).id
