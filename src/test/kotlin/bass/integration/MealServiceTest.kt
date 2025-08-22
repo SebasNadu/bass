@@ -160,7 +160,7 @@ class MealServiceTest(
 
     @Test
     fun `should return meals matching with tag`() {
-        val allMealsWithTag = mealService.findByTag("Healthy")
+        val allMealsWithTag = mealService.findAllByTag("Healthy")
 
         assertThat(allMealsWithTag).hasSize(3)
     }

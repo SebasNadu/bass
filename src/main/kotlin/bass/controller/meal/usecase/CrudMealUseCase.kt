@@ -29,5 +29,5 @@ interface CrudMealUseCase {
 
     fun validateMealNameUniqueness(name: String)
 
-    fun findByTag(tag: String): List<MealResponseDTO>
+    fun findAllByTag(tag: String): List<MealResponseDTO>
 }

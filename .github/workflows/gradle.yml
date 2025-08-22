@@ -7,9 +7,7 @@
 
 name: Java CI with Gradle
 
-on:
-  push:
-    branches: [ "dev" ]
+on: 
   pull_request:
     branches: [ "main", "dev" ]
 
@@ -43,9 +41,10 @@ jobs:
         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
         echo "JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }}" >> .env
         echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> .env
+        echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }} ./gradlew build
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.

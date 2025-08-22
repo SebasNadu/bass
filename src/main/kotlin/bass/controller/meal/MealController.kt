@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
@@ -37,6 +38,12 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
     fun getMealById(
         @PathVariable id: Long,
     ): ResponseEntity<MealResponseDTO> = ResponseEntity.ok(crudMealUseCase.findById(id))
+
+    @IgnoreCheckLogin
+    @GetMapping(MEAL_PATH_TAG)
+    fun getMealsByTag(
+        @RequestParam tagName: String,
+    ): ResponseEntity<List<MealResponseDTO>> = ResponseEntity.ok(crudMealUseCase.findAllByTag(tagName))
 
     @CheckAdminOnly
     @PostMapping(MEAL_PATH)
@@ -80,5 +87,6 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
     companion object {
         const val MEAL_PATH = "/api/meals"
         const val MEAL_PATH_ID = "$MEAL_PATH/{id}"
+        const val MEAL_PATH_TAG = "$MEAL_PATH/tag"
     }
 }
