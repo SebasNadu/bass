@@ -17,6 +17,7 @@ import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import java.time.LocalDate
 
 @Entity
 @Table(name = "member")
@@ -57,7 +58,8 @@ class MemberEntity(
     val id: Long = 0L,
 ) {
     init {
-        require(days.size in DAYS_SIZE_MIN..DAYS_SIZE_MAX) { "A member must have 0 to 2 days assigned." }
+        require(days.size in DAYS_SIZE_MIN..DAYS_SIZE_MAX) { "A member must have $DAYS_SIZE_MIN to $DAYS_SIZE_MAX days assigned." }
+        require(streak >= STREAK_MIN) { "Streak must be zero or greater than $STREAK_MIN." }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -105,8 +107,24 @@ class MemberEntity(
         day.setMemberEntity(null)
     }
 
+    // Might have to get the local day value from client side
+    fun isFreedomDay(): Boolean {
+        val todayName = LocalDate.now().dayOfWeek.name
+        val dayNames = days.map { it.dayName.name }
+        return dayNames.contains(todayName)
+    }
+
+    fun increaseStreak(increment: Int = 1) {
+        this.streak += increment
+    }
+
+    fun resetStreak() {
+        this.streak = 0
+    }
+
     companion object {
         const val DAYS_SIZE_MIN = 0
         const val DAYS_SIZE_MAX = 2
+        const val STREAK_MIN = 0
     }
 }
