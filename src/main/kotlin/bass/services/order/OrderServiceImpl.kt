@@ -9,6 +9,7 @@ import bass.entities.MemberEntity
 import bass.entities.OrderEntity
 import bass.entities.OrderItemEntity
 import bass.entities.PaymentEntity
+import bass.events.OrderCompletionEvent
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
@@ -19,9 +20,12 @@ import bass.repositories.MemberRepository
 import bass.repositories.OrderRepository
 import bass.services.payment.PaymentService
 import bass.services.stripe.StripeService
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
+// ApplicationEventPublisher is need to "publish the event"
 
 @Service
 class OrderServiceImpl(
@@ -30,6 +34,7 @@ class OrderServiceImpl(
     private val memberRepository: MemberRepository,
     private val orderRepository: OrderRepository,
     private val paymentService: PaymentService,
+    private val eventPublisher: ApplicationEventPublisher,
 ) : OrderCreationUseCase {
     @Transactional
     override fun create(
@@ -56,6 +61,10 @@ class OrderServiceImpl(
         val paymentDTO = paymentService.createPayment(savedOrder, stripeResponse)
 
         processPaymentOutcome(paymentDTO, cartItems)
+
+        if (paymentDTO.status == PaymentEntity.PaymentStatus.SUCCEEDED) {
+            eventPublisher.publishEvent(OrderCompletionEvent(this, savedOrder))
+        }
         return savedOrder.toDTO()
     }
 
@@ -83,6 +92,7 @@ class OrderServiceImpl(
             PaymentEntity.PaymentStatus.SUCCEEDED -> {
                 decreaseOptionStock(cartItems)
                 cartItemRepository.deleteAll(cartItems)
+                // call method from member to manage streak
             }
 
             PaymentEntity.PaymentStatus.PROCESSING -> decreaseOptionStock(cartItems)
