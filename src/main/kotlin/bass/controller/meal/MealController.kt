@@ -3,35 +3,48 @@ package bass.controller.meal
 import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
 import bass.controller.meal.usecase.CrudMealUseCase
+import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.mappers.toDTO
+import bass.mappers.toEntity
+import bass.services.recommendation.RecommendationService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
-// TODO fix pagination
 @RestController
-class MealController(private val crudMealUseCase: CrudMealUseCase) {
+class MealController(
+    private val crudMealUseCase: CrudMealUseCase,
+    private val recommendationService: RecommendationService,
+    private val crudMemberUseCase: CrudMemberUseCase,
+) {
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH)
     fun getMeals(
         @PageableDefault(size = 10, sort = ["name"], direction = Sort.Direction.ASC)
         pageable: Pageable,
     ): Page<MealResponseDTO> = crudMealUseCase.findAll(pageable)
+
+    @GetMapping(MEAL_PATH_RECOMMENDATIONS)
+    fun getRecommendations(
+        @RequestParam @Valid memberId: Long,
+    ): List<MealResponseDTO> {
+        val member =
+            crudMemberUseCase.findById(memberId).toEntity()
+        return if (recommendationService.isFreedomDay(member)) {
+            recommendationService.getRecommendedMeals(member, PageRequest.of(0, 10))
+        } else {
+            recommendationService.getHealthyRecommendedMeals(member)
+        }.map { it.toDTO() }
+    }
 
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH_ID)
@@ -88,5 +101,6 @@ class MealController(private val crudMealUseCase: CrudMealUseCase) {
         const val MEAL_PATH = "/api/meals"
         const val MEAL_PATH_ID = "$MEAL_PATH/{id}"
         const val MEAL_PATH_TAG = "$MEAL_PATH/tag"
+        const val MEAL_PATH_RECOMMENDATIONS = "$MEAL_PATH/recommendations"
     }
 }
