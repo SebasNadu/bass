@@ -36,3 +36,5 @@ class CouponExpiredException(message: String? = null) : RuntimeException(message
 class DaysSizeAlreadyMaximumException(message: String? = null) : RuntimeException(message)
 
 class DayNameAlreadyExistsException(message: String? = null) : RuntimeException(message)
+
+class AiInferenceException(message: String? = null, cause: Throwable? = null) : RuntimeException(message, cause)

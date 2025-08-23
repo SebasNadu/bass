@@ -1,6 +1,9 @@
 package bass.services.meal
 
+import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
+import bass.dto.NaturalSearchRequestDTO
+import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
@@ -8,6 +11,7 @@ import bass.entities.MealEntity
 import bass.exception.InvalidTagNameException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
+import bass.infrastructure.ai.TagInferenceClient
 import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.repositories.MealRepository
@@ -18,12 +22,36 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-// this was ProductServiceImpl
 @Service
 class MealServiceImpl(
     private val mealRepository: MealRepository,
     private val tagRepository: TagRepository,
-) : CrudMealUseCase {
+    private val tagInferenceClient: TagInferenceClient,
+) : CrudMealUseCase, AISearchUseCase {
+    @Transactional(readOnly = true)
+    override fun naturalSearch(request: NaturalSearchRequestDTO): NaturalSearchResponseDTO {
+        val allowedTags: Set<String> = allowedTags()
+        val tagInferenceDto = tagInferenceClient.inferTags(request.userText, allowedTags, request.maxTags)
+
+        if (tagInferenceDto.selectedTags.isEmpty()) {
+            return NaturalSearchResponseDTO(
+                selectedTags = emptyList(),
+                meals = emptyList()
+            )
+        }
+
+        val meals = if (request.requireAllTags) {
+            mealRepository.findAllTags(tagInferenceDto.selectedTags, tagInferenceDto.selectedTags.size.toLong())
+        } else {
+            mealRepository.findAnyTag(tagInferenceDto.selectedTags)
+        }
+
+        return NaturalSearchResponseDTO.from(tagInferenceDto, meals)
+    }
+
+    private fun allowedTags(): Set<String> =
+        tagRepository.findAll().map { it.name }.toSet()
+
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<MealResponseDTO> {
         val meals = mealRepository.findAll(pageable)
