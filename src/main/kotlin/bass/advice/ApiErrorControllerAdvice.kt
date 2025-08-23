@@ -14,12 +14,12 @@ import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealQuantityException
 import bass.exception.InvalidTagNameException
+import bass.exception.MissingPreferredTagsException
+import bass.exception.NoDaysSetException
+import bass.exception.NoMealRecommendationException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
-import bass.exception.MissingPreferredTagsException
-import bass.exception.NoMealRecommendationException
-import bass.exception.NoDaysSetException
 import bass.util.logger
 import org.springframework.dao.DataAccessException
 import org.springframework.dao.DuplicateKeyException
@@ -32,10 +32,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.ResourceAccessException
 import java.time.Instant
-import kotlin.Exception
 import kotlin.NoSuchElementException
-import kotlin.String
-import kotlin.apply
 
 @RestControllerAdvice(annotations = [RestController::class])
 class ApiErrorControllerAdvice {
