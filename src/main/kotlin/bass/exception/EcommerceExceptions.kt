@@ -36,3 +36,9 @@ class CouponExpiredException(message: String? = null) : RuntimeException(message
 class DaysSizeAlreadyMaximumException(message: String? = null) : RuntimeException(message)
 
 class DayNameAlreadyExistsException(message: String? = null) : RuntimeException(message)
+
+class MissingPreferredTagsException(message: String? = null) : RuntimeException(message)
+
+class NoMealRecommendationException(message: String? = null) : RuntimeException(message)
+
+class NoDaysSetException(message: String? = null) : RuntimeException(message)

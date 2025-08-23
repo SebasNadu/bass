@@ -17,6 +17,9 @@ import bass.exception.InvalidTagNameException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
+import bass.exception.MissingPreferredTagsException
+import bass.exception.NoMealRecommendationException
+import bass.exception.NoDaysSetException
 import bass.util.logger
 import org.springframework.dao.DataAccessException
 import org.springframework.dao.DuplicateKeyException
@@ -217,5 +220,26 @@ class ApiErrorControllerAdvice {
         val errorMessage = e.message ?: defaultMessage
         log.warn("DayNameAlreadyExistsException: $errorMessage", e)
         return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
+    }
+
+    @ExceptionHandler(MissingPreferredTagsException::class)
+    fun handleMissingPreferredTagsException(e: MissingPreferredTagsException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no preferred tags"
+        log.warn("MissingPreferredTagsException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Missing preferred tags", errorMessage)
+    }
+
+    @ExceptionHandler(NoMealRecommendationException::class)
+    fun handleNoMealRecommendationException(e: NoMealRecommendationException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no meal recommendation"
+        log.warn("NoMealRecommendationException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "No meal recommendation", errorMessage)
+    }
+
+    @ExceptionHandler(NoDaysSetException::class)
+    fun handleNoDaysSetException(e: NoDaysSetException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no days set"
+        log.warn("NoDaysSetException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "No days set", errorMessage)
     }
 }
