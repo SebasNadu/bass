@@ -27,8 +27,8 @@ interface MealRepository : JpaRepository<MealEntity, Long> {
         join m.tags t
         where lower(t.name) in (select lower(:tagName) from TagEntity tag join tag.meals meal)
         group by m
-        having count(distinct lower(t.name)) = :requiredCount
-    """
+        having count(distinct t.name) = :requiredCo
+    """,
     )
     fun findAllTags(
         @Param("tagNames") tagNames: Collection<String>,
