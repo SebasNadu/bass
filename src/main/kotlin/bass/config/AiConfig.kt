@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class AiConfig(
-    private val builder: ChatClient.Builder
+    private val builder: ChatClient.Builder,
 ) {
     @Bean
     fun chatClient(): ChatClient = builder.build()

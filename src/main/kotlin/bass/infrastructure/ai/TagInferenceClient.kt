@@ -9,9 +9,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class TagInferenceClient(
-    private val chatClient: ChatClient
+    private val chatClient: ChatClient,
 ) {
-    fun inferTags(userQuery: String, allowedTags: Set<String>, maxTags: Int = 8): TagInferenceResultDTO {
+    fun inferTags(
+        userQuery: String,
+        allowedTags: Set<String>,
+        maxTags: Int = 8,
+    ): TagInferenceResultDTO {
         if (userQuery.isBlank()) {
             throw InvalidTagNameException("User query must not be blank")
         }
@@ -23,22 +27,25 @@ class TagInferenceClient(
         val userPrompt = createUserPrompt(userQuery)
 
         try {
-            val result = chatClient
-                .prompt()
-                .system(systemPrompt)
-                .user(userPrompt)
-                .call()
-                .entity(TagInferenceResultDTO::class.java)
+            val result =
+                chatClient
+                    .prompt()
+                    .system(systemPrompt)
+                    .user(userPrompt)
+                    .call()
+                    .entity(TagInferenceResultDTO::class.java)
 
             return result?.takeIf { it.selectedTags.isNotEmpty() }
                 ?: TagInferenceResultDTO()
-
         } catch (ex: Exception) {
             throw AiInferenceException("Failed to infer tags for query: '$userQuery'", ex)
         }
     }
 
-    private fun createSystemPrompt(allowedTags: Set<String>, maxTags: Int): String {
+    private fun createSystemPrompt(
+        allowedTags: Set<String>,
+        maxTags: Int,
+    ): String {
         return """
             You are an expert meal recommendation assistant.
             Your task: Analyze a user’s natural language input and return only relevant meal tags.
@@ -51,7 +58,7 @@ class TagInferenceClient(
             - Do NOT include explanations, comments, or extra text outside the JSON object.
 
             Allowed tags: ${allowedTags.sorted().joinToString(", ")}
-        """.trimIndent()
+            """.trimIndent()
     }
 
     private fun createUserPrompt(userQuery: String): String {
@@ -60,6 +67,6 @@ class TagInferenceClient(
 
             Your task: select the most relevant tags from the allowed tags only.
             Respond ONLY with the JSON object defined in the system prompt.
-        """.trimIndent()
+            """.trimIndent()
     }
 }

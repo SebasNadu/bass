@@ -6,5 +6,5 @@ data class NaturalSearchRequestDTO(
     @field:NotBlank
     val userText: String,
     val requireAllTags: Boolean = false,
-    val maxTags: Int = 8
+    val maxTags: Int = 8,
 )

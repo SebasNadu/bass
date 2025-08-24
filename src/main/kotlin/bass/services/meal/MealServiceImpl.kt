@@ -36,21 +36,21 @@ class MealServiceImpl(
         if (tagInferenceDto.selectedTags.isEmpty()) {
             return NaturalSearchResponseDTO(
                 selectedTags = emptyList(),
-                meals = emptyList()
+                meals = emptyList(),
             )
         }
 
-        val meals = if (request.requireAllTags) {
-            mealRepository.findAllTags(tagInferenceDto.selectedTags, tagInferenceDto.selectedTags.size.toLong())
-        } else {
-            mealRepository.findAnyTag(tagInferenceDto.selectedTags)
-        }
+        val meals =
+            if (request.requireAllTags) {
+                mealRepository.findAllTags(tagInferenceDto.selectedTags, tagInferenceDto.selectedTags.size.toLong())
+            } else {
+                mealRepository.findAnyTag(tagInferenceDto.selectedTags)
+            }
 
         return NaturalSearchResponseDTO.from(tagInferenceDto, meals)
     }
 
-    private fun allowedTags(): Set<String> =
-        tagRepository.findAll().map { it.name }.toSet()
+    private fun allowedTags(): Set<String> = tagRepository.findAll().map { it.name }.toSet()
 
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<MealResponseDTO> {

@@ -18,7 +18,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MealAiSearchServiceTest {
-
     private lateinit var mealRepository: MealRepository
     private lateinit var tagRepository: TagRepository
     private lateinit var tagInferenceClient: TagInferenceClient
@@ -37,18 +36,19 @@ class MealAiSearchServiceTest {
         // given
         val allowedTags = setOf("vegan", "spicy")
         every { tagRepository.findAll() } returns
-                listOf(TagEntity(name = "vegan"), TagEntity(name = "spicy"))
+            listOf(TagEntity(name = "vegan"), TagEntity(name = "spicy"))
         every { tagInferenceClient.inferTags("vegan food", allowedTags, 8) } returns
-                TagInferenceResultDTO(listOf("vegan"))
+            TagInferenceResultDTO(listOf("vegan"))
 
-        val meal = MealEntity(
-            id = 1L,
-            name = "Spicy Vegan Curry",
-            quantity = 10,
-            price = BigDecimal("12.50"),
-            imageUrl = "http://example.com/curry.jpg",
-            description = "Hot and tasty"
-        )
+        val meal =
+            MealEntity(
+                id = 1L,
+                name = "Spicy Vegan Curry",
+                quantity = 10,
+                price = BigDecimal("12.50"),
+                imageUrl = "http://example.com/curry.jpg",
+                description = "Hot and tasty",
+            )
 
         every { mealRepository.findAnyTag(listOf("vegan")) } returns listOf(meal)
 
@@ -70,18 +70,19 @@ class MealAiSearchServiceTest {
         // given
         val allowedTags = setOf("vegan", "spicy")
         every { tagRepository.findAll() } returns
-                listOf(TagEntity(name = "vegan"), TagEntity(name = "spicy"))
+            listOf(TagEntity(name = "vegan"), TagEntity(name = "spicy"))
         every { tagInferenceClient.inferTags("spicy vegan", allowedTags, 8) } returns
-                TagInferenceResultDTO(listOf("vegan", "spicy"))
+            TagInferenceResultDTO(listOf("vegan", "spicy"))
 
-        val meal = MealEntity(
-            id = 2L,
-            name = "Vegan Spicy Soup",
-            quantity = 5,
-            price = BigDecimal("15.00"),
-            imageUrl = "http://example.com/soup.jpg",
-            description = "Nice soup"
-        )
+        val meal =
+            MealEntity(
+                id = 2L,
+                name = "Vegan Spicy Soup",
+                quantity = 5,
+                price = BigDecimal("15.00"),
+                imageUrl = "http://example.com/soup.jpg",
+                description = "Nice soup",
+            )
 
         every { mealRepository.findAllTags(listOf("vegan", "spicy"), 2) } returns listOf(meal)
 
@@ -103,7 +104,7 @@ class MealAiSearchServiceTest {
         val allowedTags = emptySet<String>()
         every { tagRepository.findAll() } returns emptyList()
         every { tagInferenceClient.inferTags("random text", allowedTags, 8) } returns
-                TagInferenceResultDTO(emptyList())
+            TagInferenceResultDTO(emptyList())
 
         val request = NaturalSearchRequestDTO(userText = "random text")
 

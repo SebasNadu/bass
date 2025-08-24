@@ -15,21 +15,23 @@ interface MealRepository : JpaRepository<MealEntity, Long> {
         select distinct m from MealEntity m
         join m.tags t
         where lower(t.name) in :tagNames
-        """
+        """,
     )
-    fun findAnyTag(@Param("tagNames") tagNames: Collection<String>): List<MealEntity>
+    fun findAnyTag(
+        @Param("tagNames") tagNames: Collection<String>,
+    ): List<MealEntity>
 
     @Query(
         """
         select m from MealEntity m
         join m.tags t
-        where lower(t.name) in :tagNames
+        where lower(t.name) in (select lower(:tagName) from TagEntity tag join tag.meals meal)
         group by m
         having count(distinct lower(t.name)) = :requiredCount
     """
     )
     fun findAllTags(
         @Param("tagNames") tagNames: Collection<String>,
-        @Param("requiredCount") requiredCount: Long
+        @Param("requiredCount") requiredCount: Long,
     ): List<MealEntity>
 }

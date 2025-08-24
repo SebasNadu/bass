@@ -30,11 +30,11 @@ import java.net.URI
 @RestController
 class MealController(
     private val crudMealUseCase: CrudMealUseCase,
-    private val aiSearchUseCase: AISearchUseCase
+    private val aiSearchUseCase: AISearchUseCase,
 ) {
     @PostMapping(MEAL_PATH_NATURAL_SEARCH)
     fun naturalSearch(
-        @Valid @RequestBody request: NaturalSearchRequestDTO
+        @Valid @RequestBody request: NaturalSearchRequestDTO,
     ): ResponseEntity<NaturalSearchResponseDTO> {
         val response: NaturalSearchResponseDTO = aiSearchUseCase.naturalSearch(request)
         return ResponseEntity.ok(response)
