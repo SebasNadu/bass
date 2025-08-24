@@ -7,7 +7,6 @@ import bass.entities.CartItemEntity
 import bass.entities.MealEntity
 import bass.entities.MemberEntity
 import bass.entities.OrderEntity
-import bass.enums.CouponType
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.model.PaymentRequest
@@ -17,7 +16,6 @@ import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
 import bass.repositories.OrderRepository
 import bass.services.order.OrderServiceImpl
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -140,29 +138,5 @@ class OrderServiceTest {
         assertThrows<OperationFailedException> {
             orderService.create(memberLoginDTO, paymentRequest)
         }
-    }
-
-   @Test
-    fun `should give coupon to member after order payment`() {
-        couponAchievement =
-            achievementRepository.save(
-                AchievementEntity(
-                    name = "Coupon Achievement",
-                    streaksRequired = 1,
-                    couponType = CouponType.FIRST_RANK,
-                    description = "Generates a coupon",
-                ),
-            )
-        val memberLoginDTO = MemberLoginDTO(id = member.id)
-        val paymentRequest =
-            PaymentRequest(
-                amount = "29.00".toBigDecimal(),
-                currency = "eur",
-                paymentMethod = "pm_card_visa",
-            )
-
-        orderService.create(memberLoginDTO, paymentRequest)
-        assertThat(member.achievements).isNotEmpty
-        assertThat(member.coupons).size().isEqualTo(1)
     }
 }

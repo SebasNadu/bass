@@ -25,8 +25,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-// ApplicationEventPublisher is need to "publish the event"
-
 @Service
 class OrderServiceImpl(
     private val stripeService: StripeService,
@@ -92,7 +90,6 @@ class OrderServiceImpl(
             PaymentEntity.PaymentStatus.SUCCEEDED -> {
                 decreaseOptionStock(cartItems)
                 cartItemRepository.deleteAll(cartItems)
-                // call method from member to manage streak
             }
 
             PaymentEntity.PaymentStatus.PROCESSING -> decreaseOptionStock(cartItems)
