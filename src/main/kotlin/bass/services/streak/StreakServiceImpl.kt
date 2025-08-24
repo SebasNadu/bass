@@ -37,14 +37,22 @@ class StreakServiceImpl(
         order: OrderEntity,
         member: MemberEntity,
     ) {
-        val hasHealthyMeal =
-            order.items.any { item ->
-                item.meal.tags.any { tag -> tag.name == "Healthy" }
-            }
-        if (hasHealthyMeal) {
+        if (hasMajorityHealthyMeals(order)) {
             member.increaseStreak()
         } else if (!member.isFreedomDay()) {
             member.resetStreak()
         }
+    }
+
+    private fun hasMajorityHealthyMeals(order: OrderEntity): Boolean {
+        val totalQuantity = order.items.sumOf { it.quantity }
+        if (totalQuantity == 0) return false
+
+        val healthyQuantity =
+            order.items
+                .filter { item -> item.meal.tags.any { tag -> tag.name == "Healthy" } }
+                .sumOf { it.quantity }
+
+        return healthyQuantity >= totalQuantity / 2.0
     }
 }
