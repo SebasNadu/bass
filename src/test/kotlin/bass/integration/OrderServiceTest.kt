@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.Instant
 
 @SpringBootTest
 @Transactional
@@ -70,7 +70,7 @@ class OrderServiceTest {
                 member = member,
                 meal = meal,
                 quantity = 2,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItem = cartItemRepository.save(cartItemEntity)

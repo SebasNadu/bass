@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Entity
 @Table(
@@ -28,7 +28,7 @@ class CartItemEntity(
     @Column(name = "quantity", nullable = false)
     var quantity: Int,
     @Column(name = "added_at", nullable = false)
-    val addedAt: LocalDateTime,
+    val addedAt: Instant,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,

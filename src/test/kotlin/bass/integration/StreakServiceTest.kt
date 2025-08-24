@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.time.LocalDateTime
+import java.time.Instant
 
 @SpringBootTest
 class StreakServiceTest {
@@ -58,7 +58,7 @@ class StreakServiceTest {
                 member = member,
                 meal = meal,
                 quantity = 2,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItem = cartItemRepository.save(cartItemEntity)

@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.Instant
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -130,7 +130,7 @@ class OrderControllerE2ETest(
                 member = member,
                 meal = savedMealEntity,
                 quantity = 2,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItemRepository.save(cartItem)

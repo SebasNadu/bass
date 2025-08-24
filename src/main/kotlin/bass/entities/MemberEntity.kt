@@ -17,7 +17,8 @@ import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import java.time.LocalDate
+import java.time.Instant
+import java.time.ZoneOffset
 
 @Entity
 @Table(name = "member")
@@ -109,7 +110,7 @@ class MemberEntity(
 
     // Might have to get the local day value from client side
     fun isFreedomDay(): Boolean {
-        val todayName = LocalDate.now().dayOfWeek.name
+        val todayName = Instant.now().atZone(ZoneOffset.UTC).dayOfWeek.name
         val dayNames = days.map { it.dayName.name }
         return dayNames.contains(todayName)
     }
