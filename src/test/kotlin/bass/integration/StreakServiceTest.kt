@@ -91,4 +91,60 @@ class StreakServiceTest {
         assertThat(coupons[0].achievement.name).isEqualTo("Coupon Achievement")
         assertThat(coupons).hasSize(1)
     }
+
+    @Test
+    fun `should update streak 50 percent or more meals are healthy`() {
+        val meals = mealRepository.findAll()
+        meal = meals.last()
+
+        val cartItemEntity2 =
+            CartItemEntity(
+                member = member,
+                meal = meal,
+                quantity = 1,
+                addedAt = LocalDateTime.now(),
+            )
+
+        cartItem = cartItemRepository.save(cartItemEntity2)
+
+        val memberLoginDTO = MemberLoginDTO(id = member.id)
+        val paymentRequest =
+            PaymentRequest(
+                amount = "29.00".toBigDecimal(),
+                currency = "eur",
+                paymentMethod = "pm_card_visa",
+            )
+
+        orderService.create(memberLoginDTO, paymentRequest)
+        val updatedMember = memberRepository.findById(member.id).get()
+        assertThat(updatedMember.streak).isEqualTo(2)
+    }
+
+    @Test
+    fun `should reset streak to 0 if 50 percent or more meals are not healthy`() {
+        val meals = mealRepository.findAll()
+        meal = meals.last()
+
+        val cartItemEntity2 =
+            CartItemEntity(
+                member = member,
+                meal = meal,
+                quantity = 10,
+                addedAt = LocalDateTime.now(),
+            )
+
+        cartItem = cartItemRepository.save(cartItemEntity2)
+
+        val memberLoginDTO = MemberLoginDTO(id = member.id)
+        val paymentRequest =
+            PaymentRequest(
+                amount = "29.00".toBigDecimal(),
+                currency = "eur",
+                paymentMethod = "pm_card_visa",
+            )
+
+        orderService.create(memberLoginDTO, paymentRequest)
+        val updatedMember = memberRepository.findById(member.id).get()
+        assertThat(updatedMember.streak).isEqualTo(0)
+    }
 }
