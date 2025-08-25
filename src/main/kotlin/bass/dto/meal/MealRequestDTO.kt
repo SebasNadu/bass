@@ -11,7 +11,7 @@ import java.math.BigDecimal
 
 data class MealRequestDTO(
     @field:NotBlank(message = ValidationMessages.NAME_REQUIRED)
-    @field:Size(min = 1, max = 15, message = ValidationMessages.PRODUCT_NAME_SIZE)
+    @field:Size(min = 1, max = 50, message = ValidationMessages.PRODUCT_NAME_SIZE)
     @field:Pattern(regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$", message = ValidationMessages.NAME_PATTERN)
     var name: String,
     @field:NotNull(message = ValidationMessages.PRICE_REQUIRED)
