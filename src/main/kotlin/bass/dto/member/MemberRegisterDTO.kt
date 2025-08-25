@@ -19,4 +19,6 @@ data class MemberRegisterDTO(
     var password: String,
     @field:NotEmpty(message = ValidationMessages.TAG_REQUIRED)
     var tagIds: Set<Long>,
+    @field:NotEmpty(message = ValidationMessages.DAY_REQUIRED)
+    var days: Set<String>
 )

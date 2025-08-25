@@ -23,4 +23,5 @@ object ValidationMessages {
     const val MEAL_QUANTITY_SIZE = "The Meal quantity must be between 1 and 99,999,999"
     const val ID_REQUIRED = "Id cannot be less or equal to zero"
     const val TAG_REQUIRED = "Tag is required"
+    const val DAY_REQUIRED = "Minimum one day is required"
 }
