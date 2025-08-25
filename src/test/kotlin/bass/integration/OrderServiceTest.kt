@@ -2,6 +2,7 @@ package bass.integration
 
 import bass.dto.OrderDTO
 import bass.dto.member.MemberLoginDTO
+import bass.entities.AchievementEntity
 import bass.entities.CartItemEntity
 import bass.entities.MealEntity
 import bass.entities.MemberEntity
@@ -9,6 +10,7 @@ import bass.entities.OrderEntity
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.model.PaymentRequest
+import bass.repositories.AchievementRepository
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
@@ -25,13 +27,16 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.Instant
 
 @SpringBootTest
 @Transactional
 class OrderServiceTest {
     @Autowired
     lateinit var orderService: OrderServiceImpl
+
+    @Autowired
+    private lateinit var achievementRepository: AchievementRepository
 
     @Autowired
     lateinit var memberRepository: MemberRepository
@@ -48,6 +53,7 @@ class OrderServiceTest {
     lateinit var member: MemberEntity
     lateinit var meal: MealEntity
     lateinit var cartItem: CartItemEntity
+    private lateinit var couponAchievement: AchievementEntity
 
     @BeforeEach
     fun setup() {
@@ -64,7 +70,7 @@ class OrderServiceTest {
                 member = member,
                 meal = meal,
                 quantity = 2,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItem = cartItemRepository.save(cartItemEntity)

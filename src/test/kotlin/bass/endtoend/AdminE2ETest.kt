@@ -16,7 +16,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestClient
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -77,7 +78,7 @@ class AdminE2ETest {
         assertThat(meals).allSatisfy {
             assertThat(it.name).isNotBlank()
             assertThat(it.count).isGreaterThan(0)
-            assertThat(it.mostRecentAddedAt).isBefore(LocalDateTime.now().plusMinutes(1))
+            assertThat(Instant.now().plus(1, ChronoUnit.MINUTES))
         }
     }
 

@@ -8,8 +8,8 @@ import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Service
 class AchievementServiceImpl(
@@ -41,9 +41,8 @@ class AchievementServiceImpl(
     ): CouponEntity {
         val couponCode = achievement.generateCouponCode(member.id)
         val expiresAt =
-            LocalDateTime.now()
-                .plusDays(achievement.couponType?.validityDays ?: 30L)
-                .toInstant(ZoneOffset.UTC)
+            Instant.now()
+                .plus(achievement.couponType?.validityDays ?: 30L, ChronoUnit.DAYS)
 
         val coupon =
             CouponEntity(
