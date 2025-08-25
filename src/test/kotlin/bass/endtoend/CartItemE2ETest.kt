@@ -14,7 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
-import java.time.LocalDateTime
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 // @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -50,7 +51,7 @@ class CartItemE2ETest {
         assertThat(cartItem.meal).isInstanceOf(MealResponseDTO::class.java)
         assertThat(cartItem.meal.id).isEqualTo(mealId)
         assertThat(cartItem.quantity).isEqualTo(2)
-        assertThat(cartItem.addedAt).isBefore(LocalDateTime.now().plusMinutes(1))
+        assertThat(cartItem.addedAt).isBefore(Instant.now().plus(1, ChronoUnit.MINUTES))
     }
 
     @Test
@@ -72,8 +73,8 @@ class CartItemE2ETest {
         with(cartItem) {
             assertThat(quantity).isEqualTo(addedItem.quantity)
             assertThat(meal.id).isEqualTo(mealId)
-            assertThat(addedAt).isBefore(LocalDateTime.now().plusMinutes(1))
-            assertThat(addedAt).isAfter(LocalDateTime.now().minusDays(1))
+            assertThat(addedAt).isBefore(Instant.now().plus(1, ChronoUnit.MINUTES))
+            assertThat(addedAt).isAfter(Instant.now().minus(1, ChronoUnit.DAYS))
         }
     }
 
