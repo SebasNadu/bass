@@ -102,7 +102,7 @@ class StreakServiceTest {
                 member = member,
                 meal = meal,
                 quantity = 1,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItem = cartItemRepository.save(cartItemEntity2)
@@ -130,7 +130,7 @@ class StreakServiceTest {
                 member = member,
                 meal = meal,
                 quantity = 10,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             )
 
         cartItem = cartItemRepository.save(cartItemEntity2)
