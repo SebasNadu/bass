@@ -2,6 +2,7 @@ package bass.advice
 
 import bass.dto.error.ErrorMessage
 import bass.dto.error.ErrorResponse
+import bass.exception.AiInferenceException
 import bass.exception.AuthorizationException
 import bass.exception.CouponAlreadyUsedException
 import bass.exception.CouponExpiredException
@@ -217,5 +218,12 @@ class ApiErrorControllerAdvice {
         val errorMessage = e.message ?: defaultMessage
         log.warn("DayNameAlreadyExistsException: $errorMessage", e)
         return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
+    }
+
+    @ExceptionHandler(AiInferenceException::class)
+    fun handleAiInferenceException(e: AiInferenceException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "AI inference failed"
+        log.error("AiInferenceException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "AI inference failed", errorMessage)
     }
 }
