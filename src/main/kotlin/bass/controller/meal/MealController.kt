@@ -2,8 +2,11 @@ package bass.controller.meal
 
 import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
+import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
+import bass.dto.NaturalSearchRequestDTO
+import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
@@ -17,15 +20,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
@@ -33,7 +28,16 @@ class MealController(
     private val crudMealUseCase: CrudMealUseCase,
     private val recommendationService: RecommendationService,
     private val crudMemberUseCase: CrudMemberUseCase,
+    private val aiSearchUseCase: AISearchUseCase,
 ) {
+    @PostMapping(MEAL_PATH_NATURAL_SEARCH)
+    fun naturalSearch(
+        @Valid @RequestBody request: NaturalSearchRequestDTO,
+    ): ResponseEntity<NaturalSearchResponseDTO> {
+        val response: NaturalSearchResponseDTO = aiSearchUseCase.naturalSearch(request)
+        return ResponseEntity.ok(response)
+    }
+
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH)
     fun getMeals(
@@ -110,5 +114,6 @@ class MealController(
         const val MEAL_PATH_ID = "$MEAL_PATH/{id}"
         const val MEAL_PATH_TAG = "$MEAL_PATH/tag"
         const val MEAL_PATH_RECOMMENDATIONS = "$MEAL_PATH/recommendations"
+        const val MEAL_PATH_NATURAL_SEARCH = "$MEAL_PATH/search/natural"
     }
 }

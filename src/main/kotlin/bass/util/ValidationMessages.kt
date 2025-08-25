@@ -4,7 +4,7 @@ package bass.util
 object ValidationMessages {
     const val NAME_REQUIRED = "Product name cannot be blank"
     const val PRICE_REQUIRED = "Price cannot be null"
-    const val PRODUCT_NAME_SIZE = "The product name must contain between 1 and 15 characters"
+    const val PRODUCT_NAME_SIZE = "The product name must contain between 1 and 50 characters"
     const val NAME_PATTERN = "Invalid characters in product name."
     const val PRICE_POSITIVE = "Price must be greater than zero"
     const val IMAGE_REQUIRED = "Image URL cannot be blank"

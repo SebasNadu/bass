@@ -22,4 +22,29 @@ interface MealRepository : JpaRepository<MealEntity, Long> {
     fun findTagsByMemberId(
         @Param("memberId") memberId: Long,
     ): List<TagEntity>
+
+    @Query(
+        """
+        select distinct m from MealEntity m
+        join m.tags t
+        where lower(t.name) in :tagNames
+        """,
+    )
+    fun findAnyTag(
+        @Param("tagNames") tagNames: Collection<String>,
+    ): List<MealEntity>
+
+    @Query(
+        """
+        select m from MealEntity m
+        join m.tags t
+        where lower(t.name) in (select lower(:tagName) from TagEntity tag join tag.meals meal)
+        group by m
+        having count(distinct t.name) = :requiredCo
+    """,
+    )
+    fun findAllTags(
+        @Param("tagNames") tagNames: Collection<String>,
+        @Param("requiredCount") requiredCount: Long,
+    ): List<MealEntity>
 }

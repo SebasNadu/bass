@@ -38,6 +38,8 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenvVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$openapiVersion")
+    implementation(platform("org.springframework.ai:spring-ai-bom:1.0.0"))
+    implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
     runtimeOnly("com.h2database:h2:$h2Version")
     runtimeOnly("org.postgresql:postgresql")
