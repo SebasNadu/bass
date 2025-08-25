@@ -4,8 +4,11 @@ import bass.entities.MemberEntity
 import bass.entities.OrderEntity
 import bass.events.OrderCompletionEvent
 import bass.repositories.AchievementRepository
+import bass.repositories.MemberRepository
 import bass.services.achievement.AchievementService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
@@ -13,14 +16,15 @@ import org.springframework.transaction.event.TransactionalEventListener
 class StreakServiceImpl(
     private val achievementRepository: AchievementRepository,
     private val achievementService: AchievementService,
+    private val memberRepository: MemberRepository,
 ) {
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun handleOrderCompletedEvent(event: OrderCompletionEvent) {
         val order = event.order
         val member = order.member
 
         updateStreak(order, member)
-
         if (member.streak > 0) {
             val achievements =
                 achievementRepository.findAll()
@@ -31,6 +35,7 @@ class StreakServiceImpl(
                 }
             }
         }
+        memberRepository.save(member)
     }
 
     fun updateStreak(
