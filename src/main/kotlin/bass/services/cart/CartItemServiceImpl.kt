@@ -14,7 +14,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Service
 class CartItemServiceImpl(
@@ -87,7 +87,7 @@ class CartItemServiceImpl(
                 member = member.toEntity(),
                 meal = option,
                 quantity = cartItemRequestDTO.quantity,
-                addedAt = LocalDateTime.now(),
+                addedAt = Instant.now(),
             ),
         )
     }

@@ -1,37 +1,27 @@
 package bass.integration
 
-import bass.dto.OrderDTO
 import bass.dto.member.MemberLoginDTO
 import bass.entities.AchievementEntity
 import bass.entities.CartItemEntity
 import bass.entities.MealEntity
 import bass.entities.MemberEntity
-import bass.entities.OrderEntity
-import bass.exception.NotFoundException
-import bass.exception.OperationFailedException
+import bass.enums.CouponType
 import bass.model.PaymentRequest
 import bass.repositories.AchievementRepository
 import bass.repositories.CartItemRepository
+import bass.repositories.CouponRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
-import bass.repositories.OrderRepository
 import bass.services.order.OrderServiceImpl
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.transaction.annotation.Transactional
-import java.math.BigDecimal
 import java.time.Instant
 
 @SpringBootTest
-@Transactional
-class OrderServiceTest {
+class StreakServiceTest {
     @Autowired
     lateinit var orderService: OrderServiceImpl
 
@@ -45,7 +35,7 @@ class OrderServiceTest {
     lateinit var cartItemRepository: CartItemRepository
 
     @Autowired
-    lateinit var orderRepository: OrderRepository
+    lateinit var couponRepository: CouponRepository
 
     @Autowired
     lateinit var mealRepository: MealRepository
@@ -57,14 +47,12 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-        // Create and save a member
         val members = memberRepository.findAll()
         member = members[0]
 
         val meals = mealRepository.findAll()
         meal = meals[0]
 
-        // Add an item to the member's cart
         val cartItemEntity =
             CartItemEntity(
                 member = member,
@@ -77,7 +65,16 @@ class OrderServiceTest {
     }
 
     @Test
-    fun `create should create order, payment, reduce stock and clear cart`() {
+    fun `should give coupon to member after order payment`() {
+        couponAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "Coupon Achievement",
+                    streaksRequired = 1,
+                    couponType = CouponType.FIRST_RANK,
+                    description = "Generates a coupon",
+                ),
+            )
         val memberLoginDTO = MemberLoginDTO(id = member.id)
         val paymentRequest =
             PaymentRequest(
@@ -86,57 +83,68 @@ class OrderServiceTest {
                 paymentMethod = "pm_card_visa",
             )
 
-        val orderDTO: OrderDTO = orderService.create(memberLoginDTO, paymentRequest)
+        orderService.create(memberLoginDTO, paymentRequest)
 
-        assertNotNull(orderDTO.id)
-        assertEquals(BigDecimal("29.00"), orderDTO.totalAmount)
-        assertEquals(member.id, orderDTO.memberId)
-
-        val order = orderRepository.findByIdOrNull(orderDTO.id!!)
-        assertNotNull(order)
-        assertEquals(OrderEntity.OrderStatus.CREATED, order.status)
-
-        assertEquals(1, order.items.size)
-        assertEquals(meal.id, order.items[0].meal.id)
-        assertEquals(2, order.items[0].quantity)
-
-        val updatedOption = mealRepository.findByIdOrNull(meal.id)
-        assertNotNull(updatedOption)
-        assertEquals(48, updatedOption.quantity)
-
-        val cartItemsAfter = cartItemRepository.findByMemberId(member.id)
-        assertTrue(cartItemsAfter.isEmpty())
+        val updatedMember = memberRepository.findById(member.id).get()
+        assertThat(updatedMember.streak).isEqualTo(1)
+        val coupons = couponRepository.findByMemberId(member.id)
+        assertThat(coupons[0].achievement.name).isEqualTo("Coupon Achievement")
+        assertThat(coupons).hasSize(1)
     }
 
     @Test
-    fun `create should throw if member not found`() {
-        val invalidMemberDTO = MemberLoginDTO(id = 999999L) // non-existent id
-        val paymentRequest =
-            PaymentRequest(
-                amount = 1000.0.toBigDecimal(),
-                currency = "eur",
-                paymentMethod = "pm_card_visa",
+    fun `should update streak 50 percent or more meals are healthy`() {
+        val meals = mealRepository.findAll()
+        meal = meals.last()
+
+        val cartItemEntity2 =
+            CartItemEntity(
+                member = member,
+                meal = meal,
+                quantity = 1,
+                addedAt = Instant.now(),
             )
 
-        assertThrows<NotFoundException> {
-            orderService.create(invalidMemberDTO, paymentRequest)
-        }
-    }
-
-    @Test
-    fun `create should throw if cart is empty`() {
-        cartItemRepository.deleteById(cartItem.id)
+        cartItem = cartItemRepository.save(cartItemEntity2)
 
         val memberLoginDTO = MemberLoginDTO(id = member.id)
         val paymentRequest =
             PaymentRequest(
-                amount = 1000.0.toBigDecimal(),
+                amount = "29.00".toBigDecimal(),
                 currency = "eur",
                 paymentMethod = "pm_card_visa",
             )
 
-        assertThrows<OperationFailedException> {
-            orderService.create(memberLoginDTO, paymentRequest)
-        }
+        orderService.create(memberLoginDTO, paymentRequest)
+        val updatedMember = memberRepository.findById(member.id).get()
+        assertThat(updatedMember.streak).isEqualTo(2)
+    }
+
+    @Test
+    fun `should reset streak to 0 if 50 percent or more meals are not healthy`() {
+        val meals = mealRepository.findAll()
+        meal = meals.last()
+
+        val cartItemEntity2 =
+            CartItemEntity(
+                member = member,
+                meal = meal,
+                quantity = 10,
+                addedAt = Instant.now(),
+            )
+
+        cartItem = cartItemRepository.save(cartItemEntity2)
+
+        val memberLoginDTO = MemberLoginDTO(id = member.id)
+        val paymentRequest =
+            PaymentRequest(
+                amount = "29.00".toBigDecimal(),
+                currency = "eur",
+                paymentMethod = "pm_card_visa",
+            )
+
+        orderService.create(memberLoginDTO, paymentRequest)
+        val updatedMember = memberRepository.findById(member.id).get()
+        assertThat(updatedMember.streak).isEqualTo(0)
     }
 }
