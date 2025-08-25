@@ -12,7 +12,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Configuration
 @Profile("dev")
@@ -157,13 +157,13 @@ class DatabaseConfig(
                         member = savedMembers[1],
                         meal = savedMeals[0],
                         quantity = 1,
-                        addedAt = LocalDateTime.now(),
+                        addedAt = Instant.now(),
                     ),
                     CartItemEntity(
                         member = savedMembers[1],
                         meal = savedMeals[1],
                         quantity = 2,
-                        addedAt = LocalDateTime.now(),
+                        addedAt = Instant.now(),
                     ),
                 )
 

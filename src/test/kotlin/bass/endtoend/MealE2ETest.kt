@@ -3,6 +3,7 @@ package bass.endtoend
 import bass.dto.PageResponseDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.util.ValidationMessages
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
@@ -176,7 +177,7 @@ class MealE2ETest {
     fun `Should return error when product name is bigger than 15 characters`() {
         val newMealDTO =
             MealRequestDTO(
-                name = "SpeakersareLovemyDearDearDear",
+                name = "SpeakersareLovemyDearDearDearThisIsVeryLongNameIHopeThisNameIsLongerThan50Chars",
                 price = 99.99.toBigDecimal(),
                 imageUrl = "https://example.com/speaker.jpg",
                 quantity = 4,
@@ -196,7 +197,7 @@ class MealE2ETest {
         assertThat(response.body().jsonPath().getInt("status")).isEqualTo(400)
         assertThat(
             response.body().jsonPath().getString("errors.find { it.field = 'name' }.message"),
-        ).isEqualTo("The product name must contain between 1 and 15 characters")
+        ).isEqualTo(ValidationMessages.PRODUCT_NAME_SIZE)
     }
 
     @Test
