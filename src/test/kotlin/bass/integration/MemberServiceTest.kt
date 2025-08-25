@@ -5,6 +5,7 @@ import bass.entities.MemberEntity
 import bass.exception.OperationFailedException
 import bass.repositories.MemberRepository
 import bass.services.member.MemberServiceImpl
+import bass.util.logger
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @SpringBootTest
 class MemberServiceTest {
+    private val log = logger<MemberServiceImpl>()
+
     @Autowired
     private lateinit var memberService: MemberServiceImpl
 
@@ -31,6 +34,7 @@ class MemberServiceTest {
 
         assertThat(result).hasSize(13)
         assertThat(result.map { it.email }).contains("a@a.com", "b@b.com")
+        log.info("Found ${result.size} members")
     }
 
     @Test
