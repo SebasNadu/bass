@@ -19,7 +19,7 @@ id,name,price,quantity,image_url,description
 18,"Spaghetti Carbonara",13.50,40,"","Pasta with pancetta, eggs, parmesan, and black pepper."
 19,"Chickpea Curry",11.00,50,"","Spiced chickpeas in a tomato-based curry sauce served with rice."
 20,"Avocado Toast",9.75,60,"","Sourdough bread topped with smashed avocado, chili flakes, and lime."
-21,"Teriyaki Chicken Bowl",12.95,45,"","Grilled chicken with teriyaki sauce, rice, and steamed veggies."
+21,"Teriyaki Chicken Bowl steamed",12.95,45,"","Grilled chicken with teriyaki sauce, rice, and steamed veggies."
 22,"Falafel Wrap",10.50,55,"","Falafel, hummus, lettuce, tomato, and tahini in a pita wrap."
 23,"Mac and Cheese",10.00,50,"","Creamy cheddar macaroni topped with toasted breadcrumbs."
 24,"Grilled Cheese Sandwich",8.75,60,"","Toasted bread with melted cheddar and mozzarella cheese."
