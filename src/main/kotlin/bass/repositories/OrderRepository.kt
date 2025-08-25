@@ -14,7 +14,7 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
             SELECT i.meal FROM OrderEntity o
             JOIN o.items i
             WHERE o.createdAt >= :since
-            AND o.status = 'PAID'
+            AND o.status = 'CREATED'
             GROUP BY i.meal
             ORDER BY COUNT(i.meal) DESC
            """,

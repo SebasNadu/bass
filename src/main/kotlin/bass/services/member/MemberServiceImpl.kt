@@ -2,6 +2,9 @@ package bass.services.member
 
 import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.member.MemberRegisterDTO
+import bass.entities.DayEntity
+import bass.entities.MemberEntity
+import bass.exception.DaysSizeAlreadyMaximumException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity
@@ -38,8 +41,24 @@ class MemberServiceImpl(
     override fun save(memberRegisterDTO: MemberRegisterDTO): Member {
         validateEmailUniqueness(memberRegisterDTO.email)
         val selectedTags = tagRepository.findAllById(memberRegisterDTO.tagIds).toMutableSet()
+
+        val days = memberRegisterDTO.days.map { day ->
+            DayEntity.DayOfWeek.valueOf(day.uppercase())
+        }
+
+        if (days.size !in MemberEntity.DAYS_SIZE_MIN..MemberEntity.DAYS_SIZE_MAX) {
+            throw DaysSizeAlreadyMaximumException("DaysSizeAlreadyMaximumException: $days can't be bigger than ${memberRegisterDTO.days.size}")
+        }
+
+        val member = memberRegisterDTO.toEntity(tags = selectedTags, days = mutableSetOf())
+
+        val dayEntities = days.map { DayEntity(it) }.toMutableSet()
+        dayEntities.forEach { it.setMemberEntity(member) }
+
+        member.days.addAll(dayEntities)
+
         val saved =
-            memberRepository.save(memberRegisterDTO.toEntity(selectedTags))
+            memberRepository.save(member)
                 ?: throw OperationFailedException("Failed to save product")
         return saved.toDTO()
     }

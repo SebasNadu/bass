@@ -7,8 +7,10 @@ import bass.entities.TagEntity
 import bass.exception.MissingPreferredTagsException
 import bass.exception.NoDaysSetException
 import bass.exception.NoMealRecommendationException
+import bass.exception.NotFoundException
 import bass.repositories.DayRepository
 import bass.repositories.MealRepository
+import bass.repositories.MemberRepository
 import bass.repositories.OrderRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -22,12 +24,16 @@ class RecommendationService(
     private val orderRepository: OrderRepository,
     private val mealRepository: MealRepository,
     private val dayRepository: DayRepository,
+    private val memberRepository: MemberRepository,
 ) {
     @Transactional(readOnly = true)
     fun getRecommendedMeals(
         member: MemberEntity,
         pageable: Pageable,
     ): List<MealEntity> {
+        val member = memberRepository.findById(member.id).orElseThrow {
+            throw NotFoundException("Member Not Found")
+        }
         val since = Instant.now().minus(DAYS_TO_SUBTRACT.toLong(), ChronoUnit.DAYS)
         val topMeals = orderRepository.findTopOrderedMealsSince(since, pageable)
         if (topMeals.isEmpty()) {
@@ -51,7 +57,7 @@ class RecommendationService(
         val topHealthyMeals =
             orderRepository.findTopOrderedMealsByTagSince(
                 since,
-                HEALTH_TAGS,
+                listOf("healthy"),
                 // more orders, so there are some to filter out
                 Pageable.ofSize(25),
             )
@@ -117,12 +123,12 @@ class RecommendationService(
     private fun extractTagNames(tags: Collection<TagEntity>): Set<String> = tags.map { it.name }.toSet()
 
     companion object {
-        val HEALTH_TAGS =
-            listOf(
-                "healthy",
-                "salad",
-                "soup",
-            )
+        //        val HEALTH_TAGS =
+//            listOf(
+//                "healthy",
+//                "salad",
+//                "soup",
+//            )
         const val DAYS_TO_SUBTRACT = 30
         const val LAST_ORDERS_TO_EXCLUDE = 5
     }
