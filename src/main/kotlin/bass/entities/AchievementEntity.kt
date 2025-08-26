@@ -21,7 +21,7 @@ class AchievementEntity(
     val name: String,
     @Column(name = "image_url")
     val imageUrl: String? = null,
-    @Column(name = "streaks_required", nullable = false, unique = true)
+    @Column(name = "streaks_required", nullable = false)
     val streaksRequired: Int,
     @Enumerated(EnumType.STRING)
     @Column(name = "coupon_type")
