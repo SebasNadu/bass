@@ -54,6 +54,8 @@ class MemberEntity(
     val days: MutableSet<DayEntity> = mutableSetOf(),
     @Column(name = "streak", nullable = false)
     var streak: Int = 0,
+    @Column(name = "testimonial", nullable = false)
+    var testimonial: String = DEFAULT_TESTIMONIAL,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -127,5 +129,6 @@ class MemberEntity(
         const val DAYS_SIZE_MIN = 0
         const val DAYS_SIZE_MAX = 2
         const val STREAK_MIN = 0
+        const val DEFAULT_TESTIMONIAL = "Not Today. Let's write your testimonial!"
     }
 }

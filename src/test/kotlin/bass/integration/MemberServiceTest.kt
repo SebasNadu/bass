@@ -109,8 +109,9 @@ class MemberServiceTest {
                 name = "new",
                 email = "new@test.com",
                 password = "secure",
+                testimonial = "test",
                 tagIds = setOf(1L),
-                days = setOf("MONDAY", "TUESDAY"),
+                freedomDays = setOf("MONDAY", "TUESDAY"),
             )
 
         val saved = memberService.save(dto)
@@ -137,8 +138,9 @@ class MemberServiceTest {
                         name = "exists2",
                         email = "exists@test.com",
                         password = "new",
+                        testimonial = "test",
                         tagIds = setOf(1L, 2L),
-                        days = setOf("MONDAY", "TUESDAY"),
+                        freedomDays = setOf("MONDAY", "TUESDAY"),
                     ),
                 )
             }

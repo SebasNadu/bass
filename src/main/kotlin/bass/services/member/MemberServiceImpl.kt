@@ -61,25 +61,16 @@ class MemberServiceImpl(
     override fun save(memberRegisterDTO: MemberRegisterDTO): Member {
         validateEmailUniqueness(memberRegisterDTO.email)
         val selectedTags = tagRepository.findAllById(memberRegisterDTO.tagIds).toMutableSet()
+        val freedomDays = extractFreedomDaysFromDTO(memberRegisterDTO)
 
-        val days =
-            memberRegisterDTO.days.map { day ->
-                DayEntity.DayOfWeek.valueOf(day.uppercase())
-            }
-
-        if (days.size !in MemberEntity.DAYS_SIZE_MIN..MemberEntity.DAYS_SIZE_MAX) {
+        if (freedomDays.size !in MemberEntity.DAYS_SIZE_MIN..MemberEntity.DAYS_SIZE_MAX) {
             throw DaysSizeAlreadyMaximumException(
-                "DaysSizeAlreadyMaximumException: $days can't be bigger than ${memberRegisterDTO.days.size}",
+                "DaysSizeAlreadyMaximumException: freedom Days can't be bigger than ${MemberEntity.DAYS_SIZE_MAX}",
             )
         }
 
         val member = memberRegisterDTO.toEntity(tags = selectedTags, days = mutableSetOf())
-
-        val dayEntities = days.map { DayEntity(it) }.toMutableSet()
-        dayEntities.forEach { it.setMemberEntity(member) }
-
-        member.days.addAll(dayEntities)
-
+        freedomDays.forEach { member.addDay(it) }
         val saved =
             memberRepository.save(member)
                 ?: run {
@@ -110,5 +101,13 @@ class MemberServiceImpl(
         val updatedMemberEntity = memberRepository.findById(id).get()
         val memberOrderDTO = updatedMemberEntity.toOrderDTO()
         return memberOrderDTO
+    }
+
+    private fun extractFreedomDaysFromDTO(memberRegisterDTO: MemberRegisterDTO): Set<DayEntity> {
+        val freedomDays =
+            memberRegisterDTO.freedomDays.map { dayName ->
+                DayEntity(DayEntity.DayOfWeek.valueOf(dayName.uppercase()))
+            }.toSet()
+        return freedomDays
     }
 }

@@ -20,6 +20,6 @@ class TagController(private val manageTagUseCase: ManageTagUseCase) {
     ): ResponseEntity<TagDTO> = ResponseEntity.ok(manageTagUseCase.create(tag))
 
     companion object {
-        const val TAGS = "/tags"
+        const val TAGS = "/api/tags"
     }
 }

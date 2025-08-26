@@ -11,14 +11,16 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 fun MemberEntity.toDTO(): Member {
+    val freedomDays = days.map { it.dayName.name }.toSet()
     return Member(
         name = this.name,
         email = this.email,
         password = this.password,
         role = this.role,
         id = this.id,
+        testimonial = this.testimonial,
         tags = this.tags.map { it.toDTO() }.toSet(),
-        days = this.days.map { it.toDTO() }.toSet(),
+        freedomDays = freedomDays,
     )
 }
 
@@ -34,6 +36,7 @@ fun MemberRegisterDTO.toEntity(
         name = this.name,
         email = this.email,
         password = this.password,
+        testimonial = this.testimonial,
         tags = tags.toMutableSet(),
         days = days.toMutableSet(),
     )

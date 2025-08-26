@@ -1,6 +1,5 @@
 package bass.model
 
-import bass.dto.day.DayDTO
 import bass.dto.tag.TagDTO
 import bass.entities.MemberEntity
 import bass.util.ValidationMessages.EMAIL_BLANK
@@ -26,9 +25,10 @@ data class Member(
     @field:Size(min = 1, max = 255, message = PASSWORD_SIZE)
     var password: String,
     var role: MemberEntity.Role = MemberEntity.Role.CUSTOMER,
+    var testimonial: String,
+    var freedomDays: Set<String>,
+    var tags: Set<TagDTO>,
     var id: Long = 0L,
-    val tags: Set<TagDTO>,
-    val days: Set<DayDTO>,
 ) {
     fun validatePassword(password: String): Boolean = this.password == password
 
