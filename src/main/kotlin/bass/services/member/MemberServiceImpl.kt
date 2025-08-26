@@ -2,10 +2,12 @@ package bass.services.member
 
 import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.member.MemberRegisterDTO
+import bass.entities.DayEntity
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.model.Member
+import bass.repositories.DayRepository
 import bass.repositories.MemberRepository
 import bass.repositories.TagRepository
 import org.springframework.dao.EmptyResultDataAccessException
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val tagRepository: TagRepository,
+    private val dayRepository: DayRepository,
 ) : CrudMemberUseCase {
     @Transactional(readOnly = true)
     override fun findAll(): List<Member> {
@@ -38,9 +41,11 @@ class MemberServiceImpl(
     override fun save(memberRegisterDTO: MemberRegisterDTO): Member {
         validateEmailUniqueness(memberRegisterDTO.email)
         val selectedTags = tagRepository.findAllById(memberRegisterDTO.tagIds).toMutableSet()
+        val freedomDays = extractFreedomDaysFromDTO(memberRegisterDTO)
         val saved =
             memberRepository.save(memberRegisterDTO.toEntity(selectedTags))
                 ?: throw OperationFailedException("Failed to save product")
+        freedomDays.forEach { saved.addDay(it) }
         return saved.toDTO()
     }
 
@@ -54,5 +59,12 @@ class MemberServiceImpl(
         if (memberRepository.existsByEmail(email)) {
             throw OperationFailedException("Member with email '$email' already exists")
         }
+    }
+
+    private fun extractFreedomDaysFromDTO(memberRegisterDTO: MemberRegisterDTO): Set<DayEntity> {
+        val freedomDays = memberRegisterDTO.freedomDays.map { dayName ->
+            DayEntity(DayEntity.DayOfWeek.valueOf(dayName))
+        }.toSet()
+        return freedomDays
     }
 }
