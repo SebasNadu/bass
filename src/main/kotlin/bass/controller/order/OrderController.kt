@@ -1,8 +1,9 @@
 package bass.controller.order
 
 import bass.annotation.LoginMember
+import bass.controller.member.usecase.CrudMemberUseCase
 import bass.controller.order.usecase.OrderCreationUseCase
-import bass.dto.OrderDTO
+import bass.dto.OrderCreationResponseDTO
 import bass.dto.member.MemberLoginDTO
 import bass.model.PaymentRequest
 import org.springframework.http.ResponseEntity
@@ -13,13 +14,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/order")
-class OrderController(private val orderCreationUseCase: OrderCreationUseCase) {
+class OrderController(
+    private val orderCreationUseCase: OrderCreationUseCase,
+    private val crudMemberUseCase: CrudMemberUseCase,
+) {
     @PostMapping
     fun createOrder(
         @LoginMember member: MemberLoginDTO,
         @RequestBody paymentRequest: PaymentRequest,
-    ): ResponseEntity<OrderDTO> {
+    ): ResponseEntity<OrderCreationResponseDTO> {
         val order = orderCreationUseCase.create(member, paymentRequest)
-        return ResponseEntity.ok(order)
+        val memberWithAchievement = crudMemberUseCase.findMemberNewAchievement(member.id)
+        val response =
+            OrderCreationResponseDTO(
+                order = order,
+                memberDetails = memberWithAchievement,
+            )
+        return ResponseEntity.ok(response)
     }
 }
