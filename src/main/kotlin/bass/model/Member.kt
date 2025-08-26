@@ -24,6 +24,7 @@ data class Member(
     @field:Size(min = 1, max = 255, message = PASSWORD_SIZE)
     var password: String,
     var role: MemberEntity.Role = MemberEntity.Role.CUSTOMER,
+    var testimonial: String,
     var id: Long = 0L,
 ) {
     fun validatePassword(password: String): Boolean = this.password == password
