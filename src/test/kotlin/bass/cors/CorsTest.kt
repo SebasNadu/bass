@@ -1,3 +1,4 @@
+// File: src/test/kotlin/bass/cors/AcceptanceTest.kt (renamed from CorsTest.kt)
 package bass.cors
 
 import io.restassured.RestAssured
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -15,13 +17,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.optio
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class CorsTest {
     lateinit var token: String
 
+    // 2. Inject the random port assigned by Spring
+    @LocalServerPort
+    private var port: Int = 0
+
     @BeforeEach
     fun setup() {
+        RestAssured.port = port
+
         val loginPayload =
             mapOf(
                 "email" to "sebas@sebas.com",
