@@ -1,0 +1,25 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss} %clr(%-5level){%levelColor} %clr(%logger{36}){cyan} - %clr(%msg){%levelColor}%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- muted logs -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="liquibase" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="ERROR"/>
+
+    <!-- logs start from level Info and above -->
+    <logger name="bass" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="Console"/>
+    </root>
+</configuration>
