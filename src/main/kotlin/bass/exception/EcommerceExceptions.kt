@@ -37,4 +37,10 @@ class DaysSizeAlreadyMaximumException(message: String? = null) : RuntimeExceptio
 
 class DayNameAlreadyExistsException(message: String? = null) : RuntimeException(message)
 
+class MissingPreferredTagsException(message: String? = null) : RuntimeException(message)
+
+class NoMealRecommendationException(message: String? = null) : RuntimeException(message)
+
+class NoDaysSetException(message: String? = null) : RuntimeException(message)
+
 class AiInferenceException(message: String? = null, cause: Throwable? = null) : RuntimeException(message, cause)

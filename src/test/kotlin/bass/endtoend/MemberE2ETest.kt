@@ -54,6 +54,7 @@ class MemberE2ETest(
                 "email" to EMAIL,
                 "password" to PASSWORD,
                 "tagIds" to listOf(tag.id),
+                "days" to setOf("MONDAY", "WEDNESDAY"),
             )
         val accessToken =
             RestAssured

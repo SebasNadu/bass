@@ -15,6 +15,9 @@ import bass.exception.InvalidMealDescriptionException
 import bass.exception.InvalidMealNameException
 import bass.exception.InvalidMealQuantityException
 import bass.exception.InvalidTagNameException
+import bass.exception.MissingPreferredTagsException
+import bass.exception.NoDaysSetException
+import bass.exception.NoMealRecommendationException
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.exception.PaymentFailedException
@@ -30,10 +33,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.ResourceAccessException
 import java.time.Instant
-import kotlin.Exception
 import kotlin.NoSuchElementException
-import kotlin.String
-import kotlin.apply
 
 @RestControllerAdvice(annotations = [RestController::class])
 class ApiErrorControllerAdvice {
@@ -218,6 +218,27 @@ class ApiErrorControllerAdvice {
         val errorMessage = e.message ?: defaultMessage
         log.warn("DayNameAlreadyExistsException: $errorMessage", e)
         return buildErrorResponse(HttpStatus.CONFLICT, defaultMessage, errorMessage)
+    }
+
+    @ExceptionHandler(MissingPreferredTagsException::class)
+    fun handleMissingPreferredTagsException(e: MissingPreferredTagsException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no preferred tags"
+        log.warn("MissingPreferredTagsException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Missing preferred tags", errorMessage)
+    }
+
+    @ExceptionHandler(NoMealRecommendationException::class)
+    fun handleNoMealRecommendationException(e: NoMealRecommendationException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no meal recommendation"
+        log.warn("NoMealRecommendationException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "No meal recommendation", errorMessage)
+    }
+
+    @ExceptionHandler(NoDaysSetException::class)
+    fun handleNoDaysSetException(e: NoDaysSetException): ResponseEntity<ErrorResponse> {
+        val errorMessage = e.message ?: "Member has no days set"
+        log.warn("NoDaysSetException: $errorMessage", e)
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "No days set", errorMessage)
     }
 
     @ExceptionHandler(AiInferenceException::class)

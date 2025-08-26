@@ -4,13 +4,18 @@ import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
 import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
+import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.NaturalSearchRequestDTO
 import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.mappers.toDTO
+import bass.mappers.toEntity
+import bass.services.recommendation.RecommendationService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -26,10 +31,11 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
-// TODO fix pagination
 @RestController
 class MealController(
     private val crudMealUseCase: CrudMealUseCase,
+    private val recommendationService: RecommendationService,
+    private val crudMemberUseCase: CrudMemberUseCase,
     private val aiSearchUseCase: AISearchUseCase,
 ) {
     @PostMapping(MEAL_PATH_NATURAL_SEARCH)
@@ -46,6 +52,19 @@ class MealController(
         @PageableDefault(size = 10, sort = ["name"], direction = Sort.Direction.ASC)
         pageable: Pageable,
     ): Page<MealResponseDTO> = crudMealUseCase.findAll(pageable)
+
+    @GetMapping(MEAL_PATH_RECOMMENDATIONS)
+    fun getRecommendations(
+        @RequestParam @Valid memberId: Long,
+    ): List<MealResponseDTO> {
+        val member =
+            crudMemberUseCase.findById(memberId).toEntity()
+        return if (recommendationService.isFreedomDay(member)) {
+            recommendationService.getRecommendedMeals(member, PageRequest.of(0, 10))
+        } else {
+            recommendationService.getHealthyRecommendedMeals(member)
+        }.map { it.toDTO() }
+    }
 
     @IgnoreCheckLogin
     @GetMapping(MEAL_PATH_ID)
@@ -102,6 +121,7 @@ class MealController(
         const val MEAL_PATH = "/api/meals"
         const val MEAL_PATH_ID = "$MEAL_PATH/{id}"
         const val MEAL_PATH_TAG = "$MEAL_PATH/tag"
+        const val MEAL_PATH_RECOMMENDATIONS = "$MEAL_PATH/recommendations"
         const val MEAL_PATH_NATURAL_SEARCH = "$MEAL_PATH/search/natural"
     }
 }
