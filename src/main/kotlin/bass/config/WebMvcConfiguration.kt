@@ -27,11 +27,19 @@ class WebMvcConfiguration(
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
+        val albAddress = "bass-dev-alb-1133887665.ap-northeast-2.elb.amazonaws.com"
         registry.addMapping("/api/**")
-            .allowedOrigins("*")
+            .allowedOrigins(
+                "localhost:8080",
+                "localhost:5173",
+                "43.201.85.92",
+                "10.0.0.204",
+                albAddress,
+            )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders(HttpHeaders.LOCATION)
+            .allowCredentials(true)
             .maxAge(3600)
         registry.addMapping("/swagger-ui/**")
             .allowedOrigins("*")
