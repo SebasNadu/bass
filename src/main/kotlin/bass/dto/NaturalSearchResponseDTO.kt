@@ -1,10 +1,12 @@
 package bass.dto
 
+import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
+import bass.mappers.toDTO
 
 data class NaturalSearchResponseDTO(
     val selectedTags: List<String>,
-    val meals: List<MealEntity>,
+    val meals: List<MealResponseDTO>,
 ) {
     companion object {
         fun from(
@@ -13,7 +15,7 @@ data class NaturalSearchResponseDTO(
         ): NaturalSearchResponseDTO {
             return NaturalSearchResponseDTO(
                 selectedTags = tagInference.selectedTags,
-                meals = meals,
+                meals = meals.map { it.toDTO() },
             )
         }
     }
