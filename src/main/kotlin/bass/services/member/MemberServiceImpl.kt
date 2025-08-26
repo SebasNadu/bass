@@ -11,6 +11,7 @@ import bass.mappers.toEntity
 import bass.model.Member
 import bass.repositories.MemberRepository
 import bass.repositories.TagRepository
+import bass.util.logger
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,20 +22,37 @@ class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val tagRepository: TagRepository,
 ) : CrudMemberUseCase {
+    private val log = logger<MemberServiceImpl>()
+
     @Transactional(readOnly = true)
     override fun findAll(): List<Member> {
-        return memberRepository.findAll().map { it.toDTO() }
+        val members = memberRepository.findAll().map { it.toDTO() }
+        log.info("Found ${members.size} members")
+        return members
     }
 
     @Transactional(readOnly = true)
-    override fun findById(id: Long): Member =
-        memberRepository.findByIdOrNull(id)?.toDTO()
-            ?: throw EmptyResultDataAccessException("Member with ID $id not found", 1)
+    override fun findById(id: Long): Member {
+        val member =
+            memberRepository.findByIdOrNull(id)?.toDTO()
+                ?: run {
+                    log.warn("Member with id=$id not found")
+                    throw EmptyResultDataAccessException("Member with ID $id not found", 1)
+                }
+        log.info("Found member: $member by their id: $id ")
+        return member
+    }
 
     @Transactional(readOnly = true)
     override fun findByEmail(email: String): Member {
-        return memberRepository.findByEmail(email)?.toDTO()
-            ?: throw EmptyResultDataAccessException("Member with Email $email not found", 1)
+        val member =
+            memberRepository.findByEmail(email)?.toDTO()
+                ?: run {
+                    log.warn("Member with email=$email not found")
+                    throw EmptyResultDataAccessException("Member with Email $email not found", 1)
+                }
+        log.info("Found member: ${member.name} by their email: $email ")
+        return member
     }
 
     @Transactional
@@ -58,20 +76,28 @@ class MemberServiceImpl(
         member.days.addAll(dayEntities)
 
         val saved =
-            memberRepository.save(member)
-                ?: throw OperationFailedException("Failed to save product")
+            memberRepository.save(memberRegisterDTO.toEntity(selectedTags))
+                ?: run {
+                    log.error("Failed to save ${memberRegisterDTO.email} to $memberRegisterDTO")
+                    throw OperationFailedException("Failed to save member")
+                }
+        log.info("Successfully saved member's email:${memberRegisterDTO.email} as ${saved.email}")
         return saved.toDTO()
     }
 
     @Transactional
     override fun deleteAll() {
+        log.debug("Deleting all Members")
         memberRepository.deleteAll()
+        log.info("All Members have been deleted!")
     }
 
     @Transactional(readOnly = true)
     override fun validateEmailUniqueness(email: String) {
         if (memberRepository.existsByEmail(email)) {
+            log.warn("Email: $email already exists!")
             throw OperationFailedException("Member with email '$email' already exists")
         }
+        log.info("Email $email is unique")
     }
 }
