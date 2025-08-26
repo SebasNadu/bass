@@ -18,7 +18,7 @@ class WebMvcConfiguration(
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(checkLogin).addPathPatterns("/api/**", "/meals", "/admin/**")
-            .excludePathPatterns("/api/members/**")
+            .excludePathPatterns("/api/members/register", "/api/members/login", "/api/tags")
         registry.addInterceptor(checkRole).addPathPatterns("/admin/**", "/api/meals/**")
     }
 
