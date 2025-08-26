@@ -1,9 +1,12 @@
 package bass.config
 
+import bass.entities.AchievementEntity
 import bass.entities.CartItemEntity
 import bass.entities.MealEntity
 import bass.entities.MemberEntity
 import bass.entities.TagEntity
+import bass.enums.CouponType
+import bass.repositories.AchievementRepository
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
@@ -21,6 +24,7 @@ class DatabaseConfig(
     private val mealRepository: MealRepository,
     private val cartItemRepository: CartItemRepository,
     private val tagRepository: TagRepository,
+    private val achievementRepository: AchievementRepository,
 ) {
     @Bean
     fun databaseInitializer(): CommandLineRunner =
@@ -168,5 +172,45 @@ class DatabaseConfig(
                 )
 
             cartItemRepository.saveAll(cartItems)
+
+            val achievements =
+                listOf(
+                    AchievementEntity(
+                        name = "Kickoff!",
+                        description = "Kickoff! You're on fire!",
+                        streaksRequired = 5,
+                        imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/1.png",
+                        couponType = CouponType.WELCOME_BONUS,
+                    ),
+                    AchievementEntity(
+                        name = "Cruisin!",
+                        description = "Cruisin! Double digits baby!",
+                        streaksRequired = 10,
+                        imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/2.png",
+                        couponType = CouponType.FIRST_RANK,
+                    ),
+                    AchievementEntity(
+                        name = "Locked in!",
+                        description = "Locked in! Streak mode activated!",
+                        streaksRequired = 10,
+                        imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/3.png",
+                        couponType = CouponType.SECOND_RANK,
+                    ),
+                    AchievementEntity(
+                        name = "Trailblazer!",
+                        description = "Trailblazer! Nothing can stop you!",
+                        streaksRequired = 15,
+                        imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/4.png",
+                        couponType = CouponType.THIRD_RANK,
+                    ),
+                    AchievementEntity(
+                        name = "Legend unlocked!",
+                        description = "Legend unlocked! Champion status!",
+                        streaksRequired = 20,
+                        imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/5.png",
+                        couponType = CouponType.FOURTH_RANK,
+                    ),
+                )
+            achievementRepository.saveAll(achievements)
         }
 }

@@ -1,0 +1,6 @@
+id,name,description,streaks_required,image_url,coupon_type
+1,Kickoff!,Kickoff! You're on fire!,5,https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/1.png,WELCOME_BONUS
+2,Cruisin!,Cruisin! Double digits baby!,10,https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/2.png,FIRST_RANK
+3,Locked in!,Locked in! Streak mode activated!,15,https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/3.png,SECOND_RANK
+4,Trailblazer!,Trailblazer! Nothing can stop you!,20,https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/4.png,THIRD_RANK
+5,Legend unlocked!,Legend unlocked! Champion status!,25,https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/5.png,FOURTH_RANK
