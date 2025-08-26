@@ -180,7 +180,7 @@ class DatabaseConfig(
                         description = "Kickoff! You're on fire!",
                         streaksRequired = 5,
                         imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/1.png",
-                        couponType = CouponType.WELCOME_BONUS
+                        couponType = CouponType.WELCOME_BONUS,
                     ),
                     AchievementEntity(
                         name = "Cruisin!",
@@ -194,22 +194,22 @@ class DatabaseConfig(
                         description = "Locked in! Streak mode activated!",
                         streaksRequired = 10,
                         imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/3.png",
-                        couponType = CouponType.SECOND_RANK
+                        couponType = CouponType.SECOND_RANK,
                     ),
                     AchievementEntity(
                         name = "Trailblazer!",
                         description = "Trailblazer! Nothing can stop you!",
                         streaksRequired = 15,
                         imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/4.png",
-                        couponType = CouponType.THIRD_RANK
+                        couponType = CouponType.THIRD_RANK,
                     ),
                     AchievementEntity(
                         name = "Legend unlocked!",
                         description = "Legend unlocked! Champion status!",
                         streaksRequired = 20,
                         imageUrl = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/bass-images/5.png",
-                        couponType = CouponType.FOURTH_RANK
-                    )
+                        couponType = CouponType.FOURTH_RANK,
+                    ),
                 )
             achievementRepository.saveAll(achievements)
         }
