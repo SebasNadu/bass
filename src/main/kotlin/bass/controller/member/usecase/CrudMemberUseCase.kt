@@ -1,5 +1,6 @@
 package bass.controller.member.usecase
 
+import bass.dto.member.MemberCouponDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.model.Member
 
@@ -15,4 +16,6 @@ interface CrudMemberUseCase {
     fun deleteAll()
 
     fun validateEmailUniqueness(email: String)
+
+    fun findMemberNewAchievement(id: Long): MemberCouponDTO
 }
