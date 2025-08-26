@@ -17,6 +17,9 @@ data class MemberRegisterDTO(
     @field:NotBlank(message = ValidationMessages.PASSWORD_BLANK)
     @field:Size(min = 1, max = 255, message = ValidationMessages.PASSWORD_SIZE)
     var password: String,
+    @field:NotBlank(message = ValidationMessages.TESTIMONIAL_BLANK)
+    @field:Size(min = 1, max = 512, message = ValidationMessages.TESTIMONIAL_SIZE)
+    var testimonial: String,
     @field:NotEmpty(message = ValidationMessages.TAG_REQUIRED)
     var tagIds: Set<Long>,
 )
