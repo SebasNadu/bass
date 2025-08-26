@@ -1,6 +1,8 @@
 package bass.model
 
+import bass.dto.tag.TagDTO
 import bass.entities.MemberEntity
+import bass.entities.TagEntity
 import bass.util.ValidationMessages.EMAIL_BLANK
 import bass.util.ValidationMessages.EMAIL_INVALID
 import bass.util.ValidationMessages.EMAIL_SIZE
@@ -25,6 +27,8 @@ data class Member(
     var password: String,
     var role: MemberEntity.Role = MemberEntity.Role.CUSTOMER,
     var testimonial: String,
+    var freedomDays: Set<String>,
+    var tags: Set<TagDTO>,
     var id: Long = 0L,
 ) {
     fun validatePassword(password: String): Boolean = this.password == password
