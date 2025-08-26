@@ -58,7 +58,7 @@ class RecommendationService(
         val topHealthyMeals =
             orderRepository.findTopOrderedMealsByTagSince(
                 since,
-                listOf("healthy"),
+                listOf("Healthy"),
                 // more orders, so there are some to filter out
                 Pageable.ofSize(25),
             )

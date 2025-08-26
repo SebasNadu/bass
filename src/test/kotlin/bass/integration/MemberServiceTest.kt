@@ -27,8 +27,22 @@ class MemberServiceTest {
 
     @Test
     fun `findAll should return all members`() {
-        memberRepository.save(MemberEntity(name = "a", email = "a@a.com", password = "123", role = MemberEntity.Role.CUSTOMER))
-        memberRepository.save(MemberEntity(name = "b", email = "b@b.com", password = "456", role = MemberEntity.Role.ADMIN))
+        memberRepository.save(
+            MemberEntity(
+                name = "a",
+                email = "a@a.com",
+                password = "123",
+                role = MemberEntity.Role.CUSTOMER,
+            ),
+        )
+        memberRepository.save(
+            MemberEntity(
+                name = "b",
+                email = "b@b.com",
+                password = "456",
+                role = MemberEntity.Role.ADMIN,
+            ),
+        )
 
         val result = memberService.findAll()
 
@@ -39,7 +53,15 @@ class MemberServiceTest {
 
     @Test
     fun `findById should return matching member`() {
-        val saved = memberRepository.save(MemberEntity(name = "c", email = "c@c.com", password = "pass", role = MemberEntity.Role.ADMIN))!!
+        val saved =
+            memberRepository.save(
+                MemberEntity(
+                    name = "c",
+                    email = "c@c.com",
+                    password = "pass",
+                    role = MemberEntity.Role.ADMIN,
+                ),
+            )!!
 
         val found = memberService.findById(saved.id)
 
@@ -57,7 +79,14 @@ class MemberServiceTest {
 
     @Test
     fun `findByEmail should return matching member`() {
-        memberRepository.save(MemberEntity(name = "find me", email = "findme@test.com", password = "pw", role = MemberEntity.Role.CUSTOMER))
+        memberRepository.save(
+            MemberEntity(
+                name = "find me",
+                email = "findme@test.com",
+                password = "pw",
+                role = MemberEntity.Role.CUSTOMER,
+            ),
+        )
 
         val found = memberService.findByEmail("findme@test.com")
 
@@ -75,7 +104,14 @@ class MemberServiceTest {
 
     @Test
     fun `save should persist member and return DTO`() {
-        val dto = MemberRegisterDTO(name = "new", email = "new@test.com", password = "secure", tagIds = setOf(1L))
+        val dto =
+            MemberRegisterDTO(
+                name = "new",
+                email = "new@test.com",
+                password = "secure",
+                tagIds = setOf(1L),
+                days = setOf("MONDAY", "TUESDAY"),
+            )
 
         val saved = memberService.save(dto)
 
@@ -85,11 +121,26 @@ class MemberServiceTest {
 
     @Test
     fun `save should throw if email exists`() {
-        memberRepository.save(MemberEntity(name = "exists", email = "exists@test.com", password = "old", role = MemberEntity.Role.CUSTOMER))
+        memberRepository.save(
+            MemberEntity(
+                name = "exists",
+                email = "exists@test.com",
+                password = "old",
+                role = MemberEntity.Role.CUSTOMER,
+            ),
+        )
 
         val ex =
             assertThrows<OperationFailedException> {
-                memberService.save(MemberRegisterDTO(name = "exists2", email = "exists@test.com", password = "new", tagIds = setOf(1L, 2L)))
+                memberService.save(
+                    MemberRegisterDTO(
+                        name = "exists2",
+                        email = "exists@test.com",
+                        password = "new",
+                        tagIds = setOf(1L, 2L),
+                        days = setOf("MONDAY", "TUESDAY"),
+                    ),
+                )
             }
 
         assertThat(ex.message).contains("already exists")
@@ -102,7 +153,14 @@ class MemberServiceTest {
 
     @Test
     fun `validateEmailUniqueness should throw if email exists`() {
-        memberRepository.save(MemberEntity(name = "exists", email = "exists@test.com", password = "pw", role = MemberEntity.Role.CUSTOMER))
+        memberRepository.save(
+            MemberEntity(
+                name = "exists",
+                email = "exists@test.com",
+                password = "pw",
+                role = MemberEntity.Role.CUSTOMER,
+            ),
+        )
 
         assertThrows<OperationFailedException> {
             memberService.validateEmailUniqueness("exists@test.com")

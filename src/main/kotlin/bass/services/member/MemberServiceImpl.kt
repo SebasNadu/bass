@@ -79,7 +79,7 @@ class MemberServiceImpl(
         member.days.addAll(dayEntities)
 
         val saved =
-            memberRepository.save(memberRegisterDTO.toEntity(selectedTags))
+            memberRepository.save(member)
                 ?: run {
                     log.error("Failed to save ${memberRegisterDTO.email} to $memberRegisterDTO")
                     throw OperationFailedException("Failed to save member")
