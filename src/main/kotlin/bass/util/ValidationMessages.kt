@@ -25,4 +25,6 @@ object ValidationMessages {
     const val TAG_REQUIRED = "Tag is required"
     const val TESTIMONIAL_BLANK = "Testimonial cannot be blank"
     const val TESTIMONIAL_SIZE = "Testimonial must be between 1 and 512 characters"
+    const val DAYS_REQUIRED = "Days for freedom day cannot be blank"
+    const val DAYS_SIZE = "Days for freedom day must be between 1 and 2 days"
 }
