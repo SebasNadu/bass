@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
+import javax.validation.Validation
 
 data class MemberRegisterDTO(
     @field:NotBlank(message = ValidationMessages.MEMBER_NAME_REQUIRED)
@@ -20,6 +21,9 @@ data class MemberRegisterDTO(
     @field:NotBlank(message = ValidationMessages.TESTIMONIAL_BLANK)
     @field:Size(min = 1, max = 512, message = ValidationMessages.TESTIMONIAL_SIZE)
     var testimonial: String,
+    @field:NotEmpty(message = ValidationMessages.DAYS_REQUIRED)
+    @field:Size(min = 0, max = 2, message = ValidationMessages.DAYS_SIZE)
+    val freedomDays: Set<String>,
     @field:NotEmpty(message = ValidationMessages.TAG_REQUIRED)
     var tagIds: Set<Long>,
 )
