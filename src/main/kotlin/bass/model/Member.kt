@@ -2,7 +2,6 @@ package bass.model
 
 import bass.dto.tag.TagDTO
 import bass.entities.MemberEntity
-import bass.entities.TagEntity
 import bass.util.ValidationMessages.EMAIL_BLANK
 import bass.util.ValidationMessages.EMAIL_INVALID
 import bass.util.ValidationMessages.EMAIL_SIZE

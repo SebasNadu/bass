@@ -1,6 +1,7 @@
 package bass.mappers
 
 import bass.dto.coupon.CouponDTO
+import bass.dto.coupon.CouponOrderDTO
 import bass.entities.CouponEntity
 
 fun CouponEntity.toDTO() =
@@ -15,3 +16,11 @@ fun CouponEntity.toDTO() =
         expiresAt = expiresAt,
         id = id,
     )
+
+fun CouponEntity.toOrderDTO(): CouponOrderDTO {
+    return CouponOrderDTO(
+        displayName = this.achievement.name,
+        memberStreak = this.member.streak,
+        achievementDescription = this.achievement.description,
+    )
+}

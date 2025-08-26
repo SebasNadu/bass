@@ -1,0 +1,92 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %clr(%-5level){%levelColor} %clr(%logger{36}){cyan} - %clr(%msg){%levelColor}%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>
+                    %d{HH:mm:ss} [%thread] %clr(%-5level){%levelColor} %clr(%logger{36}){cyan} - %clr(%msg){%levelColor}%n
+                </pattern>
+            </encoder>
+        </appender>
+
+        <!-- muted logs -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.springframework.boot" level="WARN"/>
+        <logger name="org.springframework.web" level="WARN"/>
+        <logger name="org.springframework.context" level="WARN"/>
+
+        <logger name="org.apache.catalina" level="WARN"/>
+        <logger name="org.apache.coyote" level="WARN"/>
+        <logger name="org.apache.tomcat" level="WARN"/>
+
+        <logger name="com.zaxxer.hikari.HikariDataSource" level="ERROR"/>
+        <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+
+        <logger name="liquibase.database" level="WARN"/>
+        <logger name="liquibase.snapshot" level="WARN"/>
+        <logger name="liquibase.changelog" level="WARN"/>
+        <logger name="liquibase.lockservice" level="WARN"/>
+        <logger name="liquibase.command" level="WARN"/>
+        <logger name="liquibase.ui" level="WARN"/>
+        <logger name="liquibase.statement" level="WARN"/>
+
+        <root level="DEBUG">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingFile" />
+        </root>
+
+    </springProfile>
+
+    <springProfile name="prod">
+        <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %clr(%-5level){%levelColor} %clr(%logger{36}){cyan} - %clr(%msg){%levelColor}%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- muted logs -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.springframework.boot" level="WARN"/>
+        <logger name="org.springframework.web" level="WARN"/>
+        <logger name="org.springframework.context" level="WARN"/>
+
+        <logger name="org.apache.catalina" level="WARN"/>
+        <logger name="org.apache.coyote" level="WARN"/>
+        <logger name="org.apache.tomcat" level="WARN"/>
+
+        <logger name="com.zaxxer.hikari.HikariDataSource" level="ERROR"/>
+        <logger name="com.zaxxer.hikari.pool.HikariPool" level="ERROR"/>
+
+        <logger name="liquibase.database" level="WARN"/>
+        <logger name="liquibase.snapshot" level="WARN"/>
+        <logger name="liquibase.changelog" level="WARN"/>
+        <logger name="liquibase.lockservice" level="WARN"/>
+        <logger name="liquibase.command" level="WARN"/>
+        <logger name="liquibase.ui" level="WARN"/>
+        <logger name="liquibase.statement" level="WARN"/>
+
+        <root level="INFO">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingFile" />
+        </root>
+    </springProfile>
+
+    <root level="WARN">
+        <appender-ref ref="RollingFile" />
+    </root>
+
+</configuration>

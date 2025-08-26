@@ -9,6 +9,13 @@ echo ">>> [BeforeInstall] Preparing environment..."
 echo ">>> Updating system packages..."
 sudo apt-get update -y && sudo apt-get upgrade -y
 
+if ! command -v jq &> /dev/null; then
+  echo ">>> Installing jq..."
+  sudo apt-get install -y jq
+else
+  echo "jq already installed."
+fi
+
 # Install Docker if missing
 echo ">>> Installing Docker if missing..."
 if ! command -v docker &> /dev/null; then
