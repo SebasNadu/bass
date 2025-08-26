@@ -31,9 +31,10 @@ class RecommendationService(
         member: MemberEntity,
         pageable: Pageable,
     ): List<MealEntity> {
-        val member = memberRepository.findById(member.id).orElseThrow {
-            throw NotFoundException("Member Not Found")
-        }
+        val member =
+            memberRepository.findById(member.id).orElseThrow {
+                throw NotFoundException("Member Not Found")
+            }
         val since = Instant.now().minus(DAYS_TO_SUBTRACT.toLong(), ChronoUnit.DAYS)
         val topMeals = orderRepository.findTopOrderedMealsSince(since, pageable)
         if (topMeals.isEmpty()) {

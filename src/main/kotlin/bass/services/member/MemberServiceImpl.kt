@@ -42,12 +42,15 @@ class MemberServiceImpl(
         validateEmailUniqueness(memberRegisterDTO.email)
         val selectedTags = tagRepository.findAllById(memberRegisterDTO.tagIds).toMutableSet()
 
-        val days = memberRegisterDTO.days.map { day ->
-            DayEntity.DayOfWeek.valueOf(day.uppercase())
-        }
+        val days =
+            memberRegisterDTO.days.map { day ->
+                DayEntity.DayOfWeek.valueOf(day.uppercase())
+            }
 
         if (days.size !in MemberEntity.DAYS_SIZE_MIN..MemberEntity.DAYS_SIZE_MAX) {
-            throw DaysSizeAlreadyMaximumException("DaysSizeAlreadyMaximumException: $days can't be bigger than ${memberRegisterDTO.days.size}")
+            throw DaysSizeAlreadyMaximumException(
+                "DaysSizeAlreadyMaximumException: $days can't be bigger than ${memberRegisterDTO.days.size}",
+            )
         }
 
         val member = memberRegisterDTO.toEntity(tags = selectedTags, days = mutableSetOf())
