@@ -36,6 +36,7 @@ fun MemberRegisterDTO.toEntity(
         name = this.name,
         email = this.email,
         password = this.password,
+        testimonial = this.testimonial,
         tags = tags.toMutableSet(),
         days = days.toMutableSet(),
     )
