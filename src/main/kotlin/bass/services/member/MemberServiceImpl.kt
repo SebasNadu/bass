@@ -1,10 +1,12 @@
 package bass.services.member
 
 import bass.controller.member.usecase.CrudMemberUseCase
+import bass.dto.member.MemberCouponDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity
+import bass.mappers.toOrderDTO
 import bass.model.Member
 import bass.repositories.MemberRepository
 import bass.repositories.TagRepository
@@ -80,5 +82,11 @@ class MemberServiceImpl(
             throw OperationFailedException("Member with email '$email' already exists")
         }
         log.info("Email $email is unique")
+    }
+
+    override fun findMemberNewAchievement(id: Long): MemberCouponDTO {
+        val updatedMemberEntity = memberRepository.findById(id).get()
+        val memberOrderDTO = updatedMemberEntity.toOrderDTO()
+        return memberOrderDTO
     }
 }

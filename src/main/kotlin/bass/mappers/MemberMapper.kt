@@ -1,10 +1,13 @@
 package bass.mappers
 
+import bass.dto.member.MemberCouponDTO
 import bass.dto.member.MemberLoginDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.entities.MemberEntity
 import bass.entities.TagEntity
 import bass.model.Member
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 fun MemberEntity.toDTO() = Member(name, email, password, role, id)
 
@@ -18,5 +21,19 @@ fun MemberRegisterDTO.toEntity(tags: Set<TagEntity>): MemberEntity {
         email = this.email,
         password = this.password,
         tags = tags.toMutableSet(),
+    )
+}
+
+fun MemberEntity.toOrderDTO(): MemberCouponDTO {
+    val fifteenMinutesAgo = Instant.now().minus(15, ChronoUnit.MINUTES)
+    val recentCouponDTO =
+        this.coupons
+            .lastOrNull()
+            ?.takeIf { it.createdAt.isAfter(fifteenMinutesAgo) }
+            ?.toOrderDTO()
+
+    return MemberCouponDTO(
+        memberId = this.id,
+        newCoupon = recentCouponDTO,
     )
 }
