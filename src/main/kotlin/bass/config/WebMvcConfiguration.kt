@@ -39,7 +39,6 @@ class WebMvcConfiguration(
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders(HttpHeaders.LOCATION)
-            .allowCredentials(true)
             .maxAge(3600)
         registry.addMapping("/swagger-ui/**")
             .allowedOrigins("*")
