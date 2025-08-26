@@ -24,7 +24,7 @@ val assureVersion = "5.5.5"
 val h2Version = "2.2.224"
 val jwtVersion = "0.12.6"
 val dotenvVersion = "6.5.1"
-val openapiVersion = "2.8.9"
+val openapiVersion = "2.8.0"
 val mockkVersion = "1.13.8"
 dependencies {
     implementation("org.liquibase:liquibase-core")

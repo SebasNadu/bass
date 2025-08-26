@@ -1,0 +1,1 @@
+ALTER TABLE member ADD COLUMN testimonial TEXT NOT NULL DEFAULT 'Not Today';

@@ -53,7 +53,9 @@ class MemberE2ETest(
                 "name" to NAME,
                 "email" to EMAIL,
                 "password" to PASSWORD,
+                "testimonial" to TESTIMONIAL,
                 "tagIds" to listOf(tag.id),
+                "freedomDays" to setOf("MONDAY", "WEDNESDAY"),
             )
         val accessToken =
             RestAssured
@@ -82,5 +84,6 @@ class MemberE2ETest(
         private const val NAME = "Sebastian"
         private const val EMAIL = "email@email.com"
         private const val PASSWORD = "1234"
+        private const val TESTIMONIAL = "testimonial"
     }
 }

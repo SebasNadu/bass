@@ -1,12 +1,15 @@
 package bass.endtoend
 
-import bass.dto.OrderDTO
+import bass.dto.OrderCreationResponseDTO
 import bass.dto.TokenRequestDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.entities.AchievementEntity
 import bass.entities.CartItemEntity
 import bass.entities.MemberEntity
+import bass.enums.CouponType
 import bass.model.PaymentRequest
+import bass.repositories.AchievementRepository
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
@@ -31,6 +34,8 @@ class OrderControllerE2ETest(
     var memberRepository: MemberRepository,
     @param:Autowired
     var mealRepository: MealRepository,
+    @Autowired
+    var achievementRepository: AchievementRepository,
 ) {
     private lateinit var token: String
     private var memberId: Long = 0L
@@ -59,6 +64,16 @@ class OrderControllerE2ETest(
 
     @Test
     fun `create order success`() {
+        val couponAchievement =
+            achievementRepository.save(
+                AchievementEntity(
+                    name = "Coupon Achievement",
+                    streaksRequired = 1,
+                    couponType = CouponType.FIRST_RANK,
+                    description = "Generates a coupon",
+                ),
+            )
+
         createCartItem()
         val paymentRequest =
             PaymentRequest(
@@ -67,7 +82,7 @@ class OrderControllerE2ETest(
                 paymentMethod = "pm_card_visa",
             )
 
-        val response =
+        val responseWrapper =
             RestAssured.given()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
@@ -75,11 +90,17 @@ class OrderControllerE2ETest(
                 .post("/api/order")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .extract().`as`(OrderDTO::class.java)
+                .extract().`as`(OrderCreationResponseDTO::class.java)
 
-        Assertions.assertThat(response).isNotNull
-        Assertions.assertThat(response.totalAmount).isEqualTo(BigDecimal("200.00"))
-        Assertions.assertThat(response.status.toString()).isEqualTo("CREATED")
+        val orderResponse = responseWrapper.order
+
+        Assertions.assertThat(orderResponse).isNotNull
+        Assertions.assertThat(orderResponse.totalAmount).isEqualTo(BigDecimal("200.00"))
+        Assertions.assertThat(orderResponse.status.toString()).isEqualTo("CREATED")
+
+        val memberDetails = responseWrapper.memberDetails
+        Assertions.assertThat(memberDetails).isNotNull
+        Assertions.assertThat(memberDetails.memberId).isEqualTo(memberId)
     }
 
     @Test
