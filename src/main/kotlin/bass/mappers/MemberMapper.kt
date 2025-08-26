@@ -6,7 +6,7 @@ import bass.entities.MemberEntity
 import bass.entities.TagEntity
 import bass.model.Member
 
-fun MemberEntity.toDTO() = Member(name, email, password, role, id)
+fun MemberEntity.toDTO() = Member(name, email, password, role, testimonial, id)
 
 fun Member.toLoginDTO() = MemberLoginDTO(id)
 
