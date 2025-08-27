@@ -1,7 +1,10 @@
 package bass.mappers
 
+import bass.dto.achievement.AchievementDTO
+import bass.dto.coupon.CouponDTO
 import bass.dto.member.MemberCouponDTO
 import bass.dto.member.MemberLoginDTO
+import bass.dto.member.MemberProfileDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.entities.DayEntity
 import bass.entities.MemberEntity
@@ -21,6 +24,7 @@ fun MemberEntity.toDTO(): Member {
         testimonial = this.testimonial,
         tags = this.tags.map { it.toDTO() }.toSet(),
         freedomDays = freedomDays,
+        streak = this.streak,
     )
 }
 
@@ -53,5 +57,18 @@ fun MemberEntity.toOrderDTO(): MemberCouponDTO {
     return MemberCouponDTO(
         memberId = this.id,
         newCoupon = recentCouponDTO,
+    )
+}
+
+fun Member.toProfileDTO(
+    achievements: List<AchievementDTO>,
+    coupons: List<CouponDTO>,
+): MemberProfileDTO {
+    return MemberProfileDTO(
+        name = this.name,
+        email = this.email,
+        streak = this.streak,
+        achievements = achievements,
+        coupons = coupons,
     )
 }
