@@ -4,9 +4,7 @@ import bass.entities.MealEntity
 import bass.entities.MemberEntity
 import bass.entities.OrderEntity
 import bass.entities.TagEntity
-import bass.exception.MissingPreferredTagsException
 import bass.exception.NoDaysSetException
-import bass.exception.NoMealRecommendationException
 import bass.repositories.DayRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
@@ -43,35 +41,33 @@ class RecommendationService(
         member: MemberEntity,
         pageable: Pageable,
     ): List<MealEntity> {
-//        val member =
-//            memberRepository.findById(member.id).orElseThrow {
-//                throw NotFoundException("Member Not Found")
-//            }
         val since = Instant.now().minus(DAYS_TO_SUBTRACT.toLong(), ChronoUnit.DAYS)
-        val topMeals = orderRepository.findTopOrderedMealsSince(since, pageable)
-        if (topMeals.isEmpty()) {
-            throw NoMealRecommendationException()
-        }
-
+        val topMeals = orderRepository.findTopOrderedMealsSince(since, PageRequest.ofSize(100))
         val preferredTags = extractTagNames(member.tags)
-        if (preferredTags.isEmpty()) {
-            throw MissingPreferredTagsException()
-        }
-        return applyRecommendationRule8020(topMeals, preferredTags)
+
+        val personalized =
+            if (preferredTags.isNotEmpty()) {
+                applyRecommendationRule8020(topMeals, preferredTags)
+            } else {
+                emptyList()
+            }
+
+        if (personalized.isNotEmpty()) return personalized
+
+        val fallbackRecommendations = orderRepository.findTopOrderedMealsSince(since, pageable)
+        if (fallbackRecommendations.isNotEmpty()) return fallbackRecommendations
+
+        return mealRepository.findAll().shuffled().take(pageable.pageSize)
     }
 
     @Transactional(readOnly = true)
-    fun getHealthyRecommendedMeals(
-        member: MemberEntity,
-        // pageable: Pageable,
-    ): List<MealEntity> {
+    fun getHealthyRecommendedMeals(member: MemberEntity): List<MealEntity> {
         val since = Instant.now().minus(DAYS_TO_SUBTRACT.toLong(), ChronoUnit.DAYS)
 
         val topHealthyMeals =
             orderRepository.findTopOrderedMealsByTagSince(
                 since,
                 listOf("Healthy"),
-                // more orders, so there are some to filter out
                 Pageable.ofSize(25),
             )
 
@@ -87,7 +83,21 @@ class RecommendationService(
         val membersTagsFromOrders = mealRepository.findTagsByMemberId(member.id).map { it.name }.toSet()
         val combinedPreferredTags = memberPreferredTags + membersTagsFromOrders
 
-        return applyRecommendationRule8020(filteredMeals, combinedPreferredTags)
+        val personalized =
+            if (combinedPreferredTags.isNotEmpty()) {
+                applyRecommendationRule8020(filteredMeals, combinedPreferredTags)
+            } else {
+                emptyList()
+            }
+
+        if (personalized.isNotEmpty()) return personalized
+        if (filteredMeals.isNotEmpty()) return filteredMeals
+        if (topHealthyMeals.isNotEmpty()) return topHealthyMeals
+
+        val healthyMeals = mealRepository.findByTagsName("Healthy")
+        if (healthyMeals.isNotEmpty()) return healthyMeals
+
+        return mealRepository.findAll().shuffled().take(10)
     }
 
     fun isFreedomDay(member: MemberEntity): Boolean {
@@ -106,10 +116,6 @@ class RecommendationService(
         val recommendedMeals = mutableListOf<MealEntity>()
         val otherMeals = mutableListOf<MealEntity>()
 
-        // for shuffled meals
-        // val recommendedMealsShuffled = recommendedMeals.shuffled()
-        // val otherMealsShuffled = otherMeals.shuffled()
-
         for (meal in topMeals) {
             if (meal.tags.any { it.name in preferredTags }) {
                 recommendedMeals.add(meal)
@@ -122,7 +128,6 @@ class RecommendationService(
         val otherMealsCount = topMeals.size - recommendedMealsCount
 
         return recommendedMeals.take(recommendedMealsCount) + otherMeals.take(otherMealsCount)
-        // return recommendedMealsShuffled.take(recommendedMealsCount) + otherMealsShuffled.take(otherMealsCount)
     }
 
     fun excludeRecentlyOrderedMeals(
@@ -136,13 +141,7 @@ class RecommendationService(
     private fun extractTagNames(tags: Collection<TagEntity>): Set<String> = tags.map { it.name }.toSet()
 
     companion object {
-        //        val HEALTH_TAGS =
-//            listOf(
-//                "healthy",
-//                "salad",
-//                "soup",
-//            )
         const val DAYS_TO_SUBTRACT = 30
-        const val LAST_ORDERS_TO_EXCLUDE = 5
+        const val LAST_ORDERS_TO_EXCLUDE = 3
     }
 }

@@ -115,7 +115,7 @@ class MealServiceTest(
             PageRequest.of(0, 999, Sort.by("name"))
         val all = mealService.findAll(sortedByName)
 
-        assertThat(all).hasSize(10)
+        assertThat(all).hasSize(22)
     }
 
     @Test
@@ -124,7 +124,7 @@ class MealServiceTest(
         val page = mealService.findAll(pageable)
 
         assertThat(page.content).hasSize(4)
-        assertThat(page.totalElements).isEqualTo(8)
+        assertThat(page.totalElements).isEqualTo(20)
     }
 
     @Test
@@ -162,7 +162,7 @@ class MealServiceTest(
     fun `should return meals matching with tag`() {
         val allMealsWithTag = mealService.findAllByTag("Healthy")
 
-        assertThat(allMealsWithTag).hasSize(3)
+        assertThat(allMealsWithTag).hasSize(8)
     }
 
     @Test
