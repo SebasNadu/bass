@@ -1,8 +1,8 @@
 package bass.endtoend
 
-import bass.dto.page.PageResponseDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.dto.page.PageResponseDTO
 import bass.util.ValidationMessages
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef

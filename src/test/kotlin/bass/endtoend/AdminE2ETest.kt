@@ -1,8 +1,8 @@
 package bass.endtoend
 
-import bass.dto.product.TopProductDTO
 import bass.dto.meal.MealResponseDTO
 import bass.dto.member.ActiveMemberDTO
+import bass.dto.product.TopProductDTO
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
