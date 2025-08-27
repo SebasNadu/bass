@@ -27,9 +27,7 @@ class AchievementServiceImpl(
         val achievement = achievementRepository.findById(achievementId).orElseThrow()
 
         member.achievements.add(achievement)
-        achievement.members.add(member)
         memberRepository.save(member)
-        achievementRepository.save(achievement)
 
         return if (achievement.generatesCoupon()) {
             generateCoupon(member, achievement)
@@ -60,7 +58,8 @@ class AchievementServiceImpl(
     }
 
     fun findAllByMemberId(memberId: Long): List<AchievementDTO> {
-        val achievements = achievementRepository.findByMemberId(memberId)
+//        val achievements = achievementRepository.findByMemberId(memberId)
+        val achievements = achievementRepository.findAllByMemberId(memberId)
         return achievements.map { AchievementDTO.fromEntity(it) }
     }
 }
