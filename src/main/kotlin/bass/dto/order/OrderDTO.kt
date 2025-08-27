@@ -1,5 +1,6 @@
-package bass.dto
+package bass.dto.order
 
+import bass.dto.payment.PaymentDTO
 import bass.entities.OrderEntity
 import java.math.BigDecimal
 

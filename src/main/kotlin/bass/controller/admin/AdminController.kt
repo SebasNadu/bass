@@ -4,7 +4,7 @@ import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
 import bass.controller.admin.usecase.FindMembersWithRecentCartActivityUseCase
 import bass.controller.admin.usecase.FindTopProductsUseCase
-import bass.dto.TopProductDTO
+import bass.dto.product.TopProductDTO
 import bass.dto.member.ActiveMemberDTO
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

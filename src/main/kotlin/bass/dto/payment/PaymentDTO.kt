@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.payment
 
 import bass.entities.PaymentEntity
 import java.math.BigDecimal

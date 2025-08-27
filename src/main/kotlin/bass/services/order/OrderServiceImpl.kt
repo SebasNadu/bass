@@ -1,8 +1,8 @@
 package bass.services.order
 
 import bass.controller.order.usecase.OrderCreationUseCase
-import bass.dto.OrderDTO
-import bass.dto.PaymentDTO
+import bass.dto.order.OrderDTO
+import bass.dto.payment.PaymentDTO
 import bass.dto.member.MemberLoginDTO
 import bass.entities.CartItemEntity
 import bass.entities.CouponEntity

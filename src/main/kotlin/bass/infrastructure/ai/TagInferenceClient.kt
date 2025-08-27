@@ -1,6 +1,6 @@
 package bass.infrastructure.ai
 
-import bass.dto.TagInferenceResultDTO
+import bass.dto.tag.TagInferenceResultDTO
 import bass.exception.AiInferenceException
 import bass.exception.InvalidTagNameException
 import bass.exception.OperationFailedException

@@ -1,6 +1,6 @@
 package bass.endtoend
 
-import bass.dto.TopProductDTO
+import bass.dto.product.TopProductDTO
 import bass.dto.meal.MealResponseDTO
 import bass.dto.member.ActiveMemberDTO
 import io.restassured.RestAssured

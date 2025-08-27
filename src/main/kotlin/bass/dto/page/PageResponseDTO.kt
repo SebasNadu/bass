@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.page
 
 data class PageResponseDTO<T>(
     val content: List<T>,

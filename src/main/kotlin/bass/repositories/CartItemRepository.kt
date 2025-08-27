@@ -1,6 +1,6 @@
 package bass.repositories
 
-import bass.dto.TopProductDTO
+import bass.dto.product.TopProductDTO
 import bass.dto.member.ActiveMemberDTO
 import bass.entities.CartItemEntity
 import org.springframework.data.jpa.repository.JpaRepository

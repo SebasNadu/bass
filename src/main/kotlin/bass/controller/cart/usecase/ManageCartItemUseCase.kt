@@ -1,7 +1,7 @@
 package bass.controller.cart.usecase
 
-import bass.dto.CartItemRequestDTO
-import bass.dto.CartItemResponseDTO
+import bass.dto.cartItem.CartItemRequestDTO
+import bass.dto.cartItem.CartItemResponseDTO
 
 interface ManageCartItemUseCase {
     fun addOrUpdate(

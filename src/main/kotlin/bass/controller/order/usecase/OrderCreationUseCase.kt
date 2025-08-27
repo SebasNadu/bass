@@ -1,6 +1,6 @@
 package bass.controller.order.usecase
 
-import bass.dto.OrderDTO
+import bass.dto.order.OrderDTO
 import bass.dto.member.MemberLoginDTO
 import bass.model.PaymentRequest
 

@@ -1,6 +1,6 @@
 package bass.endtoend
 
-import bass.dto.PageResponseDTO
+import bass.dto.page.PageResponseDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.util.ValidationMessages

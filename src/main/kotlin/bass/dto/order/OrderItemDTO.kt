@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.order
 
 import java.math.BigDecimal
 

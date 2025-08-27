@@ -1,7 +1,7 @@
 package bass.endtoend
 
-import bass.dto.OrderCreationResponseDTO
-import bass.dto.TokenRequestDTO
+import bass.dto.order.OrderCreationResponseDTO
+import bass.dto.token.TokenRequestDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.AchievementEntity
@@ -64,15 +64,14 @@ class OrderControllerE2ETest(
 
     @Test
     fun `create order success`() {
-        val couponAchievement =
-            achievementRepository.save(
-                AchievementEntity(
-                    name = "Coupon Achievement",
-                    streaksRequired = 1,
-                    couponType = CouponType.FIRST_RANK,
-                    description = "Generates a coupon",
-                ),
-            )
+        achievementRepository.save(
+            AchievementEntity(
+                name = "Coupon Achievement",
+                streaksRequired = 1,
+                couponType = CouponType.FIRST_RANK,
+                description = "Generates a coupon",
+            ),
+        )
 
         createCartItem()
         val paymentRequest =

@@ -1,6 +1,6 @@
 package bass.services.payment
 
-import bass.dto.PaymentDTO
+import bass.dto.payment.PaymentDTO
 import bass.entities.OrderEntity
 import bass.entities.PaymentEntity
 import bass.mappers.toDTO

@@ -1,6 +1,6 @@
 package bass.integration
 
-import bass.dto.OrderDTO
+import bass.dto.order.OrderDTO
 import bass.dto.member.MemberLoginDTO
 import bass.entities.AchievementEntity
 import bass.entities.CartItemEntity

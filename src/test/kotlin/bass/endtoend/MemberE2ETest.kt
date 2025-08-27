@@ -1,6 +1,6 @@
 package bass.endtoend
 
-import bass.dto.TokenResponseDTO
+import bass.dto.token.TokenResponseDTO
 import bass.entities.TagEntity
 import bass.model.Member
 import bass.repositories.TagRepository

@@ -1,7 +1,7 @@
 package bass.mappers
 
-import bass.dto.OrderDTO
-import bass.dto.PaymentDTO
+import bass.dto.order.OrderDTO
+import bass.dto.payment.PaymentDTO
 import bass.entities.OrderEntity
 
 fun OrderEntity.toDTO(paymentsWithDiscount: List<PaymentDTO>): OrderDTO =

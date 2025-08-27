@@ -1,6 +1,6 @@
 package bass.mappers
 
-import bass.dto.PaymentDTO
+import bass.dto.payment.PaymentDTO
 import bass.entities.PaymentEntity
 import java.math.BigDecimal
 

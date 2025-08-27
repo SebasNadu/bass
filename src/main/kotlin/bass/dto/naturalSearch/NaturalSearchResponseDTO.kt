@@ -1,5 +1,6 @@
-package bass.dto
+package bass.dto.naturalSearch
 
+import bass.dto.tag.TagInferenceResultDTO
 import bass.dto.meal.MealResponseDTO
 import bass.entities.MealEntity
 import bass.mappers.toDTO
