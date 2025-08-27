@@ -1,7 +1,7 @@
 package bass.controller.member.usecase
 
-import bass.dto.TokenRequestDTO
-import bass.dto.TokenResponseDTO
+import bass.dto.token.TokenRequestDTO
+import bass.dto.token.TokenResponseDTO
 import bass.model.Member
 
 interface AuthUseCase {

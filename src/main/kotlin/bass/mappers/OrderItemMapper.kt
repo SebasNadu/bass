@@ -1,6 +1,6 @@
 package bass.mappers
 
-import bass.dto.OrderItemDTO
+import bass.dto.order.OrderItemDTO
 import bass.entities.OrderItemEntity
 
 fun OrderItemEntity.toDTO() =
@@ -8,5 +8,7 @@ fun OrderItemEntity.toDTO() =
         mealId = meal.id,
         quantity = quantity,
         price = price,
+        mealName = meal.name,
+        imageUrl = meal.imageUrl,
         id = id,
     )

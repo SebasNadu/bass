@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.token
 
 import bass.util.ValidationMessages
 import jakarta.validation.constraints.Email

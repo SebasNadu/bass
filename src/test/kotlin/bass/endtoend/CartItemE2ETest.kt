@@ -1,9 +1,9 @@
 package bass.endtoend
 
-import bass.dto.CartItemRequestDTO
-import bass.dto.CartItemResponseDTO
-import bass.dto.PageResponseDTO
+import bass.dto.cartItem.CartItemRequestDTO
+import bass.dto.cartItem.CartItemResponseDTO
 import bass.dto.meal.MealResponseDTO
+import bass.dto.page.PageResponseDTO
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType

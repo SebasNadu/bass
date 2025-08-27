@@ -3,10 +3,15 @@ package bass.controller.order
 import bass.annotation.LoginMember
 import bass.controller.member.usecase.CrudMemberUseCase
 import bass.controller.order.usecase.OrderCreationUseCase
-import bass.dto.OrderCreationResponseDTO
 import bass.dto.member.MemberLoginDTO
+import bass.dto.order.OrderCreationResponseDTO
+import bass.dto.order.OrderResponseDTO
 import bass.model.PaymentRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -31,5 +36,15 @@ class OrderController(
                 memberDetails = memberWithAchievement,
             )
         return ResponseEntity.ok(response)
+    }
+
+    @GetMapping
+    fun getOrders(
+        @LoginMember member: MemberLoginDTO,
+        @PageableDefault(size = 10, sort = ["createdAt"], direction = Sort.Direction.ASC)
+        pageable: Pageable,
+    ): ResponseEntity<List<OrderResponseDTO>> {
+        val orders = orderCreationUseCase.getOrdersByMemberId(member.id, pageable)
+        return ResponseEntity.ok(orders)
     }
 }

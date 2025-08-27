@@ -12,7 +12,7 @@ enum class CouponType(
     SECOND_RANK("Second Rank Reward", 10, DiscountType.PERCENTAGE, 45),
     THIRD_RANK("Third Rank Reward", 15, DiscountType.PERCENTAGE, 60),
     FOURTH_RANK("Fourth Rank Reward", 20, DiscountType.PERCENTAGE, 90),
-    WELCOME_BONUS("Welcome Bonus", 500, DiscountType.FIXED_AMOUNT, 7), // $5.00
+    WELCOME_BONUS("Welcome Bonus", 5, DiscountType.FIXED_AMOUNT, 7), // $5.00
     FREE_SHIPPING("Free Shipping", 0, DiscountType.FREE_SHIPPING, 14),
     ;
 

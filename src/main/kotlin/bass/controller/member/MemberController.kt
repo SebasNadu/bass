@@ -3,11 +3,11 @@ package bass.controller.member
 import bass.annotation.LoginMember
 import bass.controller.member.usecase.AuthUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.TokenRequestDTO
-import bass.dto.TokenResponseDTO
 import bass.dto.member.MemberLoginDTO
 import bass.dto.member.MemberProfileDTO
 import bass.dto.member.MemberRegisterDTO
+import bass.dto.token.TokenRequestDTO
+import bass.dto.token.TokenResponseDTO
 import bass.infrastructure.AuthorizationExtractor
 import bass.mappers.toProfileDTO
 import bass.model.Member

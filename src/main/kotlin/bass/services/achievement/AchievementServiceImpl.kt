@@ -27,7 +27,9 @@ class AchievementServiceImpl(
         val achievement = achievementRepository.findById(achievementId).orElseThrow()
 
         member.achievements.add(achievement)
+        achievement.members.add(member)
         memberRepository.save(member)
+        achievementRepository.save(achievement)
 
         return if (achievement.generatesCoupon()) {
             generateCoupon(member, achievement)

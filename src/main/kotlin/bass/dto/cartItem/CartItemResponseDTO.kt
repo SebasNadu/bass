@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.cartItem
 
 import bass.dto.meal.MealResponseDTO
 import java.time.Instant

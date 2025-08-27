@@ -6,18 +6,16 @@ import bass.annotation.LoginMember
 import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.NaturalSearchRequestDTO
-import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.dto.member.MemberLoginDTO
+import bass.dto.naturalSearch.NaturalSearchRequestDTO
+import bass.dto.naturalSearch.NaturalSearchResponseDTO
 import bass.mappers.toDTO
-import bass.mappers.toEntity
 import bass.services.recommendation.RecommendationService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -59,13 +57,7 @@ class MealController(
     fun getRecommendations(
         @LoginMember member: MemberLoginDTO,
     ): List<MealResponseDTO> {
-        val member =
-            crudMemberUseCase.findById(member.id).toEntity()
-        return if (recommendationService.isFreedomDay(member)) {
-            recommendationService.getRecommendedMeals(member, PageRequest.of(0, 10))
-        } else {
-            recommendationService.getHealthyRecommendedMeals(member)
-        }.map { it.toDTO() }
+        return recommendationService.recommendedMeals(member.id).map { it.toDTO() }
     }
 
     @IgnoreCheckLogin

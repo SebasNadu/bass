@@ -1,8 +1,6 @@
-package bass.dto
+package bass.dto.product
 
 import java.time.OffsetDateTime
-
-// stays as OffsetDateTime because Instant causes a conflict with the result from native query
 
 interface TopProductDTO {
     val name: String
