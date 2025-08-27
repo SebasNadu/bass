@@ -31,6 +31,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import kotlin.collections.map
 
 @Service
 class OrderServiceImpl(
@@ -91,7 +92,7 @@ class OrderServiceImpl(
         return savedOrder.toDTO(listOf(paymentDTO))
     }
 
-    override fun getOrdersByMemberId(
+    override fun getAllOrdersByMemberId(
         memberId: Long,
         pageable: Pageable,
     ): List<OrderResponseDTO> {
