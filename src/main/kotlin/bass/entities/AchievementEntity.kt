@@ -55,14 +55,14 @@ class AchievementEntity(
         )
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is AchievementEntity) return false
-        return id != 0L && id == other.id
-    }
-
-    override fun hashCode(): Int = id.hashCode()
-
+//    override fun equals(other: Any?): Boolean {
+//        if (this === other) return true
+//        if (other !is AchievementEntity) return false
+//        return id != 0L && id == other.id
+//    }
+//
+//    override fun hashCode(): Int = id.hashCode()
+//
     override fun toString(): String {
         return "AchievementEntity(id=$id, name='$name', strikesRequired=$streaksRequired, couponType=$couponType, " +
             "description='$description', imageUrl=$imageUrl)"
