@@ -2,8 +2,12 @@ package bass.mappers
 
 import bass.dto.PaymentDTO
 import bass.entities.PaymentEntity
+import java.math.BigDecimal
 
-fun PaymentEntity.toDTO(): PaymentDTO {
+fun PaymentEntity.toDTO(
+    discount: BigDecimal,
+    initialAmount: BigDecimal
+) : PaymentDTO {
     return PaymentDTO(
         id = this.id,
         stripePaymentIntentId = this.stripePaymentIntentId,
@@ -13,5 +17,7 @@ fun PaymentEntity.toDTO(): PaymentDTO {
         failureCode = this.failureCode,
         failureMessage = this.failureMessage,
         orderId = this.order.id!!,
+        discountAmount = discount,
+        amountWithoutDiscount = initialAmount
     )
 }
