@@ -1,5 +1,6 @@
 package bass.services.achievement
 
+import bass.dto.achievement.AchievementDTO
 import bass.entities.AchievementEntity
 import bass.entities.CouponEntity
 import bass.entities.MemberEntity
@@ -54,5 +55,10 @@ class AchievementServiceImpl(
             )
 
         return couponRepository.save(coupon)
+    }
+
+    fun findAllByMemberId(memberId: Long): List<AchievementDTO> {
+        val achievements = achievementRepository.findByMemberId(memberId)
+        return achievements.map { AchievementDTO.fromEntity(it) }
     }
 }
