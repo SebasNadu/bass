@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
-class PaymentService(private val paymentRepository: PaymentRepository) { // recibit discount y totalWithDiscount
+class PaymentService(private val paymentRepository: PaymentRepository) {
     fun createPayment(
         order: OrderEntity,
         stripeResponse: StripeResponse,

@@ -112,10 +112,9 @@ class OrderServiceImpl(
             couponRepository.findByIdOrNull(couponId)
                 ?: throw NotFoundException("Coupon not found")
 
-        if (!coupon.isValid())
-            {
-                throw OperationFailedException("Coupon with code=${coupon.code} not valid")
-            }
+        if (!coupon.isValid()) {
+            throw OperationFailedException("Coupon with code=${coupon.code} not valid")
+        }
 
         if (coupon.member.id != memberId) {
             throw OperationFailedException("This coupon does not belong to you.")
