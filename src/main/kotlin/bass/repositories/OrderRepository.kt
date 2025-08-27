@@ -56,5 +56,8 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
     ): List<MealEntity>
 
     @EntityGraph(attributePaths = ["items", "items.meal"])
-    fun findAllByMemberId(memberId: Long, pageable: Pageable): List<OrderEntity>
+    fun findAllByMemberId(
+        memberId: Long,
+        pageable: Pageable,
+    ): List<OrderEntity>
 }
