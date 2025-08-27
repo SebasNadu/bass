@@ -3,6 +3,7 @@ package bass.repositories
 import bass.entities.MealEntity
 import bass.entities.OrderEntity
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -53,4 +54,7 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
         @Param("tagNames") tagNames: List<String>,
         pageable: Pageable,
     ): List<MealEntity>
+
+    @EntityGraph(attributePaths = ["items", "items.meal"])
+    fun findAllByMemberId(memberId: Long, pageable: Pageable): List<OrderEntity>
 }

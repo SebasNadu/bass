@@ -1,20 +1,17 @@
 package bass.services.order
 
 import bass.controller.order.usecase.OrderCreationUseCase
-import bass.dto.order.OrderDTO
-import bass.dto.payment.PaymentDTO
 import bass.dto.member.MemberLoginDTO
-import bass.entities.CartItemEntity
-import bass.entities.CouponEntity
-import bass.entities.MemberEntity
-import bass.entities.OrderEntity
-import bass.entities.OrderItemEntity
-import bass.entities.PaymentEntity
+import bass.dto.order.OrderDTO
+import bass.dto.order.OrderResponseDTO
+import bass.dto.payment.PaymentDTO
+import bass.entities.*
 import bass.enums.DiscountType
 import bass.events.OrderCompletionEvent
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
+import bass.mappers.toOrderResponseDTO
 import bass.model.PaymentRequest
 import bass.model.StripeResponse
 import bass.repositories.CartItemRepository
@@ -24,6 +21,7 @@ import bass.repositories.OrderRepository
 import bass.services.payment.PaymentService
 import bass.services.stripe.StripeService
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -86,6 +84,11 @@ class OrderServiceImpl(
             eventPublisher.publishEvent(OrderCompletionEvent(this, savedOrder))
         }
         return savedOrder.toDTO(listOf(paymentDTO))
+    }
+
+    override fun getOrdersByMemberId(memberId: Long, pageable: Pageable): List<OrderResponseDTO> {
+        val orders = orderRepository.findAllByMemberId(memberId, pageable)
+        return orders.map { toOrderResponseDTO(it) }
     }
 
     private fun calculateTotalDiscount(
