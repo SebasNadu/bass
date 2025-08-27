@@ -12,7 +12,7 @@ interface OrderCreationUseCase {
         paymentRequest: PaymentRequest,
     ): OrderDTO
 
-    fun getOrdersByMemberId(
+    fun getAllOrdersByMemberId(
         memberId: Long,
         pageable: Pageable,
     ): List<OrderResponseDTO>
