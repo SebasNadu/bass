@@ -35,7 +35,8 @@ class StreakServiceImpl(
                 }
             }
         }
-        memberRepository.save(member)
+        val member1 = memberRepository.findById(order.member.id).orElseThrow()
+        memberRepository.save(member1)
     }
 
     fun updateStreak(
