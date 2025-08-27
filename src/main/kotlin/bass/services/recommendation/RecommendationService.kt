@@ -7,12 +7,13 @@ import bass.entities.TagEntity
 import bass.exception.MissingPreferredTagsException
 import bass.exception.NoDaysSetException
 import bass.exception.NoMealRecommendationException
-import bass.exception.NotFoundException
 import bass.repositories.DayRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
 import bass.repositories.OrderRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -26,15 +27,26 @@ class RecommendationService(
     private val dayRepository: DayRepository,
     private val memberRepository: MemberRepository,
 ) {
+    @Transactional
+    fun recommendedMeals(memberId: Long): List<MealEntity> {
+        val member =
+            memberRepository.findByIdOrNull(memberId)!!
+        return if (isFreedomDay(member)) {
+            getRecommendedMeals(member, PageRequest.of(0, 10))
+        } else {
+            getHealthyRecommendedMeals(member)
+        }
+    }
+
     @Transactional(readOnly = true)
     fun getRecommendedMeals(
         member: MemberEntity,
         pageable: Pageable,
     ): List<MealEntity> {
-        val member =
-            memberRepository.findById(member.id).orElseThrow {
-                throw NotFoundException("Member Not Found")
-            }
+//        val member =
+//            memberRepository.findById(member.id).orElseThrow {
+//                throw NotFoundException("Member Not Found")
+//            }
         val since = Instant.now().minus(DAYS_TO_SUBTRACT.toLong(), ChronoUnit.DAYS)
         val topMeals = orderRepository.findTopOrderedMealsSince(since, pageable)
         if (topMeals.isEmpty()) {

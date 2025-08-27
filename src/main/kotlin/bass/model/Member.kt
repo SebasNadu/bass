@@ -24,6 +24,7 @@ data class Member(
     @field:NotBlank(message = PASSWORD_BLANK)
     @field:Size(min = 1, max = 255, message = PASSWORD_SIZE)
     var password: String,
+    var streak: Int,
     var role: MemberEntity.Role = MemberEntity.Role.CUSTOMER,
     var testimonial: String,
     var freedomDays: Set<String>,
