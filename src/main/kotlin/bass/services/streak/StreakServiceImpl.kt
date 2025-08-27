@@ -25,6 +25,8 @@ class StreakServiceImpl(
         val member = memberRepository.findById(order.member.id).orElseThrow()
 
         updateStreak(order, member)
+        memberRepository.save(member)
+
         if (member.streak > 0) {
             val achievements =
                 achievementRepository.findAll()
@@ -35,8 +37,6 @@ class StreakServiceImpl(
                 }
             }
         }
-        val member1 = memberRepository.findById(order.member.id).orElseThrow()
-        memberRepository.save(member1)
     }
 
     fun updateStreak(
