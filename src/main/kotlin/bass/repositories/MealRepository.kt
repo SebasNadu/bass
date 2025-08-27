@@ -16,7 +16,7 @@ interface MealRepository : JpaRepository<MealEntity, Long> {
             SELECT DISTINCT t FROM TagEntity t 
             JOIN t.meals m 
             JOIN m.cartItems ci
-            WHERE ci.member.id =: memberId
+            WHERE ci.member.id = :memberId
             """,
     )
     fun findTagsByMemberId(
