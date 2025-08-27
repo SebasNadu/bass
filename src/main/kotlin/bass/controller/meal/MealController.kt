@@ -2,6 +2,7 @@ package bass.controller.meal
 
 import bass.annotation.CheckAdminOnly
 import bass.annotation.IgnoreCheckLogin
+import bass.annotation.LoginMember
 import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
@@ -10,6 +11,7 @@ import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
+import bass.dto.member.MemberLoginDTO
 import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.services.recommendation.RecommendationService
@@ -55,10 +57,10 @@ class MealController(
 
     @GetMapping(MEAL_PATH_RECOMMENDATIONS)
     fun getRecommendations(
-        @RequestParam @Valid memberId: Long,
+        @LoginMember member: MemberLoginDTO,
     ): List<MealResponseDTO> {
         val member =
-            crudMemberUseCase.findById(memberId).toEntity()
+            crudMemberUseCase.findById(member.id).toEntity()
         return if (recommendationService.isFreedomDay(member)) {
             recommendationService.getRecommendedMeals(member, PageRequest.of(0, 10))
         } else {
