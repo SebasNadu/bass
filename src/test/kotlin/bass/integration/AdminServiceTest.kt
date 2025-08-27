@@ -2,7 +2,7 @@ package bass.integration
 
 import bass.controller.admin.usecase.FindMembersWithRecentCartActivityUseCase
 import bass.controller.admin.usecase.FindTopProductsUseCase
-import bass.dto.CartItemRequestDTO
+import bass.dto.cartItem.CartItemRequestDTO
 import bass.entities.MealEntity
 import bass.entities.MemberEntity
 import bass.repositories.CartItemRepository

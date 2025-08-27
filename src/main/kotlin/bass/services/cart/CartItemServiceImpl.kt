@@ -2,8 +2,8 @@ package bass.services.cart
 
 import bass.controller.cart.usecase.ManageCartItemUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.CartItemRequestDTO
-import bass.dto.CartItemResponseDTO
+import bass.dto.cartItem.CartItemRequestDTO
+import bass.dto.cartItem.CartItemResponseDTO
 import bass.entities.CartItemEntity
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO

@@ -1,7 +1,7 @@
 package bass.integration
 
 import bass.controller.cart.usecase.ManageCartItemUseCase
-import bass.dto.CartItemRequestDTO
+import bass.dto.cartItem.CartItemRequestDTO
 import bass.entities.MealEntity
 import bass.mappers.toDTO
 import bass.repositories.MealRepository

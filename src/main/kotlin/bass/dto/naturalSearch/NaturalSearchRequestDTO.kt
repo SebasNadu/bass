@@ -1,4 +1,4 @@
-package bass.dto
+package bass.dto.naturalSearch
 
 import jakarta.validation.constraints.NotBlank
 

@@ -1,7 +1,7 @@
 package bass.integration
 
-import bass.dto.NaturalSearchRequestDTO
-import bass.dto.TagInferenceResultDTO
+import bass.dto.naturalSearch.NaturalSearchRequestDTO
+import bass.dto.tag.TagInferenceResultDTO
 import bass.entities.MealEntity
 import bass.entities.TagEntity
 import bass.infrastructure.ai.TagInferenceClient

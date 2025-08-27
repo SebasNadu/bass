@@ -6,12 +6,12 @@ import bass.annotation.LoginMember
 import bass.controller.meal.usecase.AISearchUseCase
 import bass.controller.meal.usecase.CrudMealUseCase
 import bass.controller.member.usecase.CrudMemberUseCase
-import bass.dto.NaturalSearchRequestDTO
-import bass.dto.NaturalSearchResponseDTO
 import bass.dto.meal.MealPatchDTO
 import bass.dto.meal.MealRequestDTO
 import bass.dto.meal.MealResponseDTO
 import bass.dto.member.MemberLoginDTO
+import bass.dto.naturalSearch.NaturalSearchRequestDTO
+import bass.dto.naturalSearch.NaturalSearchResponseDTO
 import bass.mappers.toDTO
 import bass.services.recommendation.RecommendationService
 import jakarta.validation.Valid

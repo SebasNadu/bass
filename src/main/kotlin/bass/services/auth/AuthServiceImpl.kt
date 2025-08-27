@@ -1,8 +1,8 @@
 package bass.services.auth
 
 import bass.controller.member.usecase.AuthUseCase
-import bass.dto.TokenRequestDTO
-import bass.dto.TokenResponseDTO
+import bass.dto.token.TokenRequestDTO
+import bass.dto.token.TokenResponseDTO
 import bass.exception.ForbiddenException
 import bass.infrastructure.JwtTokenProvider
 import bass.mappers.toDTO
