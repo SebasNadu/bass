@@ -18,7 +18,7 @@ class WebMvcConfiguration(
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(checkLogin).addPathPatterns("/api/**", "/meals", "/admin/**")
-            .excludePathPatterns("/api/members/**")
+            .excludePathPatterns("/api/members/register", "/api/members/login", "/api/tags")
         registry.addInterceptor(checkRole).addPathPatterns("/admin/**", "/api/meals/**")
     }
 
@@ -27,8 +27,15 @@ class WebMvcConfiguration(
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
+        val albAddress = "https://bass-dev-alb-1133887665.ap-northeast-2.elb.amazonaws.com"
         registry.addMapping("/api/**")
-            .allowedOrigins("*")
+            .allowedOrigins(
+                "http://localhost:8080",
+                "http://localhost:5173",
+                "http://43.201.85.92",
+                "http://10.0.0.204",
+                albAddress,
+            )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .exposedHeaders(HttpHeaders.LOCATION)

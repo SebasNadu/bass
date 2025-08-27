@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250823-1
+      author: arekiu
+      comment: "Load initial achievements"
+      changes:
+        - loadData:
+            tableName: achievement
+            file: ../data/achievements.csv
+            relativeToChangelogFile: true
+            columns:
+              - column: { name: id, type: NUMERIC }
+              - column: { name: name, type: STRING }
+              - column: { name: description, type: STRING }
+              - column: { name: streaks_required, type: NUMERIC }
+              - column: { name: image_url, type: STRING }
+              - column: { name: coupon_type, type: STRING }
