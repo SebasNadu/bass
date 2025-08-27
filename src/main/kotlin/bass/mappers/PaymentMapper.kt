@@ -6,8 +6,8 @@ import java.math.BigDecimal
 
 fun PaymentEntity.toDTO(
     discount: BigDecimal,
-    initialAmount: BigDecimal
-) : PaymentDTO {
+    initialAmount: BigDecimal,
+): PaymentDTO {
     return PaymentDTO(
         id = this.id,
         stripePaymentIntentId = this.stripePaymentIntentId,
@@ -18,6 +18,6 @@ fun PaymentEntity.toDTO(
         failureMessage = this.failureMessage,
         orderId = this.order.id!!,
         discountAmount = discount,
-        amountWithoutDiscount = initialAmount
+        amountWithoutDiscount = initialAmount,
     )
 }

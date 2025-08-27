@@ -12,7 +12,7 @@ data class PaymentRequest(
     val currency: String,
     @field:NotBlank
     val paymentMethod: String,
-    val couponId: Long? = null
+    val couponId: Long? = null,
 ) {
     val amountInSmallestUnit: Long
         get() {

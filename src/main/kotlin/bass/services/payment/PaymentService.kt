@@ -7,12 +7,15 @@ import bass.mappers.toDTO
 import bass.model.StripeResponse
 import bass.repositories.PaymentRepository
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
-class PaymentService(private val paymentRepository: PaymentRepository) {
+class PaymentService(private val paymentRepository: PaymentRepository) { // recibit discount y totalWithDiscount
     fun createPayment(
         order: OrderEntity,
         stripeResponse: StripeResponse,
+        discount: BigDecimal,
+        amountWithoutDiscount: BigDecimal,
     ): PaymentDTO {
         val payment =
             PaymentEntity(
@@ -24,6 +27,6 @@ class PaymentService(private val paymentRepository: PaymentRepository) {
                 failureMessage = stripeResponse.failureMessage,
                 order = order,
             )
-        return paymentRepository.save(payment).toDTO()
+        return paymentRepository.save(payment).toDTO(discount, amountWithoutDiscount)
     }
 }

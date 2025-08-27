@@ -5,10 +5,12 @@ import bass.dto.OrderDTO
 import bass.dto.PaymentDTO
 import bass.dto.member.MemberLoginDTO
 import bass.entities.CartItemEntity
+import bass.entities.CouponEntity
 import bass.entities.MemberEntity
 import bass.entities.OrderEntity
 import bass.entities.OrderItemEntity
 import bass.entities.PaymentEntity
+import bass.enums.DiscountType
 import bass.events.OrderCompletionEvent
 import bass.exception.NotFoundException
 import bass.exception.OperationFailedException
@@ -16,6 +18,7 @@ import bass.mappers.toDTO
 import bass.model.PaymentRequest
 import bass.model.StripeResponse
 import bass.repositories.CartItemRepository
+import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import bass.repositories.OrderRepository
 import bass.services.payment.PaymentService
@@ -24,6 +27,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 
 @Service
 class OrderServiceImpl(
@@ -33,6 +37,7 @@ class OrderServiceImpl(
     private val orderRepository: OrderRepository,
     private val paymentService: PaymentService,
     private val eventPublisher: ApplicationEventPublisher,
+    private val couponRepository: CouponRepository,
 ) : OrderCreationUseCase {
     @Transactional
     override fun create(
@@ -47,23 +52,75 @@ class OrderServiceImpl(
 
         validateStock(cartItems)
 
+        val totalWithoutCoupon = cartItems.sumOf { it.totalPrice }
+        val coupon = paymentRequest.couponId?.let { getAndValidateCoupon(it, member.id) }
+        val (totalAmount, discountAmount) =
+            coupon?.let {
+                calculateTotalDiscount(totalWithoutCoupon, it)
+            } ?: Pair(totalWithoutCoupon, BigDecimal.ZERO)
+
         val stripeResponse =
             stripeService.createPaymentIntent(
                 paymentRequest.copy(
-                    amount = cartItems.sumOf { it.totalPrice },
+                    amount = totalAmount,
                 ),
             )
 
         val order = buildOrderEntity(member, cartItems, stripeResponse)
         val savedOrder = orderRepository.save(order)
-        val paymentDTO = paymentService.createPayment(savedOrder, stripeResponse)
+        val paymentDTO =
+            paymentService.createPayment(
+                savedOrder,
+                stripeResponse,
+                discountAmount,
+                totalWithoutCoupon,
+            )
 
         processPaymentOutcome(paymentDTO, cartItems)
 
         if (paymentDTO.status == PaymentEntity.PaymentStatus.SUCCEEDED) {
+            coupon?.let {
+                it.markAsUsed()
+                couponRepository.save(it)
+            }
             eventPublisher.publishEvent(OrderCompletionEvent(this, savedOrder))
         }
-        return savedOrder.toDTO()
+        return savedOrder.toDTO(listOf(paymentDTO))
+    }
+
+    private fun calculateTotalDiscount(
+        total: BigDecimal,
+        coupon: CouponEntity,
+    ): Pair<BigDecimal, BigDecimal> {
+        val discount =
+            when (coupon.discountType) {
+                DiscountType.PERCENTAGE -> total.multiply(BigDecimal(coupon.discountValue).divide(BigDecimal(100)))
+                DiscountType.FIXED_AMOUNT -> coupon.discountAmount
+                else -> BigDecimal.ZERO
+            }
+        val totalWithDiscount = total.subtract(discount)
+        val finalTotal = if (totalWithDiscount < BigDecimal.ZERO) BigDecimal.ZERO else totalWithDiscount
+
+        return Pair(finalTotal, discount)
+    }
+
+    private fun getAndValidateCoupon(
+        couponId: Long,
+        memberId: Long,
+    ): CouponEntity {
+        val coupon =
+            couponRepository.findByIdOrNull(couponId)
+                ?: throw NotFoundException("Coupon not found")
+
+        if (!coupon.isValid())
+            {
+                throw OperationFailedException("Coupon with code=${coupon.code} not valid")
+            }
+
+        if (coupon.member.id != memberId) {
+            throw OperationFailedException("This coupon does not belong to you.")
+        }
+        return coupon
     }
 
     private fun buildOrderEntity(
