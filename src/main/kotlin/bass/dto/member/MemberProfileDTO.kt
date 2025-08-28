@@ -13,5 +13,5 @@ data class MemberProfileDTO(
     val testimonial: String,
     var coupons: List<CouponDTO>,
     var tags: List<TagDTO>,
-    var days: List<DayDTO>
+    var days: List<DayDTO>,
 )

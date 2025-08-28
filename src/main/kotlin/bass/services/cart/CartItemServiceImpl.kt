@@ -1,13 +1,11 @@
 package bass.services.cart
 
 import bass.controller.cart.usecase.ManageCartItemUseCase
-import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.cartItem.CartItemRequestDTO
 import bass.dto.cartItem.CartItemResponseDTO
 import bass.entities.CartItemEntity
 import bass.exception.OperationFailedException
 import bass.mappers.toDTO
-import bass.mappers.toEntity
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
 import bass.repositories.MemberRepository
@@ -21,7 +19,6 @@ import java.time.Instant
 class CartItemServiceImpl(
     private val cartItemRepository: CartItemRepository,
     private val mealRepository: MealRepository,
-    private val memberService: CrudMemberUseCase,
     private val memberRepository: MemberRepository,
 ) : ManageCartItemUseCase {
     @Transactional

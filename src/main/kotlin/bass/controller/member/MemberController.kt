@@ -9,10 +9,7 @@ import bass.dto.member.MemberRegisterDTO
 import bass.dto.token.TokenRequestDTO
 import bass.dto.token.TokenResponseDTO
 import bass.infrastructure.AuthorizationExtractor
-import bass.mappers.toProfileDTO
 import bass.model.Member
-import bass.services.achievement.AchievementServiceImpl
-import bass.services.coupon.CouponServiceImpl
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -26,8 +23,6 @@ class MemberController(
     private val authService: AuthUseCase,
     private val authorizationExtractor: AuthorizationExtractor,
     private val crudMemberUseCase: CrudMemberUseCase,
-    private val achievementService: AchievementServiceImpl,
-    private val couponServiceImpl: CouponServiceImpl,
 ) {
     @PostMapping(MEMBERS_PATH_REGISTER)
     fun register(

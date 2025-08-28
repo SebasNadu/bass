@@ -1,7 +1,6 @@
 package bass.mappers
 
 import bass.dto.achievement.AchievementDTO
-import bass.dto.coupon.CouponDTO
 import bass.dto.member.MemberCouponDTO
 import bass.dto.member.MemberLoginDTO
 import bass.dto.member.MemberProfileDTO
@@ -32,7 +31,7 @@ fun MemberEntity.toDTO(): Member {
 
 fun MemberEntity.toLoginDTO() = MemberLoginDTO(id)
 
-fun MemberEntity.toEntity() = MemberEntity(name, email, password, role, id = id)
+fun Member.toEntity() = MemberEntity(name, email, password, role, id = id)
 
 fun MemberRegisterDTO.toEntity(
     tags: Set<TagEntity>,
@@ -74,6 +73,6 @@ fun MemberEntity.toProfileDTO(
         testimonial = this.testimonial,
         coupons = coupons.map { it.toDTO() },
         tags = this.tags.map { it.toDTO() },
-        days = this.days.map { it.toDTO()},
+        days = this.days.map { it.toDTO() },
     )
 }

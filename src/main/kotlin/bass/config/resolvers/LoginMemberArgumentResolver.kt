@@ -2,7 +2,6 @@ package bass.config.resolvers
 
 import bass.annotation.LoginMember
 import bass.exception.AuthorizationException
-import bass.mappers.toDTO
 import bass.mappers.toLoginDTO
 import bass.repositories.MemberRepository
 import org.springframework.core.MethodParameter
