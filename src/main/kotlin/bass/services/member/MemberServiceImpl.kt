@@ -2,6 +2,7 @@ package bass.services.member
 
 import bass.controller.member.usecase.CrudMemberUseCase
 import bass.dto.member.MemberCouponDTO
+import bass.dto.member.MemberProfileDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.entities.DayEntity
 import bass.entities.MemberEntity
@@ -10,7 +11,10 @@ import bass.exception.OperationFailedException
 import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.mappers.toOrderDTO
+import bass.mappers.toProfileDTO
 import bass.model.Member
+import bass.repositories.AchievementRepository
+import bass.repositories.CouponRepository
 import bass.repositories.MemberRepository
 import bass.repositories.TagRepository
 import bass.util.logger
@@ -23,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional
 class MemberServiceImpl(
     private val memberRepository: MemberRepository,
     private val tagRepository: TagRepository,
+    private val achievementRepository: AchievementRepository,
+    private val couponRepository: CouponRepository,
 ) : CrudMemberUseCase {
     private val log = logger<MemberServiceImpl>()
 
@@ -43,6 +49,21 @@ class MemberServiceImpl(
                 }
         log.info("Found member: $member by their id: $id ")
         return member
+    }
+
+    @Transactional(readOnly = true)
+    override fun findByIdToProfile(id: Long): MemberProfileDTO {
+        val member =
+            memberRepository.findByIdOrNull(id)
+                ?: run {
+                    log.warn("Member with id=$id not found")
+                    throw EmptyResultDataAccessException("Member with ID $id not found", 1)
+                }
+        log.info("Found member: $member by their id: $id ")
+        member
+        val achievements = achievementRepository.findAllByMemberId(member.id)
+        val coupons = couponRepository.findByMemberId(member.id)
+        return member.toProfileDTO(achievements, coupons)
     }
 
     @Transactional(readOnly = true)
