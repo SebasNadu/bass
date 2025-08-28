@@ -49,8 +49,6 @@ The core domain consists of users, meals, and the ordering process.
 - `OrderItemEntity`: Items within an order
 - `OrderEntity`: Full user orders
 
-%% > Maybe ER Diagram here %%
-
 ---
 
 ## 🏗️ Architecture & Project Structure
