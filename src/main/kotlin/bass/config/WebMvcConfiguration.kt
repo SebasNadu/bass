@@ -30,6 +30,10 @@ class WebMvcConfiguration(
         val albAddress = "https://bass-dev-alb-1133887665.ap-northeast-2.elb.amazonaws.com"
         registry.addMapping("/api/**")
             .allowedOrigins(
+                "https://www.bassdelivery.app",
+                "http://www.bassdelivery.app",
+                "https://bassdelivery.app",
+                "http://bassdelivery.app",
                 "http://localhost:8080",
                 "http://localhost:5173",
                 "http://43.201.85.92",
