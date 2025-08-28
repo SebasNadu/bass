@@ -69,6 +69,7 @@ fun Member.toProfileDTO(
         email = this.email,
         streak = this.streak,
         achievements = achievements,
+        testimonial = this.testimonial,
         coupons = coupons,
     )
 }
