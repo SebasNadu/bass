@@ -8,5 +8,6 @@ data class MemberProfileDTO(
     var email: String,
     var streak: Int,
     var achievements: List<AchievementDTO>,
+    val testimonial: String,
     var coupons: List<CouponDTO>,
 )

@@ -22,9 +22,11 @@ class StreakServiceImpl(
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun handleOrderCompletedEvent(event: OrderCompletionEvent) {
         val order = event.order
-        val member = order.member
+        val member = memberRepository.findById(order.member.id).orElseThrow()
 
         updateStreak(order, member)
+        memberRepository.save(member)
+
         if (member.streak > 0) {
             val achievements =
                 achievementRepository.findAll()
@@ -35,7 +37,6 @@ class StreakServiceImpl(
                 }
             }
         }
-        memberRepository.save(member)
     }
 
     fun updateStreak(

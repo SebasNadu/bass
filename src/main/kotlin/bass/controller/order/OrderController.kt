@@ -39,12 +39,12 @@ class OrderController(
     }
 
     @GetMapping
-    fun getOrders(
+    fun getAllOrderFromMember(
         @LoginMember member: MemberLoginDTO,
         @PageableDefault(size = 10, sort = ["createdAt"], direction = Sort.Direction.ASC)
         pageable: Pageable,
     ): ResponseEntity<List<OrderResponseDTO>> {
-        val orders = orderCreationUseCase.getOrdersByMemberId(member.id, pageable)
+        val orders = orderCreationUseCase.getAllOrdersByMemberId(member.id, pageable)
         return ResponseEntity.ok(orders)
     }
 }
