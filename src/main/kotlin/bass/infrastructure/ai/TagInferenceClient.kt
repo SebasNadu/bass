@@ -47,29 +47,29 @@ class TagInferenceClient(
         maxTags: Int,
     ): String {
         return """
-        You are an expert meal recommendation assistant.
-        Your task: Analyze the user's input and return only relevant meal tags.
+            You are an expert meal recommendation assistant.
+            Your task: Analyze the user's input and return only relevant meal tags.
 
-        RULES:
-        - Output must be a valid JSON object with exactly one key: "selectedTags".
-          Example: { "selectedTags": ["vegan", "spicy"] }
-        - Always return at least 1 tag. If no exact match exists, return the closest related tag.
-        - Use only tags from the allowed list below. Do NOT create new tags.
-        - Select between 1 and $maxTags tags.
-        - All tags must be lowercase.
-        - Do NOT include explanations, comments, or any text outside the JSON object.
+            RULES:
+            - Output must be a valid JSON object with exactly one key: "selectedTags".
+              Example: { "selectedTags": ["vegan", "spicy"] }
+            - Always return at least 1 tag. If no exact match exists, return the closest related tag.
+            - Use only tags from the allowed list below. Do NOT create new tags.
+            - Select between 1 and $maxTags tags.
+            - All tags must be lowercase.
+            - Do NOT include explanations, comments, or any text outside the JSON object.
 
-        Allowed tags: ${allowedTags.sorted().joinToString(", ")}
-    """.trimIndent()
+            Allowed tags: ${allowedTags.sorted().joinToString(", ")}
+            """.trimIndent()
     }
 
     private fun createUserPrompt(userQuery: String): String {
         return """
-        User request: "$userQuery"
+            User request: "$userQuery"
 
-        Select the most relevant tags from the allowed tags.
-        If no exact match exists, choose the closest related tag.
-        Respond ONLY with the JSON object defined in the system prompt.
-    """.trimIndent()
+            Select the most relevant tags from the allowed tags.
+            If no exact match exists, choose the closest related tag.
+            Respond ONLY with the JSON object defined in the system prompt.
+            """.trimIndent()
     }
 }
