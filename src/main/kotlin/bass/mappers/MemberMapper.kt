@@ -47,11 +47,11 @@ fun MemberRegisterDTO.toEntity(
 }
 
 fun MemberEntity.toOrderDTO(): MemberCouponDTO {
-    val fifteenMinutesAgo = Instant.now().minus(15, ChronoUnit.MINUTES)
+    val minutesAgo = Instant.now().minus(2, ChronoUnit.MINUTES)
     val recentCouponDTO =
         this.coupons
             .lastOrNull()
-            ?.takeIf { it.createdAt.isAfter(fifteenMinutesAgo) }
+            ?.takeIf { it.createdAt.isAfter(minutesAgo) }
             ?.toOrderDTO()
 
     return MemberCouponDTO(
