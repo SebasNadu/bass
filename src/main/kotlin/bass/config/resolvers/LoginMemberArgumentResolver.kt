@@ -31,7 +31,7 @@ class LoginMemberArgumentResolver(
         val email =
             webRequest.getAttribute("email", RequestAttributes.SCOPE_REQUEST) as? String
                 ?: throw AuthorizationException("Email attribute missing")
-        return memberRepository.findByEmail(email)?.toDTO()?.toLoginDTO() ?: throw EmptyResultDataAccessException(
+        return memberRepository.findByEmail(email)?.toLoginDTO() ?: throw EmptyResultDataAccessException(
             "Member with Email $email not found",
             1,
         )

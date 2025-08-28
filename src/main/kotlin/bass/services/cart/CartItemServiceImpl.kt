@@ -10,6 +10,7 @@ import bass.mappers.toDTO
 import bass.mappers.toEntity
 import bass.repositories.CartItemRepository
 import bass.repositories.MealRepository
+import bass.repositories.MemberRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,6 +22,7 @@ class CartItemServiceImpl(
     private val cartItemRepository: CartItemRepository,
     private val mealRepository: MealRepository,
     private val memberService: CrudMemberUseCase,
+    private val memberRepository: MemberRepository,
 ) : ManageCartItemUseCase {
     @Transactional
     override fun addOrUpdate(
@@ -81,10 +83,10 @@ class CartItemServiceImpl(
             mealRepository.findByIdOrNull(cartItemRequestDTO.mealId)
                 ?: throw OperationFailedException("Invalid Product Id ${cartItemRequestDTO.mealId}")
         option.checkStock(cartItemRequestDTO.quantity)
-        val member = memberService.findById(memberId)
+        val member = memberRepository.findByIdOrNull(memberId)!!
         return cartItemRepository.save(
             CartItemEntity(
-                member = member.toEntity(),
+                member = member,
                 meal = option,
                 quantity = cartItemRequestDTO.quantity,
                 addedAt = Instant.now(),

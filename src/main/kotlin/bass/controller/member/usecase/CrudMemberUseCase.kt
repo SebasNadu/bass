@@ -1,6 +1,7 @@
 package bass.controller.member.usecase
 
 import bass.dto.member.MemberCouponDTO
+import bass.dto.member.MemberProfileDTO
 import bass.dto.member.MemberRegisterDTO
 import bass.model.Member
 
@@ -18,4 +19,6 @@ interface CrudMemberUseCase {
     fun validateEmailUniqueness(email: String)
 
     fun findMemberNewAchievement(id: Long): MemberCouponDTO
+
+    fun findByIdToProfile(id: Long): MemberProfileDTO
 }

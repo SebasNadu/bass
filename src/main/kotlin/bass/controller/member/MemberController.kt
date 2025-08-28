@@ -57,15 +57,8 @@ class MemberController(
     fun findMyProfile(
         @LoginMember memberLoginDTO: MemberLoginDTO,
     ): ResponseEntity<MemberProfileDTO> {
-        val member = crudMemberUseCase.findById(memberLoginDTO.id)
-        val achievements = achievementService.findAllByMemberId(member.id)
-        val coupons = couponServiceImpl.findAll(member.id)
-        return ResponseEntity.ok().body(
-            member.toProfileDTO(
-                achievements = achievements,
-                coupons = coupons,
-            ),
-        )
+        val member = crudMemberUseCase.findByIdToProfile(memberLoginDTO.id)
+        return ResponseEntity.ok().body(member)
     }
 
     companion object {
