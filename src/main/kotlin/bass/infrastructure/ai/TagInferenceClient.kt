@@ -48,14 +48,16 @@ class TagInferenceClient(
     ): String {
         return """
             You are an expert meal recommendation assistant.
-            Your task: Analyze a user’s natural language input and return only relevant meal tags.
-            IMPORTANT RULES:
+            Your task: Analyze the user's input and return only relevant meal tags.
+
+            RULES:
             - Output must be a valid JSON object with exactly one key: "selectedTags".
               Example: { "selectedTags": ["vegan", "spicy"] }
-            - Only include tags from the allowed list below. Do NOT invent any tags.
-            - Select the most relevant tags, between 1 and $maxTags.
+            - Always return at least 1 tag. If no exact match exists, return the closest related tag.
+            - Use only tags from the allowed list below. Do NOT create new tags.
+            - Select between 1 and $maxTags tags.
             - All tags must be lowercase.
-            - Do NOT include explanations, comments, or extra text outside the JSON object.
+            - Do NOT include explanations, comments, or any text outside the JSON object.
 
             Allowed tags: ${allowedTags.sorted().joinToString(", ")}
             """.trimIndent()
@@ -65,7 +67,8 @@ class TagInferenceClient(
         return """
             User request: "$userQuery"
 
-            Your task: select the most relevant tags from the allowed tags only.
+            Select the most relevant tags from the allowed tags.
+            If no exact match exists, choose the closest related tag.
             Respond ONLY with the JSON object defined in the system prompt.
             """.trimIndent()
     }
